@@ -1,0 +1,3 @@
+{"voyage":"","updated_at":null,"type":"RECEIVE","tracking_id":"ABC123","registration_time":"2017-07-06T21:15:20.591000Z","location":"USNYC","inserted_at":null,"id":1,"completion_time":"2017-06-09T00:00:00Z"}
+{"voyage":"","updated_at":null,"type":"CUSTOMS","tracking_id":"ABC123","registration_time":"2017-07-14T20:42:29.716000Z","location":"USNYC","inserted_at":null,"id":2,"completion_time":"2017-06-10T00:00:00Z"}
+{"voyage":"989","updated_at":null,"type":"LOAD","tracking_id":"ABC123","registration_time":"2017-07-15T15:10:15.903000Z","location":"USNYC","inserted_at":null,"id":3,"completion_time":"2017-06-12T00:00:00Z"}

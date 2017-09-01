@@ -1,0 +1,9 @@
+<h2>New Handling Event</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        method: :post,
+                        location_map: @location_map,
+                        handling_event_type_map: @handling_event_type_map,
+                        action: handling_event_path(@conn, :create) %>
+
+<span><%= link "Back", to: handling_event_path(@conn, :index) %></span>

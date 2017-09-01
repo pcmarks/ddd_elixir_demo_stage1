@@ -1,0 +1,9 @@
+/* This file is for your main application css. */
+.logo {
+  width: 257px;
+  height: 88px;
+  display: inline-block;
+  margin-bottom: 1em;
+  background-image: url("/images/ddd_logo.png");
+  background-size: 257px 88px;
+}
