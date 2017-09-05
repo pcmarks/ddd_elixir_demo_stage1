@@ -69,10 +69,10 @@ This stage demonstrates the following aspects of DDD:
 The example is implemented as an Elixir
 ["umbrella"](https://elixir-lang.org/getting-started/mix-otp/dependencies-and-umbrella-apps.html#umbrella-projects) project.
 As such, it consists of two appliations (apps in Elixir parlance). One application is concerned primarily
-with the data and their associated functions; it. The other application is a
+with the data and their associated functions. The other application is a
 [Phoenix application](http://phoenixframework.org/) that provides all of the web handling facilities.
 ## Installation and Operation
-Elixir, Phonenix and other packages need to be installed first. Complete installation instructions can be found [in the Phoenix documentation](https://hexdocs.pm/phoenix/installation.html#content).
+Elixir, Phoenix and other packages need to be installed first. Complete installation instructions can be found [in the Phoenix documentation](https://hexdocs.pm/phoenix/installation.html#content).
 
 Next, obtain this repository.
 ### Building this project
