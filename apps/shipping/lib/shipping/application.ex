@@ -13,7 +13,9 @@ defmodule Shipping.Application do
     import Supervisor.Spec, warn: false
 
     Supervisor.start_link([
-      # Start up a supervised HandlingEventAgent instead of a Repo
+      # Start up a supervised HandlingEventAgent and a CargoAgent to be used
+      # in place of a database. Note that Repo is implemented in terms of calls
+      # to these agents.
       supervisor(Shipping.HandlingEventAgent, []),
       supervisor(Shipping.CargoAgent, []),
     ], strategy: :one_for_one, name: Shipping.Supervisor)
