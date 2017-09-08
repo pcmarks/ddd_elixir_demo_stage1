@@ -9,6 +9,8 @@ defmodule Shipping.HandlingEventAgent do
   new handling event is inserted. The backing store data is stored in
   JSON format.
   """
+  @app_dir File.cwd!()
+  @project_root_dir Path.join([@app_dir, "..", ".."])
   @cache_file_path "resources/handling_events.json"
 
   defstruct [events: [], last_event_id: 0, cache: nil]
