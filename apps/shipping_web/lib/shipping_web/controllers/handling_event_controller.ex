@@ -2,7 +2,7 @@ defmodule ShippingWeb.HandlingEventController do
   use ShippingWeb,  :controller
 
   # The Aggregates
-  alias Shipping.{Cargoes, HandlingEvents}
+  alias Shipping.{Cargoes, HandlingEvents, Locations}
   # The broadcasting channel
   alias ShippingWeb.HandlingEventChannel
 
@@ -13,7 +13,7 @@ defmodule ShippingWeb.HandlingEventController do
   def new(conn, _params) do
     changeset = HandlingEvents.change_handling_event(%HandlingEvents.HandlingEvent{})
     render(conn, "new.html", changeset: changeset,
-                          location_map: Cargoes.location_map(),
+                          location_map: Locations.location_map(),
                           handling_event_type_map: Cargoes.handling_event_type_map())
   end
 
@@ -34,7 +34,7 @@ defmodule ShippingWeb.HandlingEventController do
           |> redirect(to: handling_event_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset,
-                                location_map: Cargoes.location_map(),
+                                location_map: Locations.location_map(),
                                 handling_event_type_map: Cargoes.handling_event_type_map())
     end
   end
