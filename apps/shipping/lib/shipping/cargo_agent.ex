@@ -9,7 +9,7 @@ defmodule Shipping.CargoAgent do
   when this Agent is started (start_link()). The backing store data is stored in
   JSON format.
   """
-  @cache_file_path "resources/cargoes.json"
+  defp cache_file_path, do: Application.get_env(:shipping, :cargoes_cache)
 
   defstruct [cargoes: [], last_cargo_id: 0, cache: nil]
 
@@ -22,7 +22,7 @@ defmodule Shipping.CargoAgent do
   become part of the Agent's state.
   """
   def start_link do
-    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+    {:ok, cache} = File.open(cache_file_path(), [:append, :read])
     {cargoes, last_cargo_id} = load_from_cache(cache, {[], 0})
     Agent.start_link(fn -> %__MODULE__{cache: cache, cargoes: cargoes, last_cargo_id: last_cargo_id} end, name: __MODULE__)
   end
@@ -44,8 +44,8 @@ defmodule Shipping.CargoAgent do
   defp dump_to_cache() do
     cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
     File.close(cache)
-    File.rm(@cache_file_path)
-    {:ok, new_cache} = File.open(@cache_file_path, [:append, :read])
+    File.rm(cache_file_path())
+    {:ok, new_cache} = File.open(cache_file_path(), [:append, :read])
     all()
       |> Enum.map(
           fn(cargo) -> IO.write(new_cache, to_json(cargo) <> "\n")
