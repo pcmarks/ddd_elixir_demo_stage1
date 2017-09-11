@@ -2,7 +2,7 @@ defmodule Shipping.HandlingEventAgent do
   @moduledoc """
   HandlingEventAgent is an Agent that maintains a state which contains
   the HandlingEvents that have arrived and also the last id that was
-  assigned to the event before storage. This agent is supervised - see Shipping.Application
+  assigned to the event before storage. This Agent is supervised - see Shipping.Application
 
   A backing store - a file - contains all events past and present. It is read
   when this Agent is started (start_link) and is written to (appended) when a

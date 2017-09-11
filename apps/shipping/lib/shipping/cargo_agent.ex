@@ -3,7 +3,7 @@ defmodule Shipping.CargoAgent do
   CargoAgent is an Elixir Agent that maintains a state which contains
   the Cargoes that have been booked (although there is no booking function in
   stage 1 of this demo) and also the last id that was assigned to the cargo
-  before storage. This agent is supervised - see Shipping.Application
+  before storage. This Agent is supervised - see Shipping.Application
 
   A backing store - a file - contains all of the cargoes. It is read when this
   Agent is started (start_link). The backing store data is stored in JSON format.
