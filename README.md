@@ -68,7 +68,7 @@ This stage demonstrates the following aspects of DDD:
 ## Implementation
 The example is implemented as an Elixir
 ["umbrella"](https://elixir-lang.org/getting-started/mix-otp/dependencies-and-umbrella-apps.html#umbrella-projects) project.
-As such, it consists of two appliations (apps in Elixir parlance). One application is concerned primarily
+As such, it consists of two applications (apps in Elixir parlance). One application is concerned primarily
 with the data and their associated functions. The other application is a
 [Phoenix application](http://phoenixframework.org/) that provides all of the web handling facilities.
 ## Installation and Operation
