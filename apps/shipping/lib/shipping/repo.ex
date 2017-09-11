@@ -13,9 +13,9 @@ defmodule Shipping.Repo do
   and from a database system. See the commented out code above.
   However, Stage 1 of the Shipping example does not
   use a database. Instead, data is handled by Elixir Agents:
-  Shipping.HandlingEventAgent and Shipping.CargoAgent. These agents maintain
-  a list of HandlingEvents and Cargoes in memory (the agent's state)
-  and in a file. See the agents for more detail.
+  Shipping.HandlingEventAgent and Shipping.CargoAgent. These Agents maintain
+  a list of HandlingEvents and Cargoes in memory (the Agent's state)
+  and in a file. See the Agents for more detail.
 
   """
   alias Shipping.Cargoes.{Cargo, DeliveryHistory}
