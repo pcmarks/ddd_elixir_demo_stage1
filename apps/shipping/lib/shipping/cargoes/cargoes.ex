@@ -120,8 +120,7 @@ defmodule Shipping.Cargoes do
   end
 
   @doc """
-  Gets  the delivery history (all handling events to date)
-  for a tracking id.
+  Gets the delivery history (all handling events to date) for a tracking id.
 
   Raises `Ecto.NoResultsError` if the Handling event does not exist.
 
@@ -136,7 +135,7 @@ defmodule Shipping.Cargoes do
   Based on a cargo's current status and a list of handling events a new
   cargo status is determined, the cargo is updated with this status and a
   tuple containing the tracking status and the updated cargo is returned.
-  The tracking status is either :on_track or :off_track Note that tracking
+  The tracking status is either :on_track or :off_track. Note that tracking
   status is not currently used anywhere in the Stage 1 demo.
   """
   def update_cargo_status(handling_events) when is_list(handling_events) do
