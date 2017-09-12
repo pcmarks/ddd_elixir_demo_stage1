@@ -9,11 +9,14 @@ defmodule Shipping.HandlingEventAgent do
   new handling event is inserted. The backing store data is stored in
   JSON format.
   """
-  defp cache_file_path, do: Application.get_env(:shipping, :handling_events_cache)
+  @handling_event_file "handling_events.json"
 
-  defstruct [events: [], last_event_id: 0, cache: nil]
+  defstruct [events: [], last_event_id: 0, cache: nil, cache_path: ""]
 
+  # The aggregate is HandlingEvents
   alias Shipping.HandlingEvents.HandlingEvent
+
+  alias Shipping.Application
 
   @doc """
   Before starting the Agent process, start_link first loads any Handling Events
@@ -21,9 +24,16 @@ defmodule Shipping.HandlingEventAgent do
   become part of the Agent's state.
   """
   def start_link do
-    {:ok, cache} = File.open(cache_file_path(), [:append, :read])
+    cache_path = Application.prepare_cache(@handling_event_file)
+    {:ok, cache} = File.open(cache_path, [:append, :read])
     {events, last_event_id} = load_from_cache(cache, {[], 0})
-    Agent.start_link(fn -> %__MODULE__{cache: cache, events: events, last_event_id: last_event_id} end, name: __MODULE__)
+    Agent.start_link(fn ->
+      %__MODULE__{cache: cache,
+                  events: events,
+                  last_event_id: last_event_id,
+                  cache_path: cache_path}
+      end,
+      name: __MODULE__)
   end
 
   defp load_from_cache(cache, {events, last_event_id} = acc) do
@@ -46,10 +56,11 @@ defmodule Shipping.HandlingEventAgent do
   end
 
   defp dump_to_cache() do
-    cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
+    {cache, cache_path} = Agent.get(__MODULE__,
+                                    fn(struct) -> {struct.cache, struct.cache_path} end)
     File.close(cache)
-    File.rm(cache_file_path())
-    {:ok, new_cache} = File.open(cache_file_path(), [:append, :read])
+    File.rm(cache_path)
+    {:ok, new_cache} = File.open(cache_path, [:append, :read])
     all()
       |> Enum.map(
           fn(event) -> IO.write(new_cache, to_json(event) <> "\n")

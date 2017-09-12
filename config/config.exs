@@ -14,12 +14,15 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-# Configure for Shipping's location of the Cargo and Handling
-# Event agents resource files
+# Shipping's location of the Cargo and Handling
+# Event Agents resource files.
+# If Mix.env == :dev then copy these files to the resources/dev directory if
+# there are no files there
+# If Mix.env == :test then copy these files to the resources/test directory,
+# overwriting any existing files.
 app_dir = File.cwd!()
 config :shipping,
-  cargoes_cache: Path.join([app_dir, "resources", "cargoes.json"]),
-  handling_events_cache: Path.join([app_dir, "resources", "handling_events.json"])
+  resources_cache: Path.join([app_dir, "resources"])
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

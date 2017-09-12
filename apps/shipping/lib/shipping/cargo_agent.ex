@@ -9,9 +9,11 @@ defmodule Shipping.CargoAgent do
   when this Agent is started (start_link()). The backing store data is stored in
   JSON format.
   """
-  defp cache_file_path, do: Application.get_env(:shipping, :cargoes_cache)
+  @cargo_file "cargoes.json"
 
-  defstruct [cargoes: [], last_cargo_id: 0, cache: nil]
+  defstruct [cargoes: [], last_cargo_id: 0, cache: nil, cache_path: ""]
+
+  alias Shipping.Application
 
   # The Aggregate is Cargoes
   alias Shipping.Cargoes.Cargo
@@ -22,9 +24,16 @@ defmodule Shipping.CargoAgent do
   become part of the Agent's state.
   """
   def start_link do
-    {:ok, cache} = File.open(cache_file_path(), [:append, :read])
+    cache_path = Application.prepare_cache(@cargo_file)
+    {:ok, cache} = File.open(cache_path, [:append, :read])
     {cargoes, last_cargo_id} = load_from_cache(cache, {[], 0})
-    Agent.start_link(fn -> %__MODULE__{cache: cache, cargoes: cargoes, last_cargo_id: last_cargo_id} end, name: __MODULE__)
+    Agent.start_link(fn ->
+      %__MODULE__{cache: cache,
+                  cargoes: cargoes,
+                  last_cargo_id: last_cargo_id,
+                  cache_path: cache_path}
+      end,
+      name: __MODULE__)
   end
 
   # Reset the cargo status to "BOOKING"
@@ -42,10 +51,11 @@ defmodule Shipping.CargoAgent do
   end
 
   defp dump_to_cache() do
-    cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
+    {cache, cache_path} = Agent.get(__MODULE__,
+                                    fn(struct) -> {struct.cache, struct.cache_path} end)
     File.close(cache)
-    File.rm(cache_file_path())
-    {:ok, new_cache} = File.open(cache_file_path(), [:append, :read])
+    File.rm(cache_path)
+    {:ok, new_cache} = File.open(cache_path, [:append, :read])
     all()
       |> Enum.map(
           fn(cargo) -> IO.write(new_cache, to_json(cargo) <> "\n")
