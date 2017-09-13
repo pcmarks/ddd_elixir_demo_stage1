@@ -52,7 +52,7 @@
             <td><%= DateTime.to_time(handling_event.completion_time) %></td>
             <td><%= handling_event.type %></td>
           </tr>
-          <%= end %>
+          <% end %>
         </tbody>
       </table>
     <% else %>
