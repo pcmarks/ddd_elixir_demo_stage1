@@ -92,22 +92,6 @@ defmodule Shipping.HandlingEvents do
   end
 
   @doc """
-  Deletes a HandlingEvent.
-
-  ## Examples
-
-      iex> delete_handling_event(handling_event)
-      {:ok, %HandlingEvent{}}
-
-      iex> delete_handling_event(handling_event)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_handling_event(%HandlingEvent{} = handling_event) do
-    Repo.delete(handling_event)
-  end
-
-  @doc """
   Returns an `%Ecto.Changeset{}` for tracking handling_event changes.
 
   ## Examples

@@ -10,35 +10,6 @@ defmodule Shipping.Cargoes do
   alias Shipping.HandlingEvents.HandlingEvent
 
   @doc """
-  Returns the list of cargoes.
-
-  ## Examples
-
-      iex> list_cargoes()
-      [%Cargo{}, ...]
-
-  """
-  def list_cargoes do
-    Repo.all(Cargo)
-  end
-
-  @doc """
-  Gets a single cargo.
-
-  Raises `Ecto.NoResultsError` if the Cargo does not exist.
-
-  ## Examples
-
-      iex> get_cargo!(123)
-      %Cargo{}
-
-      iex> get_cargo!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_cargo!(id), do: Repo.get!(Cargo, id)
-
-  @doc """
   Gets a cargo by its tracking id.
 
   Raises `Ecto.NoResultsError` if the Cargo does not exist.
@@ -53,24 +24,6 @@ defmodule Shipping.Cargoes do
 
   """
   def get_cargo_by_tracking_id!(tracking_id), do: Repo.get_by_tracking_id!(Cargo, tracking_id)
-
-  @doc """
-  Creates a cargo.
-
-  ## Examples
-
-      iex> create_cargo(%{field: value})
-      {:ok, %Cargo{}}
-
-      iex> create_cargo(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_cargo(attrs \\ %{}) do
-    %Cargo{}
-    |> Cargo.changeset(attrs)
-    |> Repo.insert()
-  end
 
   @doc """
   Updates a cargo.
@@ -88,22 +41,6 @@ defmodule Shipping.Cargoes do
     cargo
     |> Cargo.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Cargo.
-
-  ## Examples
-
-      iex> delete_cargo(cargo)
-      {:ok, %Cargo{}}
-
-      iex> delete_cargo(cargo)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_cargo(%Cargo{} = cargo) do
-    Repo.delete(cargo)
   end
 
   @doc """
@@ -146,6 +83,7 @@ defmodule Shipping.Cargoes do
     cargo = get_cargo_by_tracking_id!(handling_event.tracking_id)
     do_update_cargo_status([handling_event], :on_track, cargo)
   end
+
   defp do_update_cargo_status([%HandlingEvent{type: type} | handling_events],
                           _tracking_status,
                           %Cargo{status: status} = cargo) do
@@ -175,29 +113,6 @@ defmodule Shipping.Cargoes do
   defp next_status("UNLOAD", "ON CARRIER"), do: {:on_track, "IN PORT"}
   defp next_status("UNLOAD", "IN PORT"), do: {:off_track, "IN PORT"}
   defp next_status(_, status), do: {:off_track, status}
-
-  #############################################################################
-  # Support for Locations
-  #############################################################################
-  @location_map  %{
-    "Hongkong": "CHHKG",
-    "Melbourne": "AUMEL",
-    "Stockholm": "SESTO",
-    "Helsinki": "FIHEL",
-    "Chicago": "USCHI",
-    "Tokyo": "JPTKO",
-    "Hamburg": "DEHAM",
-    "Shanghai": "CNSHA",
-    "Rotterdam": "NLRTM",
-    "Goteborg": "SEGOT",
-    "Hangzhou": "CHHGH",
-    "New York": "USNYC",
-    "Dallas": "USDAL"
-  }
-
-  def location_map do
-    @location_map
-  end
 
   #############################################################################
   # Support for HandlingEvent types
