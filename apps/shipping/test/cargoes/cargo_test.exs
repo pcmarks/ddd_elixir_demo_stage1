@@ -21,9 +21,4 @@ defmodule Shipping.Cargoes.CargoTest do
     refute changeset.valid?
   end
 
-  test "Fetch some existing Delivery History" do
-    history = Cargoes.get_delivery_history_for_tracking_id("ABC123")
-    assert length(history) == 3
-  end
-
 end
