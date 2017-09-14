@@ -18,7 +18,7 @@ defmodule Shipping.Repo do
   and in a file. See the agents for more detail.
 
   """
-  alias Shipping.Cargoes.{Cargo, DeliveryHistory}
+  alias Shipping.Cargoes.Cargo
   alias Shipping.HandlingEvents.HandlingEvent
   alias Shipping.{HandlingEventAgent, CargoAgent}
 
