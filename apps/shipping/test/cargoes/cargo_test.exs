@@ -1,7 +1,6 @@
 defmodule Shipping.Cargoes.CargoTest do
   use ExUnit.Case
 
-  alias Shipping.Cargoes
   alias Shipping.Cargoes.Cargo
 
   @valid_attrs %{status: "OK", tracking_id: "LMN123"}
