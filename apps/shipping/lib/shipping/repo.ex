@@ -18,7 +18,7 @@ defmodule Shipping.Repo do
   and in a file. See the agents for more detail.
 
   """
-  alias Shipping.Cargoes.{Cargo, DeliveryHistory}
+  alias Shipping.Cargoes.Cargo
   alias Shipping.HandlingEvents.HandlingEvent
   alias Shipping.{HandlingEventAgent, CargoAgent}
 
@@ -39,7 +39,7 @@ defmodule Shipping.Repo do
   @doc """
   Use the Handling Event Agent to insert a new Handling Event.
   """
-  def insert(changeset) do
+  def insert(%{data: %HandlingEvent{}} = changeset) do
     if changeset.valid? do
       data = Ecto.Changeset.apply_changes(changeset)
       {:ok, HandlingEventAgent.add(data)}

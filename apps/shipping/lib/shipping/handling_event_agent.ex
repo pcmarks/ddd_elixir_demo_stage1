@@ -36,7 +36,7 @@ defmodule Shipping.HandlingEventAgent do
       name: __MODULE__)
   end
 
-  defp load_from_cache(cache, {events, last_event_id} = acc) do
+  defp load_from_cache(cache, {events, _last_event_id} = acc) do
     case IO.read(cache, :line) do
       :eof -> acc
       event ->
