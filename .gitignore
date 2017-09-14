@@ -1,5 +1,7 @@
 /_build
 /cover
 /deps
+/resources/dev
+/resources/test
 erl_crash.dump
 *.ez
