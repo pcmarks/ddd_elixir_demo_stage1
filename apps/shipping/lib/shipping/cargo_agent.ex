@@ -8,6 +8,11 @@ defmodule Shipping.CargoAgent do
   A backing store - a file - contains all of the cargoes. It is read
   when this Agent is started (start_link()). The backing store data is stored in
   JSON format.
+
+  NOTE: Many of the, primarly private, functions have a "test" version that
+  does not use any backing store. This behavior is determined by the
+  Application environment variable: :shipping, :env that contains the value of
+  Mix.env()
   """
   @app_dir File.cwd!()
   @project_root_dir Path.join([@app_dir, "..", ".."])
@@ -24,12 +29,18 @@ defmodule Shipping.CargoAgent do
   become part of the Agent's state.
   """
   def start_link do
-    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+    # cache will be nil if we are testing
+    {:ok, cache} = open_cache(Application.get_env(:shipping, :env))
     {cargoes, last_cargo_id} = load_from_cache(cache, {[], 0})
     Agent.start_link(fn -> %__MODULE__{cache: cache, cargoes: cargoes, last_cargo_id: last_cargo_id} end, name: __MODULE__)
   end
 
-  # Reset the cargo status to "BOOKING"
+  defp open_cache(:test), do: {:ok, nil}
+  defp open_cache(_) do
+    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+  end
+
+  defp load_from_cache(nil, _state), do: {[], 0}
   defp load_from_cache(cache, {cargoes, last_cargo_id} = acc) do
     case IO.read(cache, :line) do
       :eof -> acc
@@ -43,8 +54,8 @@ defmodule Shipping.CargoAgent do
     end
   end
 
-  defp dump_to_cache() do
-    cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
+  defp dump_to_cache(nil), do: nil
+  defp dump_to_cache(cache) do
     File.close(cache)
     File.rm(@cache_file_path)
     {:ok, new_cache} = File.open(@cache_file_path, [:append, :read])
@@ -75,8 +86,13 @@ defmodule Shipping.CargoAgent do
         %{struct | cargoes: [new_cargo | struct.cargoes]}
       end)
     cache = Agent.get(__MODULE__, fn(s) -> s.cache end)
-    IO.write(cache, to_json(new_cargo) <> "\n")
+    write_to_cache(cache, new_cargo)
     new_cargo
+  end
+
+  defp write_to_cache(nil, _new_cargo), do: nil
+  defp write_to_cache(cache, new_cargo) do
+    IO.write(cache, to_json(new_cargo) <> "\n")
   end
 
   defp to_json(cargo) do
@@ -103,11 +119,12 @@ defmodule Shipping.CargoAgent do
         fn(struct) ->
           %{struct | cargoes: new_cargo_list}
         end)
-    dump_to_cache()
+    cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
+    dump_to_cache(cache)
     updated_cargo
   end
 
-  def next_id() do
+  defp next_id() do
     Agent.get_and_update(__MODULE__,
     fn(struct) ->
       next_id = struct.last_cargo_id + 1

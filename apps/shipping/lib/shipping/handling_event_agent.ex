@@ -8,6 +8,11 @@ defmodule Shipping.HandlingEventAgent do
   when this Agent is started (start_link() and is written to (appended) when a
   new handling event is inserted. The backing store data is stored in
   JSON format.
+
+  NOTE: Many of the, primarly private, functions have a "test" version that
+  does not use any backing store. This behavior is determined by the
+  Application environment variable: :shipping, :env that contains the value of
+  Mix.env()
   """
   @app_dir File.cwd!()
   @project_root_dir Path.join([@app_dir, "..", ".."])
@@ -23,11 +28,17 @@ defmodule Shipping.HandlingEventAgent do
   become part of the Agent's state.
   """
   def start_link do
-    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+    {:ok, cache} = open_cache(Application.get_env(:shipping, :env))
     {events, last_event_id} = load_from_cache(cache, {[], 0})
     Agent.start_link(fn -> %__MODULE__{cache: cache, events: events, last_event_id: last_event_id} end, name: __MODULE__)
   end
 
+  defp open_cache(:test), do: {:ok, nil}
+  defp open_cache(_) do
+    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+  end
+
+  defp load_from_cache(nil, _state), do: {[], 0}
   defp load_from_cache(cache, {events, _last_event_id} = acc) do
     case IO.read(cache, :line) do
       :eof -> acc
@@ -47,8 +58,8 @@ defmodule Shipping.HandlingEventAgent do
     Map.put(event, field, converted_date)
   end
 
-  defp dump_to_cache() do
-    cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
+  defp dump_to_cache(nil), do: nil
+  defp dump_to_cache(cache) do
     File.close(cache)
     File.rm(@cache_file_path)
     {:ok, new_cache} = File.open(@cache_file_path, [:append, :read])
@@ -79,8 +90,13 @@ defmodule Shipping.HandlingEventAgent do
         %{struct | events: [new_event | struct.events]}
       end)
     cache = Agent.get(__MODULE__, fn(s) -> s.cache end)
-    IO.write(cache, to_json(new_event) <> "\n")
+    write_to_cache(cache, new_event)
     new_event
+  end
+
+  defp write_to_cache(nil, _new_cargo), do: nil
+  defp write_to_cache(cache, new_cargo) do
+    IO.write(cache, to_json(new_cargo) <> "\n")
   end
 
   defp to_json(event) do
@@ -107,11 +123,12 @@ defmodule Shipping.HandlingEventAgent do
         fn(struct) ->
           %{struct | events: new_event_list}
         end)
-    dump_to_cache()
+    cache = Agent.get(__MODULE__, fn(struct) -> struct.cache end)
+    dump_to_cache(cache)
     updated_event
   end
 
-  def next_id() do
+  defp next_id() do
     Agent.get_and_update(__MODULE__,
     fn(struct) ->
       next_id = struct.last_event_id + 1
