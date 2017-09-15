@@ -2,8 +2,8 @@ defmodule Shipping.CargoAgent do
   @moduledoc """
   CargoAgent is an Elixir Agent that maintains a state which contains
   the Cargoes that have been booked (although there is no booking function in
-  stage 1 of this demo) and also the last id that was
-  assigned to the cargo before storage. This agent is supervised - see Shipping.Application
+  stage 1 of this demo) and also the last id that was assigned to the cargo
+  before storage. This Agent is supervised - see Shipping.Application
 
   A backing store - a file - contains all of the cargoes. It is read
   when this Agent is started (start_link()). The backing store data is stored in
@@ -67,7 +67,7 @@ defmodule Shipping.CargoAgent do
   end
 
   @doc """
-  Return all of the cargoes in the agents state as a list. This function
+  Return all of the cargoes in the Agent's state as a list. This function
   is meant to act like a database select all.
   """
   def all() do
@@ -101,8 +101,7 @@ defmodule Shipping.CargoAgent do
   end
 
   @doc """
-  Update an existing Cargo. Matching is done using
-  the Cargo id value.
+  Update an existing Cargo. Matching is done using the Cargo id value.
   """
   def update(%Cargo{} = updated_cargo) do
     new_cargo_list =
