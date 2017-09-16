@@ -37,11 +37,11 @@ defmodule Shipping.CargoAgent do
 
   defp open_cache(:test), do: {:ok, nil}
   defp open_cache(_) do
-    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+    File.open(@cache_file_path, [:append, :read])
   end
 
   defp load_from_cache(nil, _state), do: {[], 0}
-  defp load_from_cache(cache, {cargoes, last_cargo_id} = acc) do
+  defp load_from_cache(cache, {cargoes, _last_cargo_id} = acc) do
     case IO.read(cache, :line) do
       :eof -> acc
       cargo ->

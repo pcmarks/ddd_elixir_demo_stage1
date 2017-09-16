@@ -2,11 +2,8 @@ defmodule Shipping.Cargoes.CargoesTest do
   use ExUnit.Case
 
   alias Shipping.Cargoes
-  alias Shipping.Cargoes.Cargo
-  alias Shipping.CargoAgent
-  alias Shipping.HandlingEvents.HandlingEvent
-  alias Shipping.HandlingEventAgent
 
+  # Testing data is created in test_helper.exs
 
   test "Fetch an existing Cargo" do
     cargo = Cargoes.get_cargo_by_tracking_id!("ABC123")

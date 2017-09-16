@@ -1,13 +1,9 @@
 defmodule Shipping.HandlingEventsTest do
   use ExUnit.Case
 
-  alias Shipping.Cargoes.Cargo
-  alias Shipping.CargoAgent
-  alias Shipping.HandlingEventAgent
   alias Shipping.HandlingEvents
-  alias Shipping.HandlingEvents.HandlingEvent
 
-
+  # Testing data is created in test_helper.exs
   # NOTE: These test assume that there are 3 handling events in the resource.
 
   test "List all handling events" do

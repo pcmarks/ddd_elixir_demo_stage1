@@ -16,7 +16,7 @@ defmodule Shipping.HandlingEventAgent do
   """
   @app_dir File.cwd!()
   @project_root_dir Path.join([@app_dir, "..", ".."])
-  @cache_file_path "resources/handling_events.json"
+  @cache_file_path Path.join([@project_root_dir, "resources", "handling_events.json"])
 
   defstruct [events: [], last_event_id: 0, cache: nil]
 
@@ -35,7 +35,7 @@ defmodule Shipping.HandlingEventAgent do
 
   defp open_cache(:test), do: {:ok, nil}
   defp open_cache(_) do
-    {:ok, cache} = File.open(@cache_file_path, [:append, :read])
+    File.open(@cache_file_path, [:append, :read])
   end
 
   defp load_from_cache(nil, _state), do: {[], 0}
