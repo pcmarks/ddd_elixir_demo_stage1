@@ -25,16 +25,39 @@ class HandlingEvent {
       channel.on("new_handling_event", handling_event => {
         let eventContainer = document.getElementById("handling-events")
         let template = document.createElement("tr")
+        let no_of_events = eventContainer.rows.length
 
+        // Note that the new id values for the date and time are constructed
+        // to not be the same as any other element.
+        // These ids do *NOT* indicate any kind of ordering of the events.
         template.innerHTML = `
           <td>${handling_event.voyage}</td>
           <td>${handling_event.location}</td>
-          <td>${handling_event.date}</td>
-          <td>${handling_event.time}</td>
+          <td id="completion-date-${no_of_events}">${handling_event.date}</td>
+          <td id="completion-time-${no_of_events}">${handling_event.time}</td>
           <td>${handling_event.type}</td>
         `
-        // Prepend the new handling event to the existing list
-        eventContainer.insertBefore(template, eventContainer.firstChild)
+        // Find a place for the new event in the displayed events table
+        // The following code assumes that the events table is sorted in
+        // descending order by completion date and time, i.e., the newest
+        // event appears as the top row of table.
+        let new_datetime = handling_event.date + handling_event.time
+        for (var i = 0; i < no_of_events; i++) {
+          var row = eventContainer.rows[i]
+          var row_date = row.querySelector("td[id*=completion-date]").innerHTML
+          var row_time = row.querySelector("td[id*=completion-time]").innerHTML
+          var row_datetime = row_date + row_time
+          if (new_datetime >= row_datetime) {
+            eventContainer.insertBefore(template, row)
+            break
+          }
+        }
+        // If the new event was not inserted then we append it to the table -
+        // make it the last row.
+        if (no_of_events == eventContainer.rows.length) {
+          eventContainer.insertBefore(template,
+                          eventContainer.lastChild.nextSibling)
+        }
         HandlingEvent.highlight_and_fade(template);
       });
       // Listen for a new_cargo_status message. The payload contains the new
