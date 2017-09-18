@@ -38,8 +38,7 @@ defmodule Shipping.HandlingEventsTest do
     assert handling_event.location == "CHI"
   end
 
-  test "Fail to create a handling event" do
-    # Missing type value
+  test "Fail to create a handling event when type value is missing" do
     result = HandlingEvents.create_handling_event(
       %{type: "", location: "CHI" , completion_time: DateTime.utc_now, tracking_id: "ABC123", voyage: "989"})
     assert match?({:error, _}, result)
