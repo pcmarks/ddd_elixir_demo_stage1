@@ -14,6 +14,11 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Use this environment variable to alter the behavior of the Agents for the
+# purpose of testing. It is best practice to not use Mix.env in any lib code,
+# but using it here is OK.
+config :shipping, env: Mix.env
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
