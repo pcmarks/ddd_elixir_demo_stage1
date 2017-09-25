@@ -57,7 +57,8 @@ defmodule Shipping.Cargoes do
   end
 
   @doc """
-  Gets the delivery history (all handling events to date) for a tracking id.
+  Gets the delivery history (all handling events to date) for a tracking id. And
+  then sorts it in descending order based on the completion date/time.
 
   Raises `Ecto.NoResultsError` if the Handling event does not exist.
 
@@ -66,6 +67,7 @@ defmodule Shipping.Cargoes do
   """
   def get_delivery_history_for_tracking_id(tracking_id) do
     DeliveryHistory.for_tracking_id(tracking_id)
+    |> Enum.sort(&(&1.completion_time >= &2.completion_time))
   end
 
   @doc """

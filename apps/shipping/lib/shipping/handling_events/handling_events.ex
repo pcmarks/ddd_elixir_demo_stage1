@@ -22,7 +22,8 @@ defmodule Shipping.HandlingEvents do
   end
 
   @doc """
-  Gets all handling events for a tracking id.
+  Gets all handling events for a tracking id and returns them in
+  completion_time order with the newest first.
 
   Raises `Ecto.NoResultsError` if the Handling event does not exist.
 
@@ -37,6 +38,7 @@ defmodule Shipping.HandlingEvents do
   """
   def get_handling_events_by_tracking_id!(tracking_id) do
     Repo.get_by_tracking_id!(HandlingEvent, tracking_id)
+    |> Enum.sort(&(&1.completion_time >= &2.completion_time))
   end
 
   @doc """

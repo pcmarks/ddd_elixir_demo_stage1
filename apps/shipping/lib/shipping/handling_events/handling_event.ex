@@ -6,6 +6,10 @@ defmodule Shipping.HandlingEvents.HandlingEvent do
   # Cargoes Aggregates
   alias Shipping.Cargoes
 
+  # Note that handling events are stored in the order that they are received
+  # - the registration_time - so that they can be "replayed". They are usually
+  # displayed in the order that they happened - the completion_time - with the
+  # newest first.
 
   schema "handling_events" do
     field :completion_time, :utc_datetime
@@ -40,7 +44,7 @@ defmodule Shipping.HandlingEvents.HandlingEvent do
   defp validate_tracking_id(handling_event) do
     case Cargoes.get_cargo_by_tracking_id!(get_field(handling_event, :tracking_id)) do
       nil -> add_error(handling_event, :tracking_id, "Cannot find tracking number.")
-      cargo -> handling_event          
+      cargo -> handling_event
     end
   end
 
