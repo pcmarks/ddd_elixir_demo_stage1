@@ -8,5 +8,5 @@ defmodule ShippingWeb.CustomerController do
   def search(conn, %{"search" => %{"tracking_id" => tracking_id}}) do
     redirect(conn, to: cargo_path(conn, :show, tracking_id))
   end
-
+ 
 end

@@ -8,13 +8,13 @@ defmodule ShippingWeb.HandlingEventController do
 
   def index(conn, _params) do
     handling_events = HandlingEvents.list_handling_events()
-    render(conn, "index.html", handling_events: handling_events)
+    render(conn, :index, handling_events: handling_events)
   end
   def new(conn, _params) do
     changeset = HandlingEvents.change_handling_event(%HandlingEvents.HandlingEvent{})
-    render(conn, "new.html", changeset: changeset,
+    render(conn, :new, changeset: changeset,
                           location_map: Locations.location_map(),
-                          handling_event_type_map: Cargoes.handling_event_type_map())
+                        handling_event_type_map: Cargoes.handling_event_type_map())
   end
 
   def create(conn, %{"handling_event" => handling_event_params}) do

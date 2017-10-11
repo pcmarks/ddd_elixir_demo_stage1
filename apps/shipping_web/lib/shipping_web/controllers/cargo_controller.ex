@@ -10,7 +10,7 @@ defmodule ShippingWeb.CargoController do
           |> put_flash(:error, "Cargo for #{tracking_id} not found.")
           |> redirect(to: customer_path(conn, :index))
       _ ->
-        show(conn, params)
+        show(conn, params) 
     end
   end
 
@@ -34,7 +34,7 @@ defmodule ShippingWeb.CargoController do
               |> Enum.reverse()
               |> Cargoes.update_cargo_status()
           end
-        render(conn, "show.html", cargo: updated_cargo, handling_events: handling_events)
+          render(conn, :show, cargo: updated_cargo, handling_events: handling_events)
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")

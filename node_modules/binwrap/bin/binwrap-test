@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+var path = require("path");
+var packageInfo = require(path.join(process.cwd(), "package.json"));
+var package = require(path.join(process.cwd(), packageInfo.main));
+
+package.test().then(function(result) {
+}, function(result) {
+  console.error(result);
+  process.exit(1);
+});

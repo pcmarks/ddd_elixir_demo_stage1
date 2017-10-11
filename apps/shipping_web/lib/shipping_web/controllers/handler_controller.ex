@@ -11,5 +11,5 @@ defmodule ShippingWeb.HandlerController do
   """
   def index(conn, _params) do
     redirect(conn, to: handling_event_path(conn, :index))
-  end
+  end 
 end
