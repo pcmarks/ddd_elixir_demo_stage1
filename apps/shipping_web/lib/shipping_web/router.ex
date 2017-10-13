@@ -9,9 +9,6 @@ defmodule ShippingWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
 
   scope "/", ShippingWeb do
     pipe_through :browser # Use the default browser stack
@@ -24,6 +21,11 @@ defmodule ShippingWeb.Router do
     resources "/events", HandlingEventController, only: [:index, :new, :create]
   end
 
+  scope "/elm", ShippingWeb do
+    pipe_through :browser
+
+    get "/", ElmPageController, :index
+  end
   # Other scopes may use custom stacks.
   # scope "/api", Stage1Web do
   #   pipe_through :api
