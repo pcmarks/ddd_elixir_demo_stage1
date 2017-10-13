@@ -18,6 +18,23 @@ A central idea in functional programming, in general, and discussed in the above
 
 This project is divided into three stages that will, progressively, show certain aspects of DDD. This repository contains Stage 1.
 
+**NEW:** The beginning of an [Elm](http://elm-lang.org/)-based web interface is incorporated in this version of the demo; further work will be required. Temporarily, the elm code appears on the home page below the non-Elm version. If you don't want to see the Elm aspect in the home page then in the following file (change `/` to `\` for Windows systems):
+
+ `ddd_elixir_demo_stage1/apps/shipping_web/lib\shipping_web/templates/page/index.html.eex`
+
+delete or comment out the following lines:
+
+`<div>
+  <div id="elm-main"></div>
+</div>
+`
+
+The Elm code (so far) is in the file:
+
+`ddd_elixir_demo_stage1/apps/shipping_web/assets/elm/src/Main.elm`
+
+The Phoenix build facility will compile this file, automatically, when it is changed.
+
 ## Stage 1 Description
 The function of Cargo Tracking is the focus of this stage. Customers can follow the progress of the cargo as it is handled by Cargo Handlers. Cargo Handlers are  organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
 
