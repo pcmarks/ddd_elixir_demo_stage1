@@ -19,3 +19,9 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 import HandlingEvent from "./handling_event"
+
+// Import Elm compiled file and embed in a div in the document
+import Elm from "./main"
+
+const elmDiv = document.getElementById('elm-main')
+  , elmApp = Elm.Main.embed(elmDiv);
