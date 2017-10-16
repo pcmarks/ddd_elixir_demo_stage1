@@ -51,7 +51,7 @@ type alias Customer =
 
 
 type alias Handler =
-    { handlingEventList : Maybe HandlingEventList }
+    { handlingEventList : Maybe HandlerEventList }
 
 
 type alias HandlingEventList =
@@ -62,6 +62,20 @@ type alias HandlingEvent =
     { event_type : String
     , completion_time : Date
     , voyage : String
+    , location : String
+    }
+
+
+type alias HandlerEventList =
+    { handling_events : List HandlerEvent }
+
+
+type alias HandlerEvent =
+    { voyage : String
+    , event_type : String
+    , tracking_id : String
+    , registration_time : Date
+    , completion_time : Date
     , location : String
     }
 
@@ -313,8 +327,8 @@ viewHandler model =
         ]
 
 
-viewHandlerEventTable : HandlingEventList -> Html Msg
-viewHandlerEventTable handlingEventList =
+viewHandlerEventTable : HandlerEventList -> Html Msg
+viewHandlerEventTable handlerEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
             [ tr []
@@ -327,17 +341,19 @@ viewHandlerEventTable handlingEventList =
                 ]
             ]
         , tbody []
-            (List.map viewHandlerEvent handlingEventList.handling_events)
+            (List.map viewHandlerEvent handlerEventList.handling_events)
         ]
 
 
-viewHandlerEvent : HandlingEvent -> Html Msg
-viewHandlerEvent handlingEvent =
+viewHandlerEvent : HandlerEvent -> Html Msg
+viewHandlerEvent handlerEvent =
     tr []
-        [ td [] [ text handlingEvent.voyage ]
-        , td [] [ text handlingEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
-        , td [] [ text handlingEvent.event_type ]
+        [ td [] [ text handlerEvent.event_type ]
+        , td [] [ text handlerEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlerEvent.completion_time) ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlerEvent.registration_time) ]
+        , td [] [ text handlerEvent.tracking_id ]
+        , td [] [ text handlerEvent.voyage ]
         ]
 
 
@@ -353,6 +369,7 @@ type Msg
     | TrackingIdEntered String
     | FindTrackingId
     | ReceivedHandlingEvents HandlingEventList
+    | ReceivedHandlerEvents HandlerEventList
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
     | HttpError String
@@ -389,7 +406,8 @@ update msg model =
             ( { model | user = CustomerUser }, Cmd.none )
 
         HandlerChosen ->
-            ( { model | user = HandlerUser }, Cmd.none )
+            -- ( { model | user = HandlerUser }, Cmd.none )
+            ( { model | user = HandlerUser }, fetchHandlerEvents )
 
         TrackingIdEntered trackingId ->
             let
@@ -413,6 +431,16 @@ update msg model =
                     { customer | handlingEventList = Just response }
             in
                 ( { model | customer = newCustomer }, Cmd.none )
+
+        ReceivedHandlerEvents response ->
+            let
+                handler =
+                    model.handler
+
+                newHandler =
+                    { handler | handlingEventList = Just response }
+            in
+                ( { model | handler = newHandler }, Cmd.none )
 
         PhoenixMsg msg ->
             let
@@ -458,6 +486,11 @@ cargoesUrl =
     phoenixHostPortUrl ++ "/cargoes"
 
 
+handlerEventsUrl : String
+handlerEventsUrl =
+    phoenixHostPortUrl ++ "/events"
+
+
 trackingIdRequest : String -> Request HandlingEventList
 trackingIdRequest id =
     Http.get (cargoesUrl ++ "?_format=json&tracking_id=" ++ id) handlingEventListDecoder
@@ -490,6 +523,42 @@ handlingEventDecoder =
         |> Pipeline.required "type" string
         |> Pipeline.required "completion_time" date
         |> Pipeline.required "voyage" string
+        |> Pipeline.required "location" string
+
+
+fetchHandlerEvents : Cmd Msg
+fetchHandlerEvents =
+    Http.send
+        (\result ->
+            case result of
+                Ok response ->
+                    ReceivedHandlerEvents response
+
+                Err httpErr ->
+                    HttpError (toString httpErr)
+        )
+        handlerEventsRequest
+
+
+handlerEventsRequest : Request HandlerEventList
+handlerEventsRequest =
+    Http.get (handlerEventsUrl ++ "?_format=json") handlerEventListDecoder
+
+
+handlerEventListDecoder : Decoder HandlerEventList
+handlerEventListDecoder =
+    decode HandlerEventList
+        |> Pipeline.required "handling_events" (Json.Decode.list handlerEventDecoder)
+
+
+handlerEventDecoder : Decoder HandlerEvent
+handlerEventDecoder =
+    decode HandlerEvent
+        |> Pipeline.required "voyage" string
+        |> Pipeline.required "type" string
+        |> Pipeline.required "tracking_id" string
+        |> Pipeline.required "registration_time" date
+        |> Pipeline.required "completion_time" date
         |> Pipeline.required "location" string
 
 
