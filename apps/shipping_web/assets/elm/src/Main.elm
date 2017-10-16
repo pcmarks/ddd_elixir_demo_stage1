@@ -110,42 +110,92 @@ controlClass control =
     control ++ " w3-bar-item w3-border w3-border-orange w3-hover-border-navy w3-round-large  w3-margin-right w3-deep-orange"
 
 
+row : Attribute msg
+row =
+    class "w3-row"
+
+
+colS1 : Attribute msg
+colS1 =
+    class ("w3-col s1")
+
+
+colS2 : Attribute msg
+colS2 =
+    class ("w3-col s2")
+
+
+colS4 : String -> Attribute msg
+colS4 classStr =
+    class ("w3-col s4 " ++ classStr)
+
+
+colS8 : String -> Attribute msg
+colS8 classStr =
+    class ("w3-col s8 " ++ classStr)
+
+
+colS10 : Attribute msg
+colS10 =
+    class ("w3-col s10")
+
+
+buttonClass : String -> Attribute msg
+buttonClass classStr =
+    class ("w3-button w3-round-large w3-deep-orange w3-border-orange w3-hover-border-navy " ++ classStr)
+
+
 
 -- view
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "w3-container w3-center w3-padding-48" ]
+    -- div [ class "w3-container w3-center w3-padding-48" ]
+    -- [
+    div []
         [ viewLogo
         , p [] []
-        , case model.user of
-            None ->
-                viewUserChoice
+        , div []
+            (case model.user of
+                None ->
+                    viewUserChoice
 
-            CustomerUser ->
-                viewCustomer model
+                CustomerUser ->
+                    viewCustomer model
 
-            HandlerUser ->
-                viewHandler model
+                HandlerUser ->
+                    viewHandler model
+            )
         ]
 
 
 viewLogo : Html Msg
 viewLogo =
-    div [ class "w3-bar  w3-border-bottom" ]
-        [ img [ class "w3-bar-item w3-left", src "images/ddd_logo.png", logoStyle, onClick Home ] [] ]
-
-
-viewUserChoice : Html Msg
-viewUserChoice =
-    div [ class "w3-bar w3-center w3-padding-48", trackingStyle ]
-        [ button [ class (controlClass "w3-button"), onClick CustomerChosen ] [ text "Customer" ]
-        , button [ class (controlClass "w3-button"), onClick HandlerChosen ] [ text "Handler" ]
+    div [ row ]
+        [ div [ colS4 "" ] [ p [] [] ]
+        , div [ colS4 "w3-center" ]
+            [ img [ src "images/ddd_logo.png", logoStyle, onClick Home ] []
+            ]
+        , div [ colS4 "" ] [ p [] [] ]
+        , p [] []
         ]
 
 
-viewCustomer : Model -> Html Msg
+viewUserChoice : List (Html Msg)
+viewUserChoice =
+    [ div [ row ]
+        [ div [ colS4 "" ] [ p [] [] ]
+        , div [ colS4 "w3-center w3-padding-48", style [ ( "background-color", "#fee" ) ] ]
+            [ button [ buttonClass "", onClick CustomerChosen ] [ text "Customers" ]
+            , button [ buttonClass "", onClick HandlerChosen ] [ text "Handlers" ]
+            ]
+        , div [ colS4 "" ] [ p [] [] ]
+        ]
+    ]
+
+
+viewCustomer : Model -> List (Html Msg)
 viewCustomer model =
     let
         customer =
@@ -153,33 +203,64 @@ viewCustomer model =
     in
         case customer.handlingEventList of
             Nothing ->
-                div [ class "w3-bar w3-center w3-padding-48", trackingStyle ]
-                    [ input
-                        [ class "w3-bar-item"
-                        , style [ ( "width", "30em" ) ]
-                        , type_ "text"
-                        , placeholder "Tracking Number (e.g. ABC123, IJK456)"
-                        , onInput TrackingIdEntered
+                [ div [ row ]
+                    [ div [ colS2 ]
+                        [ p [] [] ]
+                    , div [ colS8 "" ]
+                        [ div [ class "w3-bar" ]
+                            [ input
+                                [ class "w3-bar-item w3-border w3-round-large"
+                                , style [ ( "width", "30em" ) ]
+                                , type_ "text"
+                                , placeholder "Tracking Number (e.g. ABC123, IJK456)"
+                                , onInput TrackingIdEntered
+                                ]
+                                []
+                            , button [ buttonClass "w3-bar-item", onClick FindTrackingId ] [ text "Track! " ]
+                            ]
+                        , div [ colS2 ]
+                            [ p [] [] ]
                         ]
-                        []
-                    , button [ class "w3-bar-item w3-button w3-round-large w3-margin-left w3-deep-orange", onClick FindTrackingId ] [ text "Track! " ]
+                    , p [] []
                     ]
+                ]
 
             Just handlingEvents ->
-                div [ class "w3-row" ]
-                    [ div [ class "w3-col m3" ] [ p [] [] ]
-                    , div [ class "w3-col m6" ]
-                        [ viewHandlingEventTable
-                            handlingEvents
+                [ div [ row ]
+                    [ div [ colS2 ] [ p [] [] ]
+                    , div [ colS8 "" ]
+                        [ h2 [] [ text "Tracking Details" ]
+                        , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
+                            [ div [ class "w3-panel w3-blue" ]
+                                [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
+                            , div [ class "w3-panel" ]
+                                [ div [ class "w3-left" ] [ text "Tracking Id:" ]
+                                , div [ class "w3-right" ] [ text "Status:" ]
+                                ]
+                            ]
                         ]
-                    , div [ class "3-col m3" ] [ p [] [] ]
+                    , div [ colS2 ] [ p [] [] ]
                     ]
+                , div [ row ]
+                    [ div [ colS2 ] [ p [] [] ]
+                    , div [ colS8 "w3-padding-small", style [ ( "background-color", "#fee" ) ] ]
+                        [ h5 [] [ text "Shipment Progress" ] ]
+                    , div [ colS2 ] [ p [] [] ]
+                    ]
+                , div [ row ]
+                    [ div [ colS2 ] [ p [] [] ]
+                    , div [ colS8 "" ]
+                        [ viewCustomerEventTable handlingEvents
+                        ]
+                    , div [ colS2 ] [ p [] [] ]
+                    ]
+                ]
 
 
-viewHandlingEventTable : HandlingEventList -> Html Msg
-viewHandlingEventTable handlingEventList =
-    table [ class "w3-table w3-striped w3-border" ]
-        [ thead []
+viewCustomerEventTable : HandlingEventList -> Html Msg
+viewCustomerEventTable handlingEventList =
+    table [ class "w3-table w3-striped w3-border w3-border-black" ]
+        [ thead [ class "w3-pale-yellow" ]
             [ tr []
                 [ th [] [ text "Voyage No" ]
                 , th [] [ text "Location" ]
@@ -188,12 +269,12 @@ viewHandlingEventTable handlingEventList =
                 ]
             ]
         , tbody []
-            (List.map viewHandlingEvent handlingEventList.handling_events)
+            (List.map viewCustomerEvent handlingEventList.handling_events)
         ]
 
 
-viewHandlingEvent : HandlingEvent -> Html Msg
-viewHandlingEvent handlingEvent =
+viewCustomerEvent : HandlingEvent -> Html Msg
+viewCustomerEvent handlingEvent =
     tr []
         [ td [] [ text handlingEvent.voyage ]
         , td [] [ text handlingEvent.location ]
@@ -202,9 +283,62 @@ viewHandlingEvent handlingEvent =
         ]
 
 
-viewHandler : Model -> Html Msg
+viewHandler : Model -> List (Html Msg)
 viewHandler model =
-    div [] [ text "HANDLER STUFF" ]
+    let
+        handler =
+            model.handler
+    in
+        [ div [ row ]
+            [ div [ colS1 ] [ p [] [] ]
+            , div [ colS10 ]
+                [ h2 [] [ text "Handling Events List" ] ]
+            , div [ colS1 ] [ p [] [] ]
+            ]
+        , case handler.handlingEventList of
+            Nothing ->
+                div [ row ]
+                    [ div [ colS1 ] [ p [] [] ]
+                    , div [ colS10 ]
+                        [ h5 [] [ text "No Handling Events Available" ] ]
+                    , div [ colS1 ] [ p [] [] ]
+                    ]
+
+            Just handlingEvents ->
+                div [ row ]
+                    [ div [ colS1 ] [ p [] [] ]
+                    , div [ colS10 ] [ viewHandlerEventTable handlingEvents ]
+                    , div [ colS1 ] [ p [] [] ]
+                    ]
+        ]
+
+
+viewHandlerEventTable : HandlingEventList -> Html Msg
+viewHandlerEventTable handlingEventList =
+    table [ class "w3-table w3-striped w3-border w3-border-black" ]
+        [ thead [ class "w3-pale-yellow" ]
+            [ tr []
+                [ th [] [ text "Type" ]
+                , th [] [ text "Location" ]
+                , th [] [ text "Local Comp. Time" ]
+                , th [] [ text "Local Reg. Time" ]
+                , th [] [ text "Tracking Id" ]
+                , th [] [ text "Voyage No" ]
+                ]
+            ]
+        , tbody []
+            (List.map viewHandlerEvent handlingEventList.handling_events)
+        ]
+
+
+viewHandlerEvent : HandlingEvent -> Html Msg
+viewHandlerEvent handlingEvent =
+    tr []
+        [ td [] [ text handlingEvent.voyage ]
+        , td [] [ text handlingEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
+        , td [] [ text handlingEvent.event_type ]
+        ]
 
 
 
