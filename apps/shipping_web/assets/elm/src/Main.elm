@@ -46,7 +46,7 @@ type User
 
 type alias Customer =
     { trackingId : Maybe String
-    , handlingEventList : Maybe HandlingEventList
+    , handlingEventList : Maybe CustomerEventList
     }
 
 
@@ -54,11 +54,11 @@ type alias Handler =
     { handlingEventList : Maybe HandlerEventList }
 
 
-type alias HandlingEventList =
-    { handling_events : List HandlingEvent }
+type alias CustomerEventList =
+    { handling_events : List CustomerEvent }
 
 
-type alias HandlingEvent =
+type alias CustomerEvent =
     { event_type : String
     , completion_time : Date
     , voyage : String
@@ -271,8 +271,8 @@ viewCustomer model =
                 ]
 
 
-viewCustomerEventTable : HandlingEventList -> Html Msg
-viewCustomerEventTable handlingEventList =
+viewCustomerEventTable : CustomerEventList -> Html Msg
+viewCustomerEventTable customerEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
             [ tr []
@@ -283,17 +283,17 @@ viewCustomerEventTable handlingEventList =
                 ]
             ]
         , tbody []
-            (List.map viewCustomerEvent handlingEventList.handling_events)
+            (List.map viewCustomerEvent customerEventList.handling_events)
         ]
 
 
-viewCustomerEvent : HandlingEvent -> Html Msg
-viewCustomerEvent handlingEvent =
+viewCustomerEvent : CustomerEvent -> Html Msg
+viewCustomerEvent customerEvent =
     tr []
-        [ td [] [ text handlingEvent.voyage ]
-        , td [] [ text handlingEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
-        , td [] [ text handlingEvent.event_type ]
+        [ td [] [ text customerEvent.voyage ]
+        , td [] [ text customerEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" customerEvent.completion_time) ]
+        , td [] [ text customerEvent.event_type ]
         ]
 
 
@@ -368,7 +368,7 @@ type Msg
     | HandlerChosen
     | TrackingIdEntered String
     | FindTrackingId
-    | ReceivedHandlingEvents HandlingEventList
+    | ReceivedCustomerEvents CustomerEventList
     | ReceivedHandlerEvents HandlerEventList
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
@@ -420,9 +420,9 @@ update msg model =
                 ( { model | customer = newCustomer }, Cmd.none )
 
         FindTrackingId ->
-            ( model, fetchCustomerTrackingId model.customer.trackingId )
+            ( model, fetchCustomerEvents model.customer.trackingId )
 
-        ReceivedHandlingEvents response ->
+        ReceivedCustomerEvents response ->
             let
                 customer =
                     model.customer
@@ -462,20 +462,20 @@ phoenixHostPortUrl =
     "http://localhost:4000"
 
 
-fetchCustomerTrackingId : Maybe String -> Cmd Msg
-fetchCustomerTrackingId trackingId =
+fetchCustomerEvents : Maybe String -> Cmd Msg
+fetchCustomerEvents trackingId =
     case trackingId of
         Just id ->
             Http.send
                 (\result ->
                     case result of
                         Ok response ->
-                            ReceivedHandlingEvents response
+                            ReceivedCustomerEvents response
 
                         Err httpErr ->
                             HttpError (toString httpErr)
                 )
-                (trackingIdRequest id)
+                (customerEventsRequest id)
 
         Nothing ->
             Cmd.none
@@ -486,20 +486,15 @@ cargoesUrl =
     phoenixHostPortUrl ++ "/cargoes"
 
 
-handlerEventsUrl : String
-handlerEventsUrl =
-    phoenixHostPortUrl ++ "/events"
+customerEventsRequest : String -> Request CustomerEventList
+customerEventsRequest id =
+    Http.get (cargoesUrl ++ "?_format=json&tracking_id=" ++ id) customerEventListDecoder
 
 
-trackingIdRequest : String -> Request HandlingEventList
-trackingIdRequest id =
-    Http.get (cargoesUrl ++ "?_format=json&tracking_id=" ++ id) handlingEventListDecoder
-
-
-handlingEventListDecoder : Decoder HandlingEventList
-handlingEventListDecoder =
-    decode HandlingEventList
-        |> Pipeline.required "handling_events" (Json.Decode.list handlingEventDecoder)
+customerEventListDecoder : Decoder CustomerEventList
+customerEventListDecoder =
+    decode CustomerEventList
+        |> Pipeline.required "handling_events" (Json.Decode.list customerEventDecoder)
 
 
 date : Decoder Date
@@ -517,13 +512,18 @@ date =
         string |> andThen convert
 
 
-handlingEventDecoder : Decoder HandlingEvent
-handlingEventDecoder =
-    decode HandlingEvent
+customerEventDecoder : Decoder CustomerEvent
+customerEventDecoder =
+    decode CustomerEvent
         |> Pipeline.required "type" string
         |> Pipeline.required "completion_time" date
         |> Pipeline.required "voyage" string
         |> Pipeline.required "location" string
+
+
+handlerEventsUrl : String
+handlerEventsUrl =
+    phoenixHostPortUrl ++ "/events"
 
 
 fetchHandlerEvents : Cmd Msg
