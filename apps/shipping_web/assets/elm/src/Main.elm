@@ -51,7 +51,10 @@ type alias Customer =
 
 
 type alias Handler =
-    { handlingEventList : Maybe HandlerEventList }
+    { handlerMode : HandlerMode
+    , newHandlerEvent : Maybe HandlerEvent
+    , handlingEventList : Maybe HandlerEventList
+    }
 
 
 type alias CustomerEventList =
@@ -64,6 +67,11 @@ type alias CustomerEvent =
     , voyage : String
     , location : String
     }
+
+
+type HandlerMode
+    = ListEvents
+    | NewEvent
 
 
 type alias HandlerEventList =
@@ -92,7 +100,7 @@ initCustomer =
 
 initHandler : Handler
 initHandler =
-    (Handler Nothing)
+    (Handler ListEvents Nothing Nothing)
 
 
 
@@ -324,6 +332,12 @@ viewHandler model =
                     , div [ colS10 ] [ viewHandlerEventTable handlingEvents ]
                     , div [ colS1 ] [ p [] [] ]
                     ]
+        , p [] []
+        , div [ row ]
+            [ div [ colS1 ] [ p [] [] ]
+            , div [ colS10 ] [ button [ buttonClass "", onClick PutNewEvent ] [ text "New Handling Event" ] ]
+            , div [ colS1 ] [ p [] [] ]
+            ]
         ]
 
 
@@ -370,6 +384,7 @@ type Msg
     | FindTrackingId
     | ReceivedCustomerEvents CustomerEventList
     | ReceivedHandlerEvents HandlerEventList
+    | PutNewEvent
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
     | HttpError String
@@ -407,7 +422,7 @@ update msg model =
 
         HandlerChosen ->
             -- ( { model | user = HandlerUser }, Cmd.none )
-            ( { model | user = HandlerUser }, fetchHandlerEvents )
+            ( { model | user = HandlerUser }, getHandlerEvents )
 
         TrackingIdEntered trackingId ->
             let
@@ -420,7 +435,7 @@ update msg model =
                 ( { model | customer = newCustomer }, Cmd.none )
 
         FindTrackingId ->
-            ( model, fetchCustomerEvents model.customer.trackingId )
+            ( model, getCustomerEvents model.customer.trackingId )
 
         ReceivedCustomerEvents response ->
             let
@@ -442,6 +457,9 @@ update msg model =
             in
                 ( { model | handler = newHandler }, Cmd.none )
 
+        PutNewEvent ->
+            ( model, Cmd.none )
+
         PhoenixMsg msg ->
             let
                 ( phxSocket, phxCmd ) =
@@ -462,8 +480,8 @@ phoenixHostPortUrl =
     "http://localhost:4000"
 
 
-fetchCustomerEvents : Maybe String -> Cmd Msg
-fetchCustomerEvents trackingId =
+getCustomerEvents : Maybe String -> Cmd Msg
+getCustomerEvents trackingId =
     case trackingId of
         Just id ->
             Http.send
@@ -526,8 +544,8 @@ handlerEventsUrl =
     phoenixHostPortUrl ++ "/events"
 
 
-fetchHandlerEvents : Cmd Msg
-fetchHandlerEvents =
+getHandlerEvents : Cmd Msg
+getHandlerEvents =
     Http.send
         (\result ->
             case result of
