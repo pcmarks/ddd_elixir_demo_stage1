@@ -209,8 +209,8 @@ viewUserChoice =
     [ div [ row ]
         [ div [ colS4 "" ] [ p [] [] ]
         , div [ colS4 "w3-center w3-padding-48", style [ ( "background-color", "#fee" ) ] ]
-            [ button [ buttonClass "", onClick CustomerChosen ] [ text "Customers" ]
-            , button [ buttonClass "", onClick HandlerChosen ] [ text "Handlers" ]
+            [ button [ buttonClass "w3-margin", onClick CustomerChosen ] [ text "Customers" ]
+            , button [ buttonClass "w3-margin", onClick HandlerChosen ] [ text "Handlers" ]
             ]
         , div [ colS4 "" ] [ p [] [] ]
         ]
@@ -232,13 +232,13 @@ viewCustomer model =
                         [ div [ class "w3-bar" ]
                             [ input
                                 [ class "w3-bar-item w3-border w3-round-large"
-                                , style [ ( "width", "30em" ) ]
+                                , style [ ( "width", "45em" ) ]
                                 , type_ "text"
                                 , placeholder "Tracking Number (e.g. ABC123, IJK456)"
                                 , onInput TrackingIdEntered
                                 ]
                                 []
-                            , button [ buttonClass "w3-bar-item", onClick FindTrackingId ] [ text "Track! " ]
+                            , button [ buttonClass "w3-bar-item w3-margin-left", onClick FindTrackingId ] [ text "Track! " ]
                             ]
                         , div [ colS2 ]
                             [ p [] [] ]
