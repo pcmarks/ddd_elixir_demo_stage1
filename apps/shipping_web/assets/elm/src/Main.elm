@@ -12,6 +12,8 @@ import Phoenix.Channel
 import Phoenix.Push
 import Date exposing (Date)
 import Date.Format
+import Core exposing (..)
+import CustomerPage exposing (..)
 
 
 -- MAIN PROGRAM
@@ -32,8 +34,8 @@ main =
 
 type alias Model =
     { user : User
-    , customer : Customer
-    , handler : Handler
+    , cargo : Cargo
+    , handlingEventSource : HandlingEventSource
     , phxSocket : Phoenix.Socket.Socket Msg
     }
 
@@ -44,28 +46,10 @@ type User
     | HandlerUser
 
 
-type alias Customer =
-    { trackingId : Maybe String
-    , handlingEventList : Maybe CustomerEventList
-    }
-
-
-type alias Handler =
-    { handlerMode : HandlerMode
-    , newHandlerEvent : Maybe HandlerEvent
-    , handlingEventList : Maybe HandlerEventList
-    }
-
-
-type alias CustomerEventList =
-    { handling_events : List CustomerEvent }
-
-
-type alias CustomerEvent =
-    { event_type : String
-    , completion_time : Date
-    , voyage : String
-    , location : String
+type alias HandlingEventSource =
+    { handlingEventSourceMode : HandlerMode
+    , newHandlingEvent : Maybe HandlingEvent
+    , handlingEventList : Maybe HandlingEventList
     }
 
 
@@ -74,33 +58,14 @@ type HandlerMode
     | NewEvent
 
 
-type alias HandlerEventList =
-    { handling_events : List HandlerEvent }
-
-
-type alias HandlerEvent =
-    { voyage : String
-    , event_type : String
-    , tracking_id : String
-    , registration_time : Date
-    , completion_time : Date
-    , location : String
-    }
-
-
 init : ( Model, Cmd msg )
 init =
-    ( Model None initCustomer initHandler (initWebSocket), Cmd.none )
+    ( Model None initCargo initHandler (initWebSocket), Cmd.none )
 
 
-initCustomer : Customer
-initCustomer =
-    (Customer Nothing Nothing)
-
-
-initHandler : Handler
+initHandler : HandlingEventSource
 initHandler =
-    (Handler ListEvents Nothing Nothing)
+    (HandlingEventSource ListEvents Nothing Nothing)
 
 
 
@@ -220,10 +185,10 @@ viewUserChoice =
 viewCustomer : Model -> List (Html Msg)
 viewCustomer model =
     let
-        customer =
-            model.customer
+        cargo =
+            model.cargo
     in
-        case customer.handlingEventList of
+        case cargo.handlingEventList of
             Nothing ->
                 [ div [ row ]
                     [ div [ colS2 ]
@@ -279,8 +244,8 @@ viewCustomer model =
                 ]
 
 
-viewCustomerEventTable : CustomerEventList -> Html Msg
-viewCustomerEventTable customerEventList =
+viewCustomerEventTable : HandlingEventList -> Html Msg
+viewCustomerEventTable handlingEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
             [ tr []
@@ -291,25 +256,25 @@ viewCustomerEventTable customerEventList =
                 ]
             ]
         , tbody []
-            (List.map viewCustomerEvent customerEventList.handling_events)
+            (List.map viewCustomerEvent handlingEventList.handling_events)
         ]
 
 
-viewCustomerEvent : CustomerEvent -> Html Msg
-viewCustomerEvent customerEvent =
+viewCustomerEvent : HandlingEvent -> Html Msg
+viewCustomerEvent handlingEvent =
     tr []
-        [ td [] [ text customerEvent.voyage ]
-        , td [] [ text customerEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" customerEvent.completion_time) ]
-        , td [] [ text customerEvent.event_type ]
+        [ td [] [ text handlingEvent.voyage ]
+        , td [] [ text handlingEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
+        , td [] [ text handlingEvent.event_type ]
         ]
 
 
 viewHandler : Model -> List (Html Msg)
 viewHandler model =
     let
-        handler =
-            model.handler
+        handlingEventSource =
+            model.handlingEventSource
     in
         [ div [ row ]
             [ div [ colS1 ] [ p [] [] ]
@@ -317,7 +282,7 @@ viewHandler model =
                 [ h2 [] [ text "Handling Events List" ] ]
             , div [ colS1 ] [ p [] [] ]
             ]
-        , case handler.handlingEventList of
+        , case handlingEventSource.handlingEventList of
             Nothing ->
                 div [ row ]
                     [ div [ colS1 ] [ p [] [] ]
@@ -329,7 +294,7 @@ viewHandler model =
             Just handlingEvents ->
                 div [ row ]
                     [ div [ colS1 ] [ p [] [] ]
-                    , div [ colS10 ] [ viewHandlerEventTable handlingEvents ]
+                    , div [ colS10 ] [ viewHandlingEventTable handlingEvents ]
                     , div [ colS1 ] [ p [] [] ]
                     ]
         , p [] []
@@ -341,8 +306,8 @@ viewHandler model =
         ]
 
 
-viewHandlerEventTable : HandlerEventList -> Html Msg
-viewHandlerEventTable handlerEventList =
+viewHandlingEventTable : HandlingEventList -> Html Msg
+viewHandlingEventTable handlingEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
             [ tr []
@@ -355,19 +320,19 @@ viewHandlerEventTable handlerEventList =
                 ]
             ]
         , tbody []
-            (List.map viewHandlerEvent handlerEventList.handling_events)
+            (List.map viewHandlingEvent handlingEventList.handling_events)
         ]
 
 
-viewHandlerEvent : HandlerEvent -> Html Msg
-viewHandlerEvent handlerEvent =
+viewHandlingEvent : HandlingEvent -> Html Msg
+viewHandlingEvent handlingEvent =
     tr []
-        [ td [] [ text handlerEvent.event_type ]
-        , td [] [ text handlerEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlerEvent.completion_time) ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlerEvent.registration_time) ]
-        , td [] [ text handlerEvent.tracking_id ]
-        , td [] [ text handlerEvent.voyage ]
+        [ td [] [ text handlingEvent.event_type ]
+        , td [] [ text handlingEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.registration_time) ]
+        , td [] [ text handlingEvent.tracking_id ]
+        , td [] [ text handlingEvent.voyage ]
         ]
 
 
@@ -382,8 +347,7 @@ type Msg
     | HandlerChosen
     | TrackingIdEntered String
     | FindTrackingId
-    | ReceivedCustomerEvents CustomerEventList
-    | ReceivedHandlerEvents HandlerEventList
+    | ReceivedHandlingEvents HandlingEventList
     | PutNewEvent
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
@@ -407,8 +371,8 @@ update msg model =
             in
                 ( { model
                     | user = None
-                    , customer = initCustomer
-                    , handler = initHandler
+                    , cargo = initCargo
+                    , handlingEventSource = initHandler
                     , phxSocket = phxSocket
                   }
                 , Cmd.map PhoenixMsg phxCmd
@@ -422,40 +386,27 @@ update msg model =
 
         HandlerChosen ->
             -- ( { model | user = HandlerUser }, Cmd.none )
-            ( { model | user = HandlerUser }, getHandlerEvents )
+            ( { model | user = HandlerUser }, getAllHandlingEvents )
 
         TrackingIdEntered trackingId ->
             let
-                customer =
-                    model.customer
-
-                newCustomer =
-                    { customer | trackingId = Just trackingId, handlingEventList = Nothing }
+                newCargo =
+                    (Cargo trackingId Nothing)
             in
-                ( { model | customer = newCustomer }, Cmd.none )
+                ( { model | cargo = newCargo }, Cmd.none )
 
         FindTrackingId ->
-            ( model, getCustomerEvents model.customer.trackingId )
+            ( model, getHandlingEvents (Just model.cargo.trackingId) )
 
-        ReceivedCustomerEvents response ->
+        ReceivedHandlingEvents response ->
             let
-                customer =
-                    model.customer
+                cargo =
+                    model.cargo
 
-                newCustomer =
-                    { customer | handlingEventList = Just response }
+                newCargo =
+                    { cargo | handlingEventList = Just response }
             in
-                ( { model | customer = newCustomer }, Cmd.none )
-
-        ReceivedHandlerEvents response ->
-            let
-                handler =
-                    model.handler
-
-                newHandler =
-                    { handler | handlingEventList = Just response }
-            in
-                ( { model | handler = newHandler }, Cmd.none )
+                ( { model | cargo = newCargo }, Cmd.none )
 
         PutNewEvent ->
             ( model, Cmd.none )
@@ -480,23 +431,37 @@ phoenixHostPortUrl =
     "http://localhost:4000"
 
 
-getCustomerEvents : Maybe String -> Cmd Msg
-getCustomerEvents trackingId =
+getHandlingEvents : Maybe String -> Cmd Msg
+getHandlingEvents trackingId =
     case trackingId of
         Just id ->
             Http.send
                 (\result ->
                     case result of
                         Ok response ->
-                            ReceivedCustomerEvents response
+                            ReceivedHandlingEvents response
 
                         Err httpErr ->
                             HttpError (toString httpErr)
                 )
-                (customerEventsRequest id)
+                (handlingEventsRequest id)
 
         Nothing ->
-            Cmd.none
+            getAllHandlingEvents
+
+
+getAllHandlingEvents : Cmd Msg
+getAllHandlingEvents =
+    Http.send
+        (\result ->
+            case result of
+                Ok response ->
+                    ReceivedHandlingEvents response
+
+                Err httpErr ->
+                    HttpError (toString httpErr)
+        )
+        allHandlingEventsRequest
 
 
 cargoesUrl : String
@@ -504,15 +469,9 @@ cargoesUrl =
     phoenixHostPortUrl ++ "/cargoes"
 
 
-customerEventsRequest : String -> Request CustomerEventList
-customerEventsRequest id =
-    Http.get (cargoesUrl ++ "?_format=json&tracking_id=" ++ id) customerEventListDecoder
-
-
-customerEventListDecoder : Decoder CustomerEventList
-customerEventListDecoder =
-    decode CustomerEventList
-        |> Pipeline.required "handling_events" (Json.Decode.list customerEventDecoder)
+handlingEventsRequest : String -> Request HandlingEventList
+handlingEventsRequest id =
+    Http.get (cargoesUrl ++ "?_format=json&tracking_id=" ++ id) handlingEventListDecoder
 
 
 date : Decoder Date
@@ -530,48 +489,25 @@ date =
         string |> andThen convert
 
 
-customerEventDecoder : Decoder CustomerEvent
-customerEventDecoder =
-    decode CustomerEvent
-        |> Pipeline.required "type" string
-        |> Pipeline.required "completion_time" date
-        |> Pipeline.required "voyage" string
-        |> Pipeline.required "location" string
-
-
-handlerEventsUrl : String
-handlerEventsUrl =
+handlingEventsUrl : String
+handlingEventsUrl =
     phoenixHostPortUrl ++ "/events"
 
 
-getHandlerEvents : Cmd Msg
-getHandlerEvents =
-    Http.send
-        (\result ->
-            case result of
-                Ok response ->
-                    ReceivedHandlerEvents response
-
-                Err httpErr ->
-                    HttpError (toString httpErr)
-        )
-        handlerEventsRequest
+allHandlingEventsRequest : Request HandlingEventList
+allHandlingEventsRequest =
+    Http.get (handlingEventsUrl ++ "?_format=json") handlingEventListDecoder
 
 
-handlerEventsRequest : Request HandlerEventList
-handlerEventsRequest =
-    Http.get (handlerEventsUrl ++ "?_format=json") handlerEventListDecoder
+handlingEventListDecoder : Decoder HandlingEventList
+handlingEventListDecoder =
+    decode HandlingEventList
+        |> Pipeline.required "handling_events" (Json.Decode.list handlingEventDecoder)
 
 
-handlerEventListDecoder : Decoder HandlerEventList
-handlerEventListDecoder =
-    decode HandlerEventList
-        |> Pipeline.required "handling_events" (Json.Decode.list handlerEventDecoder)
-
-
-handlerEventDecoder : Decoder HandlerEvent
-handlerEventDecoder =
-    decode HandlerEvent
+handlingEventDecoder : Decoder HandlingEvent
+handlingEventDecoder =
+    decode HandlingEvent
         |> Pipeline.required "voyage" string
         |> Pipeline.required "type" string
         |> Pipeline.required "tracking_id" string
