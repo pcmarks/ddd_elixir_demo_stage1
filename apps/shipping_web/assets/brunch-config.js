@@ -45,7 +45,7 @@ exports.config = {
   // Configure your plugins
   plugins: {
     elmBrunch: {
-      mainModules: "src/Main.elm",
+      mainModules: ["src/Main.elm"],
       elmFolder: "elm",
       outputFolder: "../../priv/static/js",
       outputFile: "main.js"
