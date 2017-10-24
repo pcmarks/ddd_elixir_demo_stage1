@@ -101,10 +101,10 @@ view model =
                     viewUserChoice
 
                 CustomerUser ->
-                    viewCustomer model
+                    viewCustomer model.cargo
 
                 HandlerUser ->
-                    viewHandler model
+                    viewHandler model.handlingEventSource
             )
         ]
 
@@ -134,66 +134,62 @@ viewUserChoice =
     ]
 
 
-viewCustomer : Model -> List (Html Msg)
-viewCustomer model =
-    let
-        cargo =
-            model.cargo
-    in
-        case cargo.handlingEventList of
-            Nothing ->
-                [ div [ class row ]
-                    [ div [ class colS2 ]
+viewCustomer : Cargo -> List (Html Msg)
+viewCustomer cargo =
+    case cargo.handlingEventList of
+        Nothing ->
+            [ div [ class row ]
+                [ div [ class colS2 ]
+                    [ p [] [] ]
+                , div [ class (colS8 "") ]
+                    [ div [ class "w3-bar" ]
+                        [ input
+                            [ class "w3-bar-item w3-border w3-round-large"
+                            , style [ ( "width", "45em" ) ]
+                            , type_ "text"
+                            , placeholder "Tracking Number (e.g. ABC123, IJK456)"
+                            , onInput TrackingIdEntered
+                            ]
+                            []
+                        , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindTrackingId ] [ text "Track! " ]
+                        ]
+                    , div [ class colS2 ]
                         [ p [] [] ]
-                    , div [ class (colS8 "") ]
-                        [ div [ class "w3-bar" ]
-                            [ input
-                                [ class "w3-bar-item w3-border w3-round-large"
-                                , style [ ( "width", "45em" ) ]
-                                , type_ "text"
-                                , placeholder "Tracking Number (e.g. ABC123, IJK456)"
-                                , onInput TrackingIdEntered
-                                ]
-                                []
-                            , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindTrackingId ] [ text "Track! " ]
-                            ]
-                        , div [ class colS2 ]
-                            [ p [] [] ]
-                        ]
-                    , p [] []
                     ]
+                , p [] []
                 ]
+            ]
 
-            Just handlingEvents ->
-                [ div [ class row ]
-                    [ div [ class colS2 ] [ p [] [] ]
-                    , div [ class (colS8 "") ]
-                        [ h2 [] [ text "Tracking Details" ]
-                        , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
-                            [ div [ class "w3-panel w3-blue" ]
-                                [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
-                            , div [ class "w3-panel" ]
-                                [ div [ class "w3-left" ] [ text "Tracking Id:" ]
-                                , div [ class "w3-right" ] [ text "Status:" ]
-                                ]
+        Just handlingEvents ->
+            [ div [ class row ]
+                [ div [ class colS2 ] [ p [] [] ]
+                , div [ class (colS8 "") ]
+                    [ h2 [] [ text "Tracking Details" ]
+                    , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
+                        [ div [ class "w3-panel w3-blue" ]
+                            [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
+                        , div [ class "w3-panel" ]
+                            [ div [ class "w3-left" ] [ text "Tracking Id:" ]
+                            , div [ class "w3-right" ] [ text "Status:" ]
                             ]
                         ]
-                    , div [ class colS2 ] [ p [] [] ]
                     ]
-                , div [ class row ]
-                    [ div [ class colS2 ] [ p [] [] ]
-                    , div [ class (colS8 "w3-padding-small"), style [ ( "background-color", "#fee" ) ] ]
-                        [ h5 [] [ text "Shipment Progress" ] ]
-                    , div [ class colS2 ] [ p [] [] ]
-                    ]
-                , div [ class row ]
-                    [ div [ class colS2 ] [ p [] [] ]
-                    , div [ class (colS8 "") ]
-                        [ viewCustomerEventTable handlingEvents
-                        ]
-                    , div [ class colS2 ] [ p [] [] ]
-                    ]
+                , div [ class colS2 ] [ p [] [] ]
                 ]
+            , div [ class row ]
+                [ div [ class colS2 ] [ p [] [] ]
+                , div [ class (colS8 "w3-padding-small"), style [ ( "background-color", "#fee" ) ] ]
+                    [ h5 [] [ text "Shipment Progress" ] ]
+                , div [ class colS2 ] [ p [] [] ]
+                ]
+            , div [ class row ]
+                [ div [ class colS2 ] [ p [] [] ]
+                , div [ class (colS8 "") ]
+                    [ viewCustomerEventTable handlingEvents
+                    ]
+                , div [ class colS2 ] [ p [] [] ]
+                ]
+            ]
 
 
 viewCustomerEventTable : HandlingEventList -> Html Msg
@@ -222,40 +218,36 @@ viewCustomerEvent handlingEvent =
         ]
 
 
-viewHandler : Model -> List (Html Msg)
-viewHandler model =
-    let
-        handlingEventSource =
-            model.handlingEventSource
-    in
-        [ div [ class row ]
-            [ div [ class colS1 ] [ p [] [] ]
-            , div [ class colS10 ]
-                [ h2 [] [ text "Handling Events List" ] ]
-            , div [ class colS1 ] [ p [] [] ]
-            ]
-        , case handlingEventSource.handlingEventList of
-            Nothing ->
-                div [ class row ]
-                    [ div [ class colS1 ] [ p [] [] ]
-                    , div [ class colS10 ]
-                        [ h5 [] [ text "No Handling Events Available" ] ]
-                    , div [ class colS1 ] [ p [] [] ]
-                    ]
-
-            Just handlingEvents ->
-                div [ class row ]
-                    [ div [ class colS1 ] [ p [] [] ]
-                    , div [ class colS10 ] [ viewHandlingEventTable handlingEvents ]
-                    , div [ class colS1 ] [ p [] [] ]
-                    ]
-        , p [] []
-        , div [ class row ]
-            [ div [ class colS1 ] [ p [] [] ]
-            , div [ class colS10 ] [ button [ class (buttonClassStr ""), onClick PutNewEvent ] [ text "New Handling Event" ] ]
-            , div [ class colS1 ] [ p [] [] ]
-            ]
+viewHandler : HandlingEventSource -> List (Html Msg)
+viewHandler handlingEventSource =
+    [ div [ class row ]
+        [ div [ class colS1 ] [ p [] [] ]
+        , div [ class colS10 ]
+            [ h2 [] [ text "Handling Events List" ] ]
+        , div [ class colS1 ] [ p [] [] ]
         ]
+    , case handlingEventSource.handlingEventList of
+        Nothing ->
+            div [ class row ]
+                [ div [ class colS1 ] [ p [] [] ]
+                , div [ class colS10 ]
+                    [ h5 [] [ text "No Handling Events Available" ] ]
+                , div [ class colS1 ] [ p [] [] ]
+                ]
+
+        Just handlingEvents ->
+            div [ class row ]
+                [ div [ class colS1 ] [ p [] [] ]
+                , div [ class colS10 ] [ viewHandlingEventTable handlingEvents ]
+                , div [ class colS1 ] [ p [] [] ]
+                ]
+    , p [] []
+    , div [ class row ]
+        [ div [ class colS1 ] [ p [] [] ]
+        , div [ class colS10 ] [ button [ class (buttonClassStr ""), onClick PutNewEvent ] [ text "New Handling Event" ] ]
+        , div [ class colS1 ] [ p [] [] ]
+        ]
+    ]
 
 
 viewHandlingEventTable : HandlingEventList -> Html Msg
