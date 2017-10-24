@@ -12,7 +12,14 @@ import Phoenix.Channel
 import Phoenix.Push
 import Date exposing (Date)
 import Date.Format
+
+
+-- SUPPORTING MODULES
+-- Core - common functions
+-- Sytles - various and sundry Attribute class Styles
+
 import Core exposing (..)
+import Styles exposing (..)
 import CustomerPage exposing (..)
 
 
@@ -79,61 +86,6 @@ initWebSocket =
 
 
 -- VIEWS
---- Styles
-
-
-logoStyle : Attribute msg
-logoStyle =
-    style [ ( "display", "inline-block" ), ( "width", "257px" ), ( "height", "88px" ), ( "background-size", " 257px 88px" ) ]
-
-
-trackingStyle : Attribute Msg
-trackingStyle =
-    style [ ( "background-color", "#eee" ), ( "padding-left", "48px" ), ( "padding-right", "48px" ) ]
-
-
-controlClass : String -> String
-controlClass control =
-    control ++ " w3-bar-item w3-border w3-border-orange w3-hover-border-navy w3-round-large  w3-margin-right w3-deep-orange"
-
-
-row : Attribute msg
-row =
-    class "w3-row"
-
-
-colS1 : Attribute msg
-colS1 =
-    class ("w3-col s1")
-
-
-colS2 : Attribute msg
-colS2 =
-    class ("w3-col s2")
-
-
-colS4 : String -> Attribute msg
-colS4 classStr =
-    class ("w3-col s4 " ++ classStr)
-
-
-colS8 : String -> Attribute msg
-colS8 classStr =
-    class ("w3-col s8 " ++ classStr)
-
-
-colS10 : Attribute msg
-colS10 =
-    class ("w3-col s10")
-
-
-buttonClass : String -> Attribute msg
-buttonClass classStr =
-    class ("w3-button w3-round-large w3-deep-orange w3-border-orange w3-hover-border-navy " ++ classStr)
-
-
-
--- view
 
 
 view : Model -> Html Msg
@@ -159,25 +111,25 @@ view model =
 
 viewLogo : Html Msg
 viewLogo =
-    div [ row ]
-        [ div [ colS4 "" ] [ p [] [] ]
-        , div [ colS4 "w3-center" ]
-            [ img [ src "images/ddd_logo.png", logoStyle, onClick Home ] []
+    div [ class row ]
+        [ div [ class (colS4 "") ] [ p [] [] ]
+        , div [ class (colS4 "w3-center") ]
+            [ img [ src "images/ddd_logo.png", style logo, onClick Home ] []
             ]
-        , div [ colS4 "" ] [ p [] [] ]
+        , div [ class (colS4 "") ] [ p [] [] ]
         , p [] []
         ]
 
 
 viewUserChoice : List (Html Msg)
 viewUserChoice =
-    [ div [ row ]
-        [ div [ colS4 "" ] [ p [] [] ]
-        , div [ colS4 "w3-center w3-padding-48", style [ ( "background-color", "#fee" ) ] ]
-            [ button [ buttonClass "w3-margin", onClick CustomerChosen ] [ text "Customers" ]
-            , button [ buttonClass "w3-margin", onClick HandlerChosen ] [ text "Handlers" ]
+    [ div [ class row ]
+        [ div [ class (colS4 "") ] [ p [] [] ]
+        , div [ class (colS4 "w3-center w3-padding-48"), style [ ( "background-color", "#fee" ) ] ]
+            [ button [ class (buttonClassStr "w3-margin"), onClick CustomerChosen ] [ text "Customers" ]
+            , button [ class (buttonClassStr "w3-margin"), onClick HandlerChosen ] [ text "Handlers" ]
             ]
-        , div [ colS4 "" ] [ p [] [] ]
+        , div [ class (colS4 "") ] [ p [] [] ]
         ]
     ]
 
@@ -190,10 +142,10 @@ viewCustomer model =
     in
         case cargo.handlingEventList of
             Nothing ->
-                [ div [ row ]
-                    [ div [ colS2 ]
+                [ div [ class row ]
+                    [ div [ class colS2 ]
                         [ p [] [] ]
-                    , div [ colS8 "" ]
+                    , div [ class (colS8 "") ]
                         [ div [ class "w3-bar" ]
                             [ input
                                 [ class "w3-bar-item w3-border w3-round-large"
@@ -203,9 +155,9 @@ viewCustomer model =
                                 , onInput TrackingIdEntered
                                 ]
                                 []
-                            , button [ buttonClass "w3-bar-item w3-margin-left", onClick FindTrackingId ] [ text "Track! " ]
+                            , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindTrackingId ] [ text "Track! " ]
                             ]
-                        , div [ colS2 ]
+                        , div [ class colS2 ]
                             [ p [] [] ]
                         ]
                     , p [] []
@@ -213,9 +165,9 @@ viewCustomer model =
                 ]
 
             Just handlingEvents ->
-                [ div [ row ]
-                    [ div [ colS2 ] [ p [] [] ]
-                    , div [ colS8 "" ]
+                [ div [ class row ]
+                    [ div [ class colS2 ] [ p [] [] ]
+                    , div [ class (colS8 "") ]
                         [ h2 [] [ text "Tracking Details" ]
                         , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
                             [ div [ class "w3-panel w3-blue" ]
@@ -226,20 +178,20 @@ viewCustomer model =
                                 ]
                             ]
                         ]
-                    , div [ colS2 ] [ p [] [] ]
+                    , div [ class colS2 ] [ p [] [] ]
                     ]
-                , div [ row ]
-                    [ div [ colS2 ] [ p [] [] ]
-                    , div [ colS8 "w3-padding-small", style [ ( "background-color", "#fee" ) ] ]
+                , div [ class row ]
+                    [ div [ class colS2 ] [ p [] [] ]
+                    , div [ class (colS8 "w3-padding-small"), style [ ( "background-color", "#fee" ) ] ]
                         [ h5 [] [ text "Shipment Progress" ] ]
-                    , div [ colS2 ] [ p [] [] ]
+                    , div [ class colS2 ] [ p [] [] ]
                     ]
-                , div [ row ]
-                    [ div [ colS2 ] [ p [] [] ]
-                    , div [ colS8 "" ]
+                , div [ class row ]
+                    [ div [ class colS2 ] [ p [] [] ]
+                    , div [ class (colS8 "") ]
                         [ viewCustomerEventTable handlingEvents
                         ]
-                    , div [ colS2 ] [ p [] [] ]
+                    , div [ class colS2 ] [ p [] [] ]
                     ]
                 ]
 
@@ -276,32 +228,32 @@ viewHandler model =
         handlingEventSource =
             model.handlingEventSource
     in
-        [ div [ row ]
-            [ div [ colS1 ] [ p [] [] ]
-            , div [ colS10 ]
+        [ div [ class row ]
+            [ div [ class colS1 ] [ p [] [] ]
+            , div [ class colS10 ]
                 [ h2 [] [ text "Handling Events List" ] ]
-            , div [ colS1 ] [ p [] [] ]
+            , div [ class colS1 ] [ p [] [] ]
             ]
         , case handlingEventSource.handlingEventList of
             Nothing ->
-                div [ row ]
-                    [ div [ colS1 ] [ p [] [] ]
-                    , div [ colS10 ]
+                div [ class row ]
+                    [ div [ class colS1 ] [ p [] [] ]
+                    , div [ class colS10 ]
                         [ h5 [] [ text "No Handling Events Available" ] ]
-                    , div [ colS1 ] [ p [] [] ]
+                    , div [ class colS1 ] [ p [] [] ]
                     ]
 
             Just handlingEvents ->
-                div [ row ]
-                    [ div [ colS1 ] [ p [] [] ]
-                    , div [ colS10 ] [ viewHandlingEventTable handlingEvents ]
-                    , div [ colS1 ] [ p [] [] ]
+                div [ class row ]
+                    [ div [ class colS1 ] [ p [] [] ]
+                    , div [ class colS10 ] [ viewHandlingEventTable handlingEvents ]
+                    , div [ class colS1 ] [ p [] [] ]
                     ]
         , p [] []
-        , div [ row ]
-            [ div [ colS1 ] [ p [] [] ]
-            , div [ colS10 ] [ button [ buttonClass "", onClick PutNewEvent ] [ text "New Handling Event" ] ]
-            , div [ colS1 ] [ p [] [] ]
+        , div [ class row ]
+            [ div [ class colS1 ] [ p [] [] ]
+            , div [ class colS10 ] [ button [ class (buttonClassStr ""), onClick PutNewEvent ] [ text "New Handling Event" ] ]
+            , div [ class colS1 ] [ p [] [] ]
             ]
         ]
 
