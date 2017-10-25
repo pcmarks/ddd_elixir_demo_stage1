@@ -292,6 +292,7 @@ type Msg
     | TrackingIdEntered String
     | FindTrackingId
     | ReceivedHandlingEvents HandlingEventList
+    | ReceivedAllHandlingEvents HandlingEventList
     | PutNewEvent
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
@@ -352,6 +353,16 @@ update msg model =
             in
                 ( { model | cargo = newCargo }, Cmd.none )
 
+        ReceivedAllHandlingEvents response ->
+            let
+                handlingEventSource =
+                    model.handlingEventSource
+
+                newHandlingEventSource =
+                    HandlingEventSource ListEvents Nothing (Just response)
+            in
+                ( { model | handlingEventSource = newHandlingEventSource }, Cmd.none )
+
         PutNewEvent ->
             ( model, Cmd.none )
 
@@ -400,7 +411,7 @@ getAllHandlingEvents =
         (\result ->
             case result of
                 Ok response ->
-                    ReceivedHandlingEvents response
+                    ReceivedAllHandlingEvents response
 
                 Err httpErr ->
                     HttpError (toString httpErr)
