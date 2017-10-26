@@ -169,7 +169,7 @@ viewCustomer cargo =
                         [ div [ class "w3-panel w3-blue" ]
                             [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
                         , div [ class "w3-panel" ]
-                            [ div [ class "w3-left" ] [ text "Tracking Id:" ]
+                            [ div [ class "w3-left" ] [ text ("Tracking Id: " ++ cargo.trackingId) ]
                             , div [ class "w3-right" ] [ text "Status:" ]
                             ]
                         ]
