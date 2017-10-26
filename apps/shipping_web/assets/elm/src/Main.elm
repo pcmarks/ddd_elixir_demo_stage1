@@ -50,28 +50,28 @@ type alias Model =
 type User
     = None
     | CustomerUser
-    | HandlerUser
+    | ClerkUser
 
 
 type alias HandlingEventSource =
-    { handlingEventSourceMode : HandlerMode
+    { handlingEventSourceMode : ClerkMode
     , newHandlingEvent : Maybe HandlingEvent
     , handlingEventList : Maybe HandlingEventList
     }
 
 
-type HandlerMode
+type ClerkMode
     = ListEvents
     | NewEvent
 
 
 init : ( Model, Cmd msg )
 init =
-    ( Model None initCargo initHandler (initWebSocket), Cmd.none )
+    ( Model None initCargo initClerk (initWebSocket), Cmd.none )
 
 
-initHandler : HandlingEventSource
-initHandler =
+initClerk : HandlingEventSource
+initClerk =
     (HandlingEventSource ListEvents Nothing Nothing)
 
 
@@ -90,8 +90,6 @@ initWebSocket =
 
 view : Model -> Html Msg
 view model =
-    -- div [ class "w3-container w3-center w3-padding-48" ]
-    -- [
     div []
         [ viewLogo
         , p [] []
@@ -103,8 +101,8 @@ view model =
                 CustomerUser ->
                     viewCustomer model.cargo
 
-                HandlerUser ->
-                    viewHandler model.handlingEventSource
+                ClerkUser ->
+                    viewClerk model.handlingEventSource
             )
         ]
 
@@ -124,10 +122,34 @@ viewLogo =
 viewUserChoice : List (Html Msg)
 viewUserChoice =
     [ div [ class row ]
+        [ div [ class (colS3 "") ] [ p [] [] ]
+        , div [ class (colS6 "w3-center") ]
+            [ div []
+                [ h1
+                    [ class ""
+                    , style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
+                    ]
+                    [ text "An Elm/Phoenix Demonstration" ]
+                ]
+            ]
+        ]
+    , div [ class row ]
+        [ div [ class (colS3 "") ] [ p [] [] ]
+        , div [ class (colS6 "w3-center") ]
+            [ div []
+                [ h3
+                    [ class ""
+                    , style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
+                    ]
+                    [ text "Please Choose a User Type" ]
+                ]
+            ]
+        ]
+    , div [ class row ]
         [ div [ class (colS4 "") ] [ p [] [] ]
         , div [ class (colS4 "w3-center w3-padding-48"), style [ ( "background-color", "#fee" ) ] ]
-            [ button [ class (buttonClassStr "w3-margin"), onClick CustomerChosen ] [ text "Customers" ]
-            , button [ class (buttonClassStr "w3-margin"), onClick HandlerChosen ] [ text "Handlers" ]
+            [ button [ class (buttonClassStr "w3-margin"), onClick CustomerChosen ] [ text "Customer" ]
+            , button [ class (buttonClassStr "w3-margin"), onClick ClerkChosen ] [ text "Shipping Clerk" ]
             ]
         , div [ class (colS4 "") ] [ p [] [] ]
         ]
@@ -136,9 +158,42 @@ viewUserChoice =
 
 viewCustomer : Cargo -> List (Html Msg)
 viewCustomer cargo =
+    viewCustomerHeader :: viewCustomerDetail cargo
+
+
+viewCustomerHeader : Html Msg
+viewCustomerHeader =
+    div [ class row ]
+        [ div [ class (colS3 "") ] [ p [] [] ]
+        , div [ class (colS6 "w3-center") ]
+            [ div []
+                [ h1
+                    [ class ""
+                    , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
+                    ]
+                    [ text "Customer" ]
+                ]
+            ]
+        ]
+
+
+viewCustomerDetail : Cargo -> List (Html Msg)
+viewCustomerDetail cargo =
     case cargo.handlingEventList of
         Nothing ->
             [ div [ class row ]
+                [ div [ class (colS3 "") ] [ p [] [] ]
+                , div [ class (colS6 "") ]
+                    [ div []
+                        [ h3
+                            [ class ""
+                            , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
+                            ]
+                            [ text "Enter Your Tracking ID" ]
+                        ]
+                    ]
+                ]
+            , div [ class row ]
                 [ div [ class colS2 ]
                     [ p [] [] ]
                 , div [ class (colS8 "") ]
@@ -164,7 +219,7 @@ viewCustomer cargo =
             [ div [ class row ]
                 [ div [ class colS2 ] [ p [] [] ]
                 , div [ class (colS8 "") ]
-                    [ h2 [] [ text "Tracking Details" ]
+                    [ h2 [] [ text "Cargo Tracking Details" ]
                     , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
                         [ div [ class "w3-panel w3-blue" ]
                             [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
@@ -218,9 +273,21 @@ viewCustomerEvent handlingEvent =
         ]
 
 
-viewHandler : HandlingEventSource -> List (Html Msg)
-viewHandler handlingEventSource =
+viewClerk : HandlingEventSource -> List (Html Msg)
+viewClerk handlingEventSource =
     [ div [ class row ]
+        [ div [ class (colS3 "") ] [ p [] [] ]
+        , div [ class (colS6 "w3-center") ]
+            [ div []
+                [ h1
+                    [ class "w3-wide"
+                    , style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
+                    ]
+                    [ text "Shipping Clerk" ]
+                ]
+            ]
+        ]
+    , div [ class row ]
         [ div [ class colS1 ] [ p [] [] ]
         , div [ class colS10 ]
             [ h2 [] [ text "Handling Events List" ] ]
@@ -288,7 +355,7 @@ type Msg
     = NoOpMsg
     | Home
     | CustomerChosen
-    | HandlerChosen
+    | ClerkChosen
     | TrackingIdEntered String
     | FindTrackingId
     | ReceivedHandlingEvents HandlingEventList
@@ -317,7 +384,7 @@ update msg model =
                 ( { model
                     | user = None
                     , cargo = initCargo
-                    , handlingEventSource = initHandler
+                    , handlingEventSource = initClerk
                     , phxSocket = phxSocket
                   }
                 , Cmd.map PhoenixMsg phxCmd
@@ -329,9 +396,9 @@ update msg model =
         CustomerChosen ->
             ( { model | user = CustomerUser }, Cmd.none )
 
-        HandlerChosen ->
-            -- ( { model | user = HandlerUser }, Cmd.none )
-            ( { model | user = HandlerUser }, getAllHandlingEvents )
+        ClerkChosen ->
+            -- ( { model | user = ClerkUser }, Cmd.none )
+            ( { model | user = ClerkUser }, getAllHandlingEvents )
 
         TrackingIdEntered trackingId ->
             let

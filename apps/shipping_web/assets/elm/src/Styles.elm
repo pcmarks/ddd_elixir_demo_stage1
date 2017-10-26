@@ -31,9 +31,19 @@ colS2 =
     "w3-col s2"
 
 
+colS3 : String -> String
+colS3 str =
+    "w3-col s3 " ++ str
+
+
 colS4 : String -> String
 colS4 str =
     "w3-col s4 " ++ str
+
+
+colS6 : String -> String
+colS6 str =
+    "w3-col s6 " ++ str
 
 
 colS8 : String -> String
