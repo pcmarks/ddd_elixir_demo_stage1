@@ -182,33 +182,27 @@ viewCustomerDetail cargo =
     case cargo.handlingEventList of
         Nothing ->
             [ div [ class row ]
-                [ div [ class (colS3 "") ] [ p [] [] ]
+                [ div [ class (colS3 "") ]
+                    [ p [] [] ]
                 , div [ class (colS6 "") ]
-                    [ div []
-                        [ h3
-                            [ class ""
+                    [ div [ class "w3-bar w3-center" ]
+                        [ span
+                            [ class "w3-bar-item"
                             , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
                             ]
-                            [ text "Enter Your Tracking ID" ]
-                        ]
-                    ]
-                ]
-            , div [ class row ]
-                [ div [ class colS2 ]
-                    [ p [] [] ]
-                , div [ class (colS8 "") ]
-                    [ div [ class "w3-bar" ]
-                        [ input
+                            [ text "Enter your Tracking ID" ]
+                        , input
                             [ class "w3-bar-item w3-border w3-round-large"
-                            , style [ ( "width", "45em" ) ]
+
+                            -- , style [ ( "width", "30em" ) ]
                             , type_ "text"
-                            , placeholder "Tracking Number (e.g. ABC123, IJK456)"
+                            , placeholder "e.g. ABC123, IJK456"
                             , onInput TrackingIdEntered
                             ]
                             []
                         , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindTrackingId ] [ text "Track! " ]
                         ]
-                    , div [ class colS2 ]
+                    , div [ class (colS3 "") ]
                         [ p [] [] ]
                     ]
                 , p [] []
