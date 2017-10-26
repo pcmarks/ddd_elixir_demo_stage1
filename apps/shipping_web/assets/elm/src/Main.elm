@@ -184,8 +184,8 @@ viewCustomerDetail cargo =
             [ div [ class row ]
                 [ div [ class (colS3 "") ]
                     [ p [] [] ]
-                , div [ class (colS6 "") ]
-                    [ div [ class "w3-bar w3-center" ]
+                , div [ class (colS6 "w3-center") ]
+                    [ div [ class "w3-bar" ]
                         [ span
                             [ class "w3-bar-item"
                             , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
@@ -202,8 +202,9 @@ viewCustomerDetail cargo =
                             []
                         , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindTrackingId ] [ text "Track! " ]
                         ]
-                    , div [ class (colS3 "") ]
-                        [ p [] [] ]
+
+                    -- , div [ class colS2 ]
+                    --     [ p [] [] ]
                     ]
                 , p [] []
                 ]
