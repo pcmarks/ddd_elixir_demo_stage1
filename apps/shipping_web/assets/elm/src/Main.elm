@@ -275,19 +275,27 @@ viewCustomerEvent handlingEvent =
 
 viewClerk : HandlingEventSource -> List (Html Msg)
 viewClerk handlingEventSource =
-    [ div [ class row ]
+    viewClerkHeader :: viewClerkDetail handlingEventSource
+
+
+viewClerkHeader : Html Msg
+viewClerkHeader =
+    div [ class row ]
         [ div [ class (colS3 "") ] [ p [] [] ]
         , div [ class (colS6 "w3-center") ]
             [ div []
                 [ h1
-                    [ class "w3-wide"
-                    , style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
+                    [ style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
                     ]
                     [ text "Shipping Clerk" ]
                 ]
             ]
         ]
-    , div [ class row ]
+
+
+viewClerkDetail : HandlingEventSource -> List (Html Msg)
+viewClerkDetail handlingEventSource =
+    [ div [ class row ]
         [ div [ class colS1 ] [ p [] [] ]
         , div [ class colS10 ]
             [ h2 [] [ text "Handling Events List" ] ]
