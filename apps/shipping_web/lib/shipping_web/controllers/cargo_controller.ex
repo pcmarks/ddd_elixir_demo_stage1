@@ -3,17 +3,6 @@ defmodule ShippingWeb.CargoController do
 
   alias Shipping.Cargoes
 
-  # def search(conn, %{"search" => %{"tracking_id" => tracking_id} = params}) do
-  #   case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
-  #     nil ->
-  #       conn
-  #         |> put_flash(:error, "Cargo for #{tracking_id} not found.")
-  #         |> redirect(to: customer_path(conn, :index))
-  #     _ ->
-  #       show(conn, params)
-  #   end
-  # end
-
   def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
     case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
       nil ->

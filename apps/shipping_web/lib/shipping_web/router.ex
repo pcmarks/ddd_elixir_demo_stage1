@@ -14,15 +14,11 @@ defmodule ShippingWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    # get "/customers", CustomerController, :index
-    # post "/customers", CargoController, :search
-    # get "/cargoes", CargoController, :show
-    # get "/handlers", HandlerController, :index
-    # resources "/events", HandlingEventController, only: [:index, :new, :create]
   end
 
   scope "/customers", ShippingWeb do
     pipe_through :browser
+    
     get "/", CustomerController, :index
     get "/cargoes", CargoController, :show
   end
@@ -32,7 +28,6 @@ defmodule ShippingWeb.Router do
 
     get "/", HandlerController, :index
     resources "/events", HandlingEventController, only: [:index, :new, :create]
-
   end
 
   scope "/elm", ShippingWeb do
@@ -40,6 +35,7 @@ defmodule ShippingWeb.Router do
 
     get "/", ElmPageController, :index
   end
+
   # Other scopes may use custom stacks.
   # scope "/api", Stage1Web do
   #   pipe_through :api
