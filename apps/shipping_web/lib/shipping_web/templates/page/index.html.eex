@@ -1,6 +1,8 @@
+<h2 style="text-align: center; color: MidnightBlue;">A Phoenix Demonstration</h2>
+<h3 style="text-align: center; color: MidnightBlue;">Please Choose a User Type</h2>
 <div class="jumbotron">
   <a href="<%= customer_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Customers</a>
-  <a href="<%= handler_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Handlers </a>
+  <a href="<%= handler_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Shipping Clerk </a>
 </div>
 <div>
   <div id="elm-main"></div>
