@@ -14,11 +14,25 @@ defmodule ShippingWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    get "/customers", CustomerController, :index
-    post "/customers", CargoController, :search
+    # get "/customers", CustomerController, :index
+    # post "/customers", CargoController, :search
+    # get "/cargoes", CargoController, :show
+    # get "/handlers", HandlerController, :index
+    # resources "/events", HandlingEventController, only: [:index, :new, :create]
+  end
+
+  scope "/customers", ShippingWeb do
+    pipe_through :browser
+    get "/", CustomerController, :index
     get "/cargoes", CargoController, :show
-    get "/handlers", HandlerController, :index
+  end
+
+  scope "/handlers", ShippingWeb do
+    pipe_through :browser
+
+    get "/", HandlerController, :index
     resources "/events", HandlingEventController, only: [:index, :new, :create]
+
   end
 
   scope "/elm", ShippingWeb do
