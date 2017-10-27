@@ -469,7 +469,7 @@ getHandlingEvents trackingId =
                         Err httpErr ->
                             HttpError (toString httpErr)
                 )
-                (handlingEventsRequest id)
+                (customerCargoRequest id)
 
         Nothing ->
             getAllHandlingEvents
@@ -489,14 +489,20 @@ getAllHandlingEvents =
         allHandlingEventsRequest
 
 
-cargoesUrl : String
-cargoesUrl =
-    phoenixHostPortUrl ++ "/cargoes"
+customersUrl : String
+customersUrl =
+    phoenixHostPortUrl ++ "/customers"
 
 
-handlingEventsRequest : String -> Request HandlingEventList
-handlingEventsRequest id =
-    Http.get (cargoesUrl ++ "?_format=json&tracking_id=" ++ id) handlingEventListDecoder
+customerCargoRequest : String -> Request HandlingEventList
+customerCargoRequest id =
+    Http.get
+        (customersUrl
+            ++ "/cargoes"
+            ++ "?_format=json&cargo_params[tracking_id]="
+            ++ id
+        )
+        handlingEventListDecoder
 
 
 date : Decoder Date
