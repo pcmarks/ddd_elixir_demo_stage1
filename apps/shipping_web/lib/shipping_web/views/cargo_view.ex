@@ -17,7 +17,7 @@ defmodule ShippingWeb.CargoView do
   end
 
   def cargo_to_json(cargo) do
-    %{id: cargo.id, status: cargo.status}
+    %{tracking_id: cargo.tracking_id, status: cargo.status}
   end
 
   def handling_event_to_json(handling_event) do
