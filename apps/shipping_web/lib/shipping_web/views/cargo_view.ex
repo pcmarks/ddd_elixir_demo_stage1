@@ -1,8 +1,12 @@
 defmodule ShippingWeb.CargoView do
   use ShippingWeb, :view
 
+  def render("error.json", %{error_status: error_status}) do
+    %{error_status: error_status}
+  end
+
   def render("show.json", %{cargo: cargo, handling_events: handling_events}) do
-    %{ cargo: cargo_to_json(cargo),
+    %{ error_status: nil, cargo: cargo_to_json(cargo),
     handling_events: Enum.map(handling_events, &handling_event_to_json/1)
     }
   end
