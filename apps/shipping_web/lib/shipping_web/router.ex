@@ -18,16 +18,16 @@ defmodule ShippingWeb.Router do
 
   scope "/customers", ShippingWeb do
     pipe_through :browser
-    
-    get "/", CustomerController, :index
+
     get "/cargoes", CargoController, :show
+    resources "/", CustomerController, only: [:index, :show]
   end
 
   scope "/handlers", ShippingWeb do
     pipe_through :browser
 
-    get "/", HandlerController, :index
     resources "/events", HandlingEventController, only: [:index, :new, :create]
+    get "/", HandlerController, :index
   end
 
   scope "/elm", ShippingWeb do

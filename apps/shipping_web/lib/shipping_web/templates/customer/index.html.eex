@@ -1,4 +1,5 @@
 <div class="jumbotron">
+  <div>Customer Id: <%= @id %></div>
   <%= form_for @conn, cargo_path(@conn, :show), [method: "get", as: :cargo_params], fn f -> %>
     <div class="input-group">
       <%= text_input f, :tracking_id, placeholder: "Tracking Number (e.g. ABC123, IJK456)", class: "form-control" %>
