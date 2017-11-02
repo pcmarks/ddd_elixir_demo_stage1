@@ -3,7 +3,7 @@ defmodule ShippingWeb.CargoController do
 
   alias Shipping.Cargoes
 
-  def show(conn, %{"tracking_id" => tracking_id}) do
+  def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
     case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
       nil ->
         case get_format(conn) do
