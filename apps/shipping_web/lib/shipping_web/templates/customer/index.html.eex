@@ -1,3 +1,4 @@
+<h1 style="color: MidnightBlue;text-align:center;">Customer</h1>
 <div class="jumbotron">
   <%= form_for @conn, cargo_path(@conn, :show), [method: "get", as: :cargo_params], fn f -> %>
     <div class="input-group">
