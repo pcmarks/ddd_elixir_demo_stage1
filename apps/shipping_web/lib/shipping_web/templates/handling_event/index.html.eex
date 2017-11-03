@@ -27,4 +27,4 @@
   </tbody>
 </table>
 
-<a href="<%= handling_event_path(@conn, :new ) %>" role="button" class="btn btn-primary btn-lg">New Handling Event</a>
+<!-- <a href="<%= handling_event_path(@conn, :new ) %>" role="button" class="btn btn-primary btn-lg">New Handling Event</a> -->
