@@ -5,8 +5,8 @@ defmodule ShippingWeb.CustomerController do
     render conn, :index
   end
 
-  def show(conn, %{"id" => id}) do
-    render conn, :index, id: id
+  def show(conn, _params) do
+    render conn, :index
   end
 
 end
