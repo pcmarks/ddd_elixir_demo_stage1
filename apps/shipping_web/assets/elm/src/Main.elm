@@ -54,15 +54,9 @@ type User
 
 
 type alias HandlingEventSource =
-    { handlingEventSourceMode : ClerkMode
-    , newHandlingEvent : Maybe HandlingEvent
+    { newHandlingEvent : Maybe HandlingEvent
     , handlingEventList : Maybe HandlingEventList
     }
-
-
-type ClerkMode
-    = ListEvents
-    | NewEvent
 
 
 init : ( Model, Cmd msg )
@@ -72,7 +66,7 @@ init =
 
 initClerk : HandlingEventSource
 initClerk =
-    (HandlingEventSource ListEvents Nothing Nothing)
+    (HandlingEventSource Nothing Nothing)
 
 
 
@@ -312,11 +306,6 @@ viewClerkDetail handlingEventSource =
                 , div [ class colS1 ] [ p [] [] ]
                 ]
     , p [] []
-    , div [ class row ]
-        [ div [ class colS1 ] [ p [] [] ]
-        , div [ class colS10 ] [ button [ class (buttonClassStr ""), onClick PutNewEvent ] [ text "New Handling Event" ] ]
-        , div [ class colS1 ] [ p [] [] ]
-        ]
     ]
 
 
@@ -363,7 +352,6 @@ type Msg
     | FindTrackingId
     | ReceivedHandlingEvents HandlingEventList
     | ReceivedAllHandlingEvents HandlingEventList
-    | PutNewEvent
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
     | HttpError String
@@ -429,12 +417,9 @@ update msg model =
                     model.handlingEventSource
 
                 newHandlingEventSource =
-                    HandlingEventSource ListEvents Nothing (Just response)
+                    HandlingEventSource Nothing (Just response)
             in
                 ( { model | handlingEventSource = newHandlingEventSource }, Cmd.none )
-
-        PutNewEvent ->
-            ( model, Cmd.none )
 
         PhoenixMsg msg ->
             let
@@ -494,6 +479,11 @@ customersUrl =
     phoenixHostPortUrl ++ "/customers"
 
 
+clerksUrl : String
+clerksUrl =
+    phoenixHostPortUrl ++ "/shipping/clerks"
+
+
 customerCargoRequest : String -> Request HandlingEventList
 customerCargoRequest id =
     Http.get
@@ -520,14 +510,14 @@ date =
         string |> andThen convert
 
 
-handlingEventsUrl : String
-handlingEventsUrl =
-    phoenixHostPortUrl ++ "/events"
+clerkEventsUrl : String
+clerkEventsUrl =
+    phoenixHostPortUrl ++ clerksUrl ++ "/events"
 
 
 allHandlingEventsRequest : Request HandlingEventList
 allHandlingEventsRequest =
-    Http.get (handlingEventsUrl ++ "?_format=json") handlingEventListDecoder
+    Http.get (clerkEventsUrl ++ "?_format=json") handlingEventListDecoder
 
 
 handlingEventListDecoder : Decoder HandlingEventList
