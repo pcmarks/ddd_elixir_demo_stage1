@@ -37,7 +37,7 @@
       <table id="shipment-progress" class="table table-striped">
         <thead>
           <tr class="warning">
-            <th>Voyage</th>
+            <!-- <th>Voyage</th> -->
             <th>Location</th>
             <th>Date</th>
             <th>Local Time</th>
@@ -47,7 +47,7 @@
         <tbody id="handling-events">
           <%= Enum.with_index(@handling_events) |> Enum.map(fn({handling_event, index}) -> %>
           <tr>
-            <td><%= handling_event.voyage %></td>
+            <!-- <td><%= handling_event.voyage %></td> -->
             <td><%= handling_event.location %></td>
             <td id="completion-date-<%= index %>"><%= DateTime.to_date(handling_event.completion_time) %></td>
             <td id="completion-time-<%= index %>"><%= DateTime.to_time(handling_event.completion_time) %></td>

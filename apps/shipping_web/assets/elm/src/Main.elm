@@ -241,8 +241,9 @@ viewCustomerEventTable handlingEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
             [ tr []
-                [ th [] [ text "Voyage No" ]
-                , th [] [ text "Location" ]
+                -- [ th [] [ text "Voyage No" ]
+                [ th [] [ text "Location" ]
+                , th [] [ text "Date" ]
                 , th [] [ text "Local Time" ]
                 , th [] [ text "Type" ]
                 ]
@@ -255,9 +256,10 @@ viewCustomerEventTable handlingEventList =
 viewCustomerEvent : HandlingEvent -> Html Msg
 viewCustomerEvent handlingEvent =
     tr []
-        [ td [] [ text handlingEvent.voyage ]
-        , td [] [ text handlingEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
+        -- [ td [] [ text handlingEvent.voyage ]
+        [ td [] [ text handlingEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d" handlingEvent.completion_time) ]
+        , td [] [ text (Date.Format.format "%H:%M:%S" handlingEvent.completion_time) ]
         , td [] [ text handlingEvent.event_type ]
         ]
 
