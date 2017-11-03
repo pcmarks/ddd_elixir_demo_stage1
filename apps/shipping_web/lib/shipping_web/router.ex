@@ -23,11 +23,13 @@ defmodule ShippingWeb.Router do
     resources "/", CustomerController, only: [:index, :show]
   end
 
-  scope "/handlers", ShippingWeb do
+  scope "/shipping", ShippingWeb do
     pipe_through :browser
 
-    resources "/events", HandlingEventController, only: [:index, :new, :create]
-    get "/", HandlerController, :index
+    scope "/clerks" do
+      resources "/events", HandlingEventController, only: [:index, :new, :create]
+      get "/", ClerkController, :index
+    end
   end
 
   scope "/elm", ShippingWeb do
