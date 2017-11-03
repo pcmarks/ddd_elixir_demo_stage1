@@ -8,20 +8,15 @@
     <meta name="author" content="">
 
     <title>Hello Shipping!</title>
-    <!-- <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>"> -->
-    <!-- Bring in the styles for the Elm version -->
+    <!-- Bring in the styles for the Elm W3CSS version -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
 
   <body>
-    <!-- <%= render @view_module, @view_template, assigns %> -->
     <script src="<%= static_path(@conn, "/js/main.js") %>"></script>
     <script>
       var app = Elm.Main.fullscreen();
-      // const elmDiv = document.getElementById('elm-main'),
-      //               elmApp = Elm.Main.embed(elmDiv);
     </script>
 
   </body>

@@ -176,9 +176,9 @@ viewCustomerDetail cargo =
     case cargo.handlingEventList of
         Nothing ->
             [ div [ class row ]
-                [ div [ class (colS3 "") ]
+                [ div [ class colS2 ]
                     [ p [] [] ]
-                , div [ class (colS6 "w3-center") ]
+                , div [ class (colS8 "w3-center") ]
                     [ div [ class "w3-bar" ]
                         [ span
                             [ class "w3-bar-item"
@@ -229,6 +229,14 @@ viewCustomerDetail cargo =
                     [ viewCustomerEventTable handlingEvents
                     ]
                 , div [ class colS2 ] [ p [] [] ]
+                ]
+            , p [] []
+            , div [ class row ]
+                [ div [ class (colS4 "") ]
+                    [ p [] []
+                    ]
+                , div [ class (colS4 "w3-center") ]
+                    [ button [ class (buttonClassStr "w3-center"), onClick CustomerBack ] [ text "Back" ] ]
                 ]
             ]
 
@@ -346,6 +354,7 @@ type Msg
     = NoOpMsg
     | Home
     | CustomerChosen
+    | CustomerBack
     | ClerkChosen
     | TrackingIdEntered String
     | FindTrackingId
@@ -385,6 +394,13 @@ update msg model =
 
         CustomerChosen ->
             ( { model | user = CustomerUser }, Cmd.none )
+
+        CustomerBack ->
+            let
+                cargo =
+                    initCargo
+            in
+                ( { model | cargo = cargo }, Cmd.none )
 
         ClerkChosen ->
             -- Prefetch all of the Handling Events for the Clerk
