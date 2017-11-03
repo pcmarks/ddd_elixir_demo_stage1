@@ -19,10 +19,11 @@ type alias HandlingEventList =
 
 type alias Cargo =
     { trackingId : String
-    , handlingEventList : Maybe HandlingEventList
+    , status : String
+    , handlingEventList : Maybe (List HandlingEvent)
     }
 
 
 initCargo : Cargo
 initCargo =
-    (Cargo "" Nothing)
+    (Cargo "" "" Nothing)

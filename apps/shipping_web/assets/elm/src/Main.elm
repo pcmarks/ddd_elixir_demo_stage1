@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, id, type_, placeholder, style, src)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (Request)
-import Json.Decode exposing (map, int, string, list, Decoder, andThen, succeed, fail)
+import Json.Decode exposing (map, int, string, list, maybe, Decoder, andThen, succeed, fail)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode
 import Phoenix.Socket
@@ -196,9 +196,6 @@ viewCustomerDetail cargo =
                             []
                         , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindTrackingId ] [ text "Track! " ]
                         ]
-
-                    -- , div [ class colS2 ]
-                    --     [ p [] [] ]
                     ]
                 , p [] []
                 ]
@@ -214,7 +211,7 @@ viewCustomerDetail cargo =
                             [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
                         , div [ class "w3-panel" ]
                             [ div [ class "w3-left" ] [ text ("Tracking Id: " ++ cargo.trackingId) ]
-                            , div [ class "w3-right" ] [ text "Status:" ]
+                            , div [ class "w3-right" ] [ text ("Status: " ++ cargo.status) ]
                             ]
                         ]
                     ]
@@ -236,7 +233,7 @@ viewCustomerDetail cargo =
             ]
 
 
-viewCustomerEventTable : HandlingEventList -> Html Msg
+viewCustomerEventTable : List HandlingEvent -> Html Msg
 viewCustomerEventTable handlingEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
@@ -249,7 +246,7 @@ viewCustomerEventTable handlingEventList =
                 ]
             ]
         , tbody []
-            (List.map viewCustomerEvent handlingEventList.handling_events)
+            (List.map viewCustomerEvent handlingEventList)
         ]
 
 
@@ -352,7 +349,7 @@ type Msg
     | ClerkChosen
     | TrackingIdEntered String
     | FindTrackingId
-    | ReceivedHandlingEvents HandlingEventList
+    | ReceivedCustomerCargo Cargo
     | ReceivedAllHandlingEvents HandlingEventList
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
@@ -396,22 +393,15 @@ update msg model =
         TrackingIdEntered trackingId ->
             let
                 newCargo =
-                    (Cargo trackingId Nothing)
+                    (Cargo trackingId "" Nothing)
             in
                 ( { model | cargo = newCargo }, Cmd.none )
 
         FindTrackingId ->
-            ( model, getHandlingEvents (Just model.cargo.trackingId) )
+            ( model, getCustomerCargo (Just model.cargo.trackingId) )
 
-        ReceivedHandlingEvents response ->
-            let
-                cargo =
-                    model.cargo
-
-                newCargo =
-                    { cargo | handlingEventList = Just response }
-            in
-                ( { model | cargo = newCargo }, Cmd.none )
+        ReceivedCustomerCargo cargo ->
+            ( { model | cargo = cargo }, Cmd.none )
 
         ReceivedAllHandlingEvents response ->
             let
@@ -443,15 +433,15 @@ phoenixHostPortUrl =
     "http://localhost:4000"
 
 
-getHandlingEvents : Maybe String -> Cmd Msg
-getHandlingEvents trackingId =
+getCustomerCargo : Maybe String -> Cmd Msg
+getCustomerCargo trackingId =
     case trackingId of
         Just id ->
             Http.send
                 (\result ->
                     case result of
                         Ok response ->
-                            ReceivedHandlingEvents response
+                            ReceivedCustomerCargo response
 
                         Err httpErr ->
                             HttpError (toString httpErr)
@@ -486,7 +476,7 @@ clerksUrl =
     phoenixHostPortUrl ++ "/shipping/clerks"
 
 
-customerCargoRequest : String -> Request HandlingEventList
+customerCargoRequest : String -> Request Cargo
 customerCargoRequest id =
     Http.get
         (customersUrl
@@ -494,7 +484,46 @@ customerCargoRequest id =
             ++ "?_format=json&cargo_params[tracking_id]="
             ++ id
         )
-        handlingEventListDecoder
+        customerCargoDecoder
+
+
+customerCargoDecoder : Decoder Cargo
+customerCargoDecoder =
+    decode Cargo
+        |> Pipeline.required "tracking_id" string
+        |> Pipeline.required "status" string
+        |> Pipeline.required "handling_events" (maybe (list handlingEventDecoder))
+
+
+clerkEventsUrl : String
+clerkEventsUrl =
+    clerksUrl ++ "/events"
+
+
+allHandlingEventsRequest : Request HandlingEventList
+allHandlingEventsRequest =
+    Http.get (clerkEventsUrl ++ "?_format=json") handlingEventListDecoder
+
+
+foo =
+    (list handlingEventDecoder)
+
+
+handlingEventListDecoder : Decoder HandlingEventList
+handlingEventListDecoder =
+    decode HandlingEventList
+        |> Pipeline.required "handling_events" (list handlingEventDecoder)
+
+
+handlingEventDecoder : Decoder HandlingEvent
+handlingEventDecoder =
+    decode HandlingEvent
+        |> Pipeline.required "voyage" string
+        |> Pipeline.required "type" string
+        |> Pipeline.required "tracking_id" string
+        |> Pipeline.required "registration_time" date
+        |> Pipeline.required "completion_time" date
+        |> Pipeline.required "location" string
 
 
 date : Decoder Date
@@ -510,33 +539,6 @@ date =
                     fail error
     in
         string |> andThen convert
-
-
-clerkEventsUrl : String
-clerkEventsUrl =
-    clerksUrl ++ "/events"
-
-
-allHandlingEventsRequest : Request HandlingEventList
-allHandlingEventsRequest =
-    Http.get (clerkEventsUrl ++ "?_format=json") handlingEventListDecoder
-
-
-handlingEventListDecoder : Decoder HandlingEventList
-handlingEventListDecoder =
-    decode HandlingEventList
-        |> Pipeline.required "handling_events" (Json.Decode.list handlingEventDecoder)
-
-
-handlingEventDecoder : Decoder HandlingEvent
-handlingEventDecoder =
-    decode HandlingEvent
-        |> Pipeline.required "voyage" string
-        |> Pipeline.required "type" string
-        |> Pipeline.required "tracking_id" string
-        |> Pipeline.required "registration_time" date
-        |> Pipeline.required "completion_time" date
-        |> Pipeline.required "location" string
 
 
 
