@@ -388,7 +388,7 @@ update msg model =
             ( { model | user = CustomerUser }, Cmd.none )
 
         ClerkChosen ->
-            -- ( { model | user = ClerkUser }, Cmd.none )
+            -- Prefetch all of the Handling Events for the Clerk
             ( { model | user = ClerkUser }, getAllHandlingEvents )
 
         TrackingIdEntered trackingId ->
@@ -512,7 +512,7 @@ date =
 
 clerkEventsUrl : String
 clerkEventsUrl =
-    phoenixHostPortUrl ++ clerksUrl ++ "/events"
+    clerksUrl ++ "/events"
 
 
 allHandlingEventsRequest : Request HandlingEventList
