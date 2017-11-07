@@ -33,7 +33,7 @@ The Elm code (so far) is in the file:
 
 `ddd_elixir_demo_stage1/apps/shipping_web/assets/elm/src/Main.elm`
 
-The Phoenix build facility will compile this file, automatically, when it is changed.
+Instead of relying on brunch (we have had problems with compiling multiple dependent Elm modules), the elm-compile batch or shell script can be run from the elm directory.
 
 ## Stage 1 Description
 The function of Cargo Tracking is the focus of this stage. Customers can follow the progress of the cargo as it is handled by Cargo Handlers. Cargo Handlers are  organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
@@ -86,14 +86,19 @@ Next, obtain this repository.
 2. $ mix phx.server
 
 ### Using the web application
-The application is configured to be run by users acting in two roles: Customers and Cargo Handlers. For a complete demonstration, open two browser windows, one for each type of user.
+The application is configured to be run by users acting in two roles: Customers and Shipping Clerks.
+
+Two separate methods are used to generate the web content: Phoenix (Views and Templates) and Elm. Each is accessed using a different URL. For Phoenix, use [localhost:4000](localhost:4000) and for the Elm version use [localhost:4000/elm](localhost:4000/elm)
+
+These URLs will bring you to the respective home page. From this point on, the UI is exactly the same for both versions.
 
 #### Customers
 
-In one browser window, access the application with this url: [localhost:4000](localhost:4000). Click on the _Customers_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
+From the home page, click on the _Customers_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
 
-#### Handlers
-In the other browser window, access the application again by going to [localhost:4000](localhost:4000). Click on _Handlers_. A list of Handling Events will appear. At the bottom of the page, click on the New Handling Event button. Enter data for a new event making sure you use this tracking number: 'ABC123'. When this new event is submitted, it will appear in this page's list of events and appear in the Customer's list of events in the other browser's window.
+#### Shipping Clerks
+
+From the home page, click on _Shipping Clerk_. A list of all Handling Events will appear.
 
 ### Data Storage
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries in these files can be deleted if you wish to start from scratch and they can be added to with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
