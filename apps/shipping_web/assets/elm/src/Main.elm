@@ -167,7 +167,7 @@ viewCustomerError model =
             [ div [ class row ]
                 [ div [ class (colS3 "") ] [ p [] [] ]
                 , div [ class (colS6 "w3-center") ]
-                    [ h3 [] [ span [ class "w3-yellow" ] [ text message ] ] ]
+                    [ h3 [] [ span [ class "w3-light-blue" ] [ text message ] ] ]
                 ]
             , div [] [ p [] [] ]
             ]
