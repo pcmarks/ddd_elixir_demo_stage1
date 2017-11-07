@@ -6,19 +6,17 @@ defmodule ShippingWeb.CargoView do
   end
 
   def render("show.json", %{cargo: cargo, handling_events: handling_events}) do
-    %{tracking_id: cargo.tracking_id,
-      status: cargo.status,
-      handling_events:
-        case List.first(handling_events) do
-          nil -> nil
-          _ ->
-            Enum.map(handling_events, &handling_event_to_json/1)
-        end
+    %{cargo:
+      %{tracking_id: cargo.tracking_id,
+        status: cargo.status,
+        handling_events:
+          case List.first(handling_events) do
+            nil -> nil
+            _ ->
+              Enum.map(handling_events, &handling_event_to_json/1)
+          end
+      }
     }
-  end
-
-  def cargo_to_json(cargo) do
-    %{tracking_id: cargo.tracking_id, status: cargo.status}
   end
 
   def handling_event_to_json(handling_event) do

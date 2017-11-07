@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, id, type_, placeholder, style, src)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (Request)
-import Json.Decode exposing (map, int, string, list, maybe, Decoder, andThen, succeed, fail)
+import Json.Decode exposing (Decoder, andThen, fail, int, list, maybe, map, oneOf, string, succeed)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode
 import Date exposing (Date)
@@ -39,6 +39,7 @@ main =
 type alias Model =
     { user : User
     , cargo : Cargo
+    , cargoErrorMessage : Maybe String
     , handlingEventSource : HandlingEventSource
     }
 
@@ -57,7 +58,7 @@ type alias HandlingEventSource =
 
 init : ( Model, Cmd msg )
 init =
-    ( Model None initCargo initClerk, Cmd.none )
+    ( Model None initCargo Nothing initClerk, Cmd.none )
 
 
 initClerk : HandlingEventSource
@@ -80,7 +81,7 @@ view model =
                     viewUserChoice
 
                 CustomerUser ->
-                    viewCustomer model.cargo
+                    viewCustomer model
 
                 ClerkUser ->
                     viewClerk model.handlingEventSource
@@ -137,14 +138,14 @@ viewUserChoice =
     ]
 
 
-viewCustomer : Cargo -> List (Html Msg)
-viewCustomer cargo =
-    viewCustomerHeader :: viewCustomerDetail cargo
+viewCustomer : Model -> List (Html Msg)
+viewCustomer model =
+    List.concat [ viewCustomerHeader, viewCustomerError model, viewCustomerDetail model.cargo ]
 
 
-viewCustomerHeader : Html Msg
+viewCustomerHeader : List (Html Msg)
 viewCustomerHeader =
-    div [ class row ]
+    [ div [ class row ]
         [ div [ class (colS3 "") ] [ p [] [] ]
         , div [ class (colS6 "w3-center") ]
             [ div []
@@ -156,6 +157,23 @@ viewCustomerHeader =
                 ]
             ]
         ]
+    ]
+
+
+viewCustomerError : Model -> List (Html Msg)
+viewCustomerError model =
+    case model.cargoErrorMessage of
+        Just message ->
+            [ div [ class row ]
+                [ div [ class (colS3 "") ] [ p [] [] ]
+                , div [ class (colS6 "w3-center") ]
+                    [ h3 [] [ span [ class "w3-yellow" ] [ text message ] ] ]
+                ]
+            , div [] [ p [] [] ]
+            ]
+
+        Nothing ->
+            []
 
 
 viewCustomerDetail : Cargo -> List (Html Msg)
@@ -345,7 +363,7 @@ type Msg
     | ClerkChosen
     | TrackingIdEntered String
     | FindTrackingId
-    | ReceivedCustomerCargo Cargo
+    | ReceivedCustomerCargo CargoResponse
     | ReceivedAllHandlingEvents HandlingEventList
     | JoinedChannel String
     | HttpError String
@@ -393,8 +411,13 @@ update msg model =
         FindTrackingId ->
             ( model, getCustomerCargo (Just model.cargo.trackingId) )
 
-        ReceivedCustomerCargo cargo ->
-            ( { model | cargo = cargo }, Cmd.none )
+        ReceivedCustomerCargo cargoResponse ->
+            case cargoResponse of
+                CargoResponseValid cargo ->
+                    ( { model | cargo = cargo, cargoErrorMessage = Nothing }, Cmd.none )
+
+                CargoResponseError cargoErrorMessage ->
+                    ( { model | cargo = initCargo, cargoErrorMessage = Just cargoErrorMessage }, Cmd.none )
 
         ReceivedAllHandlingEvents response ->
             let
@@ -411,7 +434,7 @@ update msg model =
 
 
 
--- SERVER (PHOENIX APP) INTERFACE
+-- SERVER (PHOENIX APP) INTERFACE - REQUESTS AND DECODERS
 
 
 phoenixHostPortUrl : String
@@ -462,7 +485,7 @@ clerksUrl =
     phoenixHostPortUrl ++ "/shipping/clerks"
 
 
-customerCargoRequest : String -> Request Cargo
+customerCargoRequest : String -> Request CargoResponse
 customerCargoRequest id =
     Http.get
         (customersUrl
@@ -470,15 +493,64 @@ customerCargoRequest id =
             ++ "?_format=json&cargo_params[tracking_id]="
             ++ id
         )
-        customerCargoDecoder
+        cargoResponseDecoder
 
 
-customerCargoDecoder : Decoder Cargo
-customerCargoDecoder =
+
+-- Cargo Request Responses
+
+
+type CargoResponse
+    = CargoResponseError String
+    | CargoResponseValid Cargo
+
+
+cargoResponseDecoder =
+    oneOf [ validCargoDecoder, errorCargoDecoder ]
+
+
+
+-- Valid Cargo response
+
+
+type alias CargoValidResponse =
+    { cargo : Cargo }
+
+
+validCargoDecoder =
+    Json.Decode.map (\response -> CargoResponseValid response.cargo)
+        cargoValidResponseDecoder
+
+
+cargoValidResponseDecoder =
+    decode CargoValidResponse
+        |> (required "cargo" cargoDecoder)
+
+
+cargoDecoder : Decoder Cargo
+cargoDecoder =
     decode Cargo
         |> Pipeline.required "tracking_id" string
         |> Pipeline.required "status" string
         |> Pipeline.required "handling_events" (maybe (list handlingEventDecoder))
+
+
+
+-- Cargo Error response
+
+
+type alias CargoErrorResponse =
+    { errorStatus : String }
+
+
+errorCargoDecoder =
+    Json.Decode.map (\response -> CargoResponseError response.errorStatus)
+        cargoErrorResponseDecoder
+
+
+cargoErrorResponseDecoder =
+    decode CargoErrorResponse
+        |> (required "error_status" string)
 
 
 clerkEventsUrl : String
