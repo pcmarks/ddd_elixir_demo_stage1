@@ -7,9 +7,6 @@ import Http exposing (Request)
 import Json.Decode exposing (map, int, string, list, maybe, Decoder, andThen, succeed, fail)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode
-import Phoenix.Socket
-import Phoenix.Channel
-import Phoenix.Push
 import Date exposing (Date)
 import Date.Format
 
@@ -31,7 +28,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = always Sub.none
         }
 
 
@@ -43,7 +40,6 @@ type alias Model =
     { user : User
     , cargo : Cargo
     , handlingEventSource : HandlingEventSource
-    , phxSocket : Phoenix.Socket.Socket Msg
     }
 
 
@@ -61,21 +57,12 @@ type alias HandlingEventSource =
 
 init : ( Model, Cmd msg )
 init =
-    ( Model None initCargo initClerk (initWebSocket), Cmd.none )
+    ( Model None initCargo initClerk, Cmd.none )
 
 
 initClerk : HandlingEventSource
 initClerk =
     (HandlingEventSource Nothing Nothing)
-
-
-
--- initWebSocket : Phoenix.Socket.Socket Msg
-
-
-initWebSocket : Phoenix.Socket.Socket msg
-initWebSocket =
-    Phoenix.Socket.init phoenixWSUrl
 
 
 
@@ -360,7 +347,6 @@ type Msg
     | FindTrackingId
     | ReceivedCustomerCargo Cargo
     | ReceivedAllHandlingEvents HandlingEventList
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | JoinedChannel String
     | HttpError String
 
@@ -372,22 +358,13 @@ update msg model =
             ( model, Cmd.none )
 
         Home ->
-            let
-                channel =
-                    Phoenix.Channel.init "handling_event:*"
-                        |> Phoenix.Channel.onJoin (always (JoinedChannel "handling_event:*"))
-
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.join channel model.phxSocket
-            in
-                ( { model
-                    | user = None
-                    , cargo = initCargo
-                    , handlingEventSource = initClerk
-                    , phxSocket = phxSocket
-                  }
-                , Cmd.map PhoenixMsg phxCmd
-                )
+            ( { model
+                | user = None
+                , cargo = initCargo
+                , handlingEventSource = initClerk
+              }
+            , Cmd.none
+            )
 
         JoinedChannel channelName ->
             ( model, Cmd.none )
@@ -428,13 +405,6 @@ update msg model =
                     HandlingEventSource Nothing (Just response)
             in
                 ( { model | handlingEventSource = newHandlingEventSource }, Cmd.none )
-
-        PhoenixMsg msg ->
-            let
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.update msg model.phxSocket
-            in
-                ( { model | phxSocket = phxSocket }, Cmd.map PhoenixMsg phxCmd )
 
         HttpError errorString ->
             ( model, Cmd.none )
@@ -555,21 +525,3 @@ date =
                     fail error
     in
         string |> andThen convert
-
-
-
--- SERVER (WEB SOCKET) INTERFACE
-
-
-phoenixWSUrl : String
-phoenixWSUrl =
-    "ws:" ++ phoenixHostPortUrl ++ "/socket/websocket"
-
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Phoenix.Socket.listen model.phxSocket PhoenixMsg
