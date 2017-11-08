@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Dom
 import Html exposing (..)
 import Html.Attributes exposing (class, id, type_, placeholder, style, src)
 import Html.Events exposing (onClick, onInput)
@@ -7,6 +8,7 @@ import Http exposing (Request)
 import Json.Decode exposing (Decoder, andThen, fail, int, list, maybe, map, oneOf, string, succeed)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode
+import Task exposing (perform)
 import Date exposing (Date)
 import Date.Format
 
@@ -194,6 +196,7 @@ viewCustomerDetail cargo =
                             [ class "w3-bar-item w3-border w3-round-large"
 
                             -- , style [ ( "width", "30em" ) ]
+                            , id focusElement
                             , type_ "text"
                             , placeholder "e.g. ABC123, IJK456"
                             , onInput TrackingIdEntered
@@ -367,6 +370,8 @@ type Msg
     | ReceivedAllHandlingEvents HandlingEventList
     | JoinedChannel String
     | HttpError String
+    | CustomerQueryFocusOk
+    | CustomerQueryFocusNotOk
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -388,7 +393,22 @@ update msg model =
             ( model, Cmd.none )
 
         CustomerChosen ->
-            ( { model | user = CustomerUser }, Cmd.none )
+            let
+                setFocus result =
+                    case result of
+                        Ok _ ->
+                            CustomerQueryFocusOk
+
+                        Err _ ->
+                            CustomerQueryFocusNotOk
+            in
+                ( { model | user = CustomerUser }, Task.attempt setFocus (Dom.focus focusElement) )
+
+        CustomerQueryFocusOk ->
+            ( model, Cmd.none )
+
+        CustomerQueryFocusNotOk ->
+            ( model, Cmd.none )
 
         CustomerBack ->
             let

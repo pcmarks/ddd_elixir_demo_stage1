@@ -1,5 +1,15 @@
 module Styles exposing (..)
 
+import Dom exposing (Id)
+
+
+-- The identifier of the element to focus on
+
+
+focusElement : Id
+focusElement =
+    "customer-query"
+
 
 logo : List ( String, String )
 logo =
