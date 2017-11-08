@@ -363,7 +363,7 @@ type Msg
     | ClerkChosen
     | TrackingIdEntered String
     | FindTrackingId
-    | ReceivedCustomerCargo CargoResponse
+    | ReceivedCargo CargoResponse
     | ReceivedAllHandlingEvents HandlingEventList
     | JoinedChannel String
     | HttpError String
@@ -409,9 +409,9 @@ update msg model =
                 ( { model | cargo = newCargo }, Cmd.none )
 
         FindTrackingId ->
-            ( model, getCustomerCargo (Just model.cargo.trackingId) )
+            ( model, getCargo (Just model.cargo.trackingId) )
 
-        ReceivedCustomerCargo cargoResponse ->
+        ReceivedCargo cargoResponse ->
             case cargoResponse of
                 CargoResponseValid cargo ->
                     ( { model | cargo = cargo, cargoErrorMessage = Nothing }, Cmd.none )
@@ -442,20 +442,20 @@ phoenixHostPortUrl =
     "http://localhost:4000"
 
 
-getCustomerCargo : Maybe String -> Cmd Msg
-getCustomerCargo trackingId =
+getCargo : Maybe String -> Cmd Msg
+getCargo trackingId =
     case trackingId of
         Just id ->
             Http.send
                 (\result ->
                     case result of
                         Ok response ->
-                            ReceivedCustomerCargo response
+                            ReceivedCargo response
 
                         Err httpErr ->
                             HttpError (toString httpErr)
                 )
-                (customerCargoRequest id)
+                (cargoRequest id)
 
         Nothing ->
             getAllHandlingEvents
@@ -485,8 +485,8 @@ clerksUrl =
     phoenixHostPortUrl ++ "/shipping/clerks"
 
 
-customerCargoRequest : String -> Request CargoResponse
-customerCargoRequest id =
+cargoRequest : String -> Request CargoResponse
+cargoRequest id =
     Http.get
         (customersUrl
             ++ "/cargoes"
