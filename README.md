@@ -77,7 +77,7 @@ Perform all of these steps in order:
 
 The last Elm step will download Elm packages and compile the Elm code.
 
-**A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. One of the elm-compile script must be run instead.
+**A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. You can use of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm files is saved.
 
 ### Running the web application
 1. $ cd ddd_elixir_demo_stage1
@@ -85,17 +85,17 @@ The last Elm step will download Elm packages and compile the Elm code.
 
 ### Using the web application
 
-Two separate methods are used to generate the web content: Phoenix (Views and Templates) and Elm. Each is accessed using a different URL. For Phoenix, use [localhost:4000](localhost:4000) and for the Elm version use [localhost:4000/elm](localhost:4000/elm). Both of these URLs will bring you to the demo's home page. From this point on, the UI looks (except for some color difference) and behaves exactly the same for both versions.
+Two separate methods are used to generate the web content: Phoenix (Views and Templates) and Elm. Each is accessed using a different URL. For Phoenix, use [localhost:4000](localhost:4000) and for the Elm version use [localhost:4000/elm](localhost:4000/elm). Both of these URLs will bring you to the demo's home page. From this point on, the UI looks and behaves (except for some color differences, button sizes, etc.) exactly the same for both versions.
 
 The application is designed for two different types of users: Customers and Shipping Clerks.
 
 #### Customers
 
-From the home page, click on the _Customers_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
+Customers are those people that wish to find the status of their cargoes. From the home page, click on the _Customers_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
 
 #### Shipping Clerks
 
-From the home page, click on _Shipping Clerk_. A list of all Handling Events will appear.
+Shipping Clerks work for the Shipping company and are interested in seeing all of the cargoes being managed. From the home page, click on _Shipping Clerk_. A list of all Handling Events will appear.
 
 ### Data Storage
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries in these files can be deleted if you wish to start from scratch and they can be added to with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
