@@ -374,6 +374,21 @@ type Msg
     | CustomerQueryFocusNotOk
 
 
+
+-- setFocus is used to bring the key input focus for an input element.
+-- There are three uses of it for the Customer functionality
+
+
+setFocus : Result error value -> Msg
+setFocus result =
+    case result of
+        Ok _ ->
+            CustomerQueryFocusOk
+
+        Err _ ->
+            CustomerQueryFocusNotOk
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -393,16 +408,7 @@ update msg model =
             ( model, Cmd.none )
 
         CustomerChosen ->
-            let
-                setFocus result =
-                    case result of
-                        Ok _ ->
-                            CustomerQueryFocusOk
-
-                        Err _ ->
-                            CustomerQueryFocusNotOk
-            in
-                ( { model | user = CustomerUser }, Task.attempt setFocus (Dom.focus focusElement) )
+            ( { model | user = CustomerUser }, Task.attempt setFocus (Dom.focus focusElement) )
 
         CustomerQueryFocusOk ->
             ( model, Cmd.none )
@@ -415,7 +421,7 @@ update msg model =
                 cargo =
                     initCargo
             in
-                ( { model | cargo = cargo }, Cmd.none )
+                ( { model | cargo = cargo }, Task.attempt setFocus (Dom.focus focusElement) )
 
         ClerkChosen ->
             -- Prefetch all of the Handling Events for the Clerk
@@ -437,7 +443,7 @@ update msg model =
                     ( { model | cargo = cargo, cargoErrorMessage = Nothing }, Cmd.none )
 
                 CargoResponseError cargoErrorMessage ->
-                    ( { model | cargo = initCargo, cargoErrorMessage = Just cargoErrorMessage }, Cmd.none )
+                    ( { model | cargo = initCargo, cargoErrorMessage = Just cargoErrorMessage }, Task.attempt setFocus (Dom.focus focusElement) )
 
         ReceivedAllHandlingEvents response ->
             let
