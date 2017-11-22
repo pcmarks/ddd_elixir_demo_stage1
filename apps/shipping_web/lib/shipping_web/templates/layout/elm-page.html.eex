@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <script src="<%= static_path(@conn, "/js/App.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script>
       var app = Elm.App.fullscreen();
     </script>

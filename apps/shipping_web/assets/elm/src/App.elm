@@ -1,6 +1,15 @@
 module App exposing (main)
 
 import Html exposing (..)
+import Html.Attributes exposing (class, id, type_, placeholder, style, src)
+import Html.Events exposing (onClick)
+
+
+{--
+Local Inports
+--}
+
+import Styles exposing (..)
 
 
 -- MAIN Entry Point of Application
@@ -39,7 +48,7 @@ init =
 
 
 type Msg
-    = DemoHomeChosen
+    = BackToDemo
     | ClerkChosen
     | ClerkMsg
     | SysOpsChosen
@@ -48,7 +57,12 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        BackToDemo ->
+            ( { model | user = NoUser }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 
@@ -57,7 +71,94 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [] [ text "App Page" ]
+    div []
+        [ viewLogo
+        , p [] []
+        , div []
+            [ case model.user of
+                NoUser ->
+                    viewUserChoice
+
+                ClerkUser ->
+                    div []
+                        [ text "CLERK"
+                        , viewBackToDemo
+                        ]
+
+                -- Clerk.view model.user
+                SysOpsUser ->
+                    div []
+                        [ text "SYSOPS"
+                        , viewBackToDemo
+                        ]
+
+            -- SysOps.view model.user
+            ]
+        ]
+
+
+viewLogo : Html Msg
+viewLogo =
+    div [ class row ]
+        [ div [ class (colS4 "") ] [ p [] [] ]
+        , div [ class (colS4 "w3-center") ]
+            [ img [ src "images/ddd_logo.png", style logo, onClick BackToDemo ] []
+            ]
+        , div [ class (colS4 "") ] [ p [] [] ]
+        , p [] []
+        ]
+
+
+viewUserChoice : Html Msg
+viewUserChoice =
+    div []
+        [ div [ class row ]
+            [ div [ class (colS3 "") ] [ p [] [] ]
+            , div [ class (colS6 "w3-center") ]
+                [ div []
+                    [ h1
+                        [ class ""
+                        , style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
+                        ]
+                        [ text "An Elm/Phoenix Demonstration" ]
+                    ]
+                ]
+            ]
+        , div [ class row ]
+            [ div [ class (colS3 "") ] [ p [] [] ]
+            , div [ class (colS6 "w3-center") ]
+                [ div []
+                    [ h3
+                        [ class ""
+                        , style [ ( "font", "bolder" ), ( "color", "MidnightBlue" ) ]
+                        ]
+                        [ text "Please Choose a User Type" ]
+                    ]
+                ]
+            ]
+        , div [ class row ]
+            [ div [ class (colS4 "") ] [ p [] [] ]
+            , div [ class (colS4 "w3-center w3-padding-48"), style [ ( "background-color", "#fee" ) ] ]
+                [ button [ class (buttonClassStr "w3-margin"), onClick ClerkChosen ] [ text "Clerk" ]
+                , button [ class (buttonClassStr "w3-margin"), onClick SysOpsChosen ] [ text "Sys Ops Manager" ]
+                ]
+            , div [ class (colS4 "") ] [ p [] [] ]
+            ]
+        ]
+
+
+viewBackToDemo : Html Msg
+viewBackToDemo =
+    div []
+        [ p [] []
+        , div [ class row ]
+            [ div [ class (colS4 "") ]
+                [ p [] []
+                ]
+            , div [ class (colS4 "w3-center") ]
+                [ button [ class (buttonClassStr "w3-center"), onClick BackToDemo ] [ text "Back" ] ]
+            ]
+        ]
 
 
 
