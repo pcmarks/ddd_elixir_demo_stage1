@@ -42,15 +42,15 @@ update msg model =
         RestMsg restMsg ->
             case restMsg of
                 Rest.ReceivedCargo response ->
-                    case response of
-                        Shipping.CargoFound cargo ->
-                            ( { model | message = Just "FOUND CARGO!" }, Cmd.none )
+                    ( { model | cargoResponse = Just response }, Cmd.none )
 
-                        Shipping.CargoNotFound message ->
-                            ( { model | message = Just message }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+                Rest.HttpError message ->
+                    ( { model
+                        | message = Just message
+                        , cargoResponse = Nothing
+                      }
+                    , Cmd.none
+                    )
 
 
 view : Model -> Html Msg
