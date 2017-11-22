@@ -10,13 +10,14 @@ type CargoResponse
 
 type alias Cargo =
     { trackingId : String
+    , status : String
     , handlingEventsList : Maybe (List HandlingEvent)
     }
 
 
 initCargo : Cargo
 initCargo =
-    (Cargo "" Nothing)
+    (Cargo "" "" Nothing)
 
 
 type alias HandlingEvent =

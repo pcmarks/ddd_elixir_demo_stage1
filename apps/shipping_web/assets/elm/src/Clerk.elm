@@ -8,6 +8,7 @@ import Html.Events exposing (onClick, onInput)
 -- Local Imports
 
 import Shipping
+import Rest
 import Styles exposing (..)
 
 
@@ -26,6 +27,7 @@ init =
 type Msg
     = TrackingIdEntered String
     | FindCargo
+    | RestMsg Rest.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -35,7 +37,20 @@ update msg model =
             ( { model | trackingId = String.toUpper trackingId }, Cmd.none )
 
         FindCargo ->
-            ( model, Cmd.none )
+            ( model, Cmd.map RestMsg (Rest.findCargo model.trackingId) )
+
+        RestMsg restMsg ->
+            case restMsg of
+                Rest.ReceivedCargo response ->
+                    case response of
+                        Shipping.CargoFound cargo ->
+                            ( { model | message = Just "FOUND CARGO!" }, Cmd.none )
+
+                        Shipping.CargoNotFound message ->
+                            ( { model | message = Just message }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 view : Model -> Html Msg
