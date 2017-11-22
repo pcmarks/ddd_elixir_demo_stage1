@@ -1,5 +1,5 @@
 {
   "commands": [
-    "**/src/*.elm : elm-make --yes --output ../../priv/static/js/elm.js src/Main.elm"
+    "**/src/*.elm : elm-make --yes --output ../../priv/static/js/App.js src/App.elm"
   ]
 }
