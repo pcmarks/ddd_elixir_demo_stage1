@@ -9,6 +9,7 @@ import Html.Events exposing (onClick)
 Local Inports
 --}
 
+import Clerk exposing (Model, init, view)
 import Styles exposing (..)
 
 
@@ -30,7 +31,7 @@ main =
 
 type User
     = NoUser
-    | ClerkUser
+    | ClerkUser Clerk.Model
     | SysOpsUser
 
 
@@ -50,7 +51,7 @@ init =
 type Msg
     = BackToDemo
     | ClerkChosen
-    | ClerkMsg
+    | ClerkMsg Clerk.Msg
     | SysOpsChosen
     | SysOpsMsg
 
@@ -60,6 +61,9 @@ update msg model =
     case msg of
         BackToDemo ->
             ( { model | user = NoUser }, Cmd.none )
+
+        ClerkChosen ->
+            ( { model | user = ClerkUser Clerk.init }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -79,9 +83,9 @@ view model =
                 NoUser ->
                     viewUserChoice
 
-                ClerkUser ->
+                ClerkUser clerkModel ->
                     div []
-                        [ text "CLERK"
+                        [ Html.map ClerkMsg (Clerk.view clerkModel)
                         , viewBackToDemo
                         ]
 
@@ -102,7 +106,12 @@ viewLogo =
     div [ class row ]
         [ div [ class (colS4 "") ] [ p [] [] ]
         , div [ class (colS4 "w3-center") ]
-            [ img [ src "images/ddd_logo.png", style logo, onClick BackToDemo ] []
+            [ img
+                [ src "images/ddd_logo.png"
+                , style logo
+                , onClick BackToDemo
+                ]
+                []
             ]
         , div [ class (colS4 "") ] [ p [] [] ]
         , p [] []
@@ -138,9 +147,20 @@ viewUserChoice =
             ]
         , div [ class row ]
             [ div [ class (colS4 "") ] [ p [] [] ]
-            , div [ class (colS4 "w3-center w3-padding-48"), style [ ( "background-color", "#fee" ) ] ]
-                [ button [ class (buttonClassStr "w3-margin"), onClick ClerkChosen ] [ text "Clerk" ]
-                , button [ class (buttonClassStr "w3-margin"), onClick SysOpsChosen ] [ text "Sys Ops Manager" ]
+            , div
+                [ class (colS4 "w3-center w3-padding-48")
+                , style [ ( "background-color", "#fee" ) ]
+                ]
+                [ button
+                    [ class (buttonClassStr "w3-margin")
+                    , onClick ClerkChosen
+                    ]
+                    [ text "Clerk" ]
+                , button
+                    [ class (buttonClassStr "w3-margin")
+                    , onClick SysOpsChosen
+                    ]
+                    [ text "Sys Ops Manager" ]
                 ]
             , div [ class (colS4 "") ] [ p [] [] ]
             ]
@@ -156,7 +176,12 @@ viewBackToDemo =
                 [ p [] []
                 ]
             , div [ class (colS4 "w3-center") ]
-                [ button [ class (buttonClassStr "w3-center"), onClick BackToDemo ] [ text "Back" ] ]
+                [ button
+                    [ class (buttonClassStr "w3-center")
+                    , onClick BackToDemo
+                    ]
+                    [ text "Back" ]
+                ]
             ]
         ]
 
