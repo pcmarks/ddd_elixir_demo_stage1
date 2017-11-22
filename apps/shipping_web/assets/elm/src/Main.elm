@@ -191,7 +191,7 @@ viewCustomerDetail cargo =
                             [ class "w3-bar-item"
                             , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
                             ]
-                            [ text "Enter your Tracking ID" ]
+                            [ text "Enter your Tracking ID:" ]
                         , input
                             [ class "w3-bar-item w3-border w3-round-large"
 

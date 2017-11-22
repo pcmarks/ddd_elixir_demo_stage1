@@ -1,4 +1,4 @@
-module App exposing (main)
+module AppUI exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, type_, placeholder, style, src)
@@ -31,17 +31,19 @@ main =
 
 type User
     = NoUser
-    | ClerkUser Clerk.Model
+    | ClerkUser
     | SysOpsUser
 
 
 type alias Model =
-    { user : User }
+    { user : User
+    , clerkModel : Clerk.Model
+    }
 
 
 init : Model
 init =
-    Model NoUser
+    Model NoUser Clerk.init
 
 
 
@@ -60,10 +62,17 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         BackToDemo ->
-            ( { model | user = NoUser }, Cmd.none )
+            ( { model | user = NoUser, clerkModel = Clerk.init }, Cmd.none )
 
         ClerkChosen ->
-            ( { model | user = ClerkUser Clerk.init }, Cmd.none )
+            ( { model | user = ClerkUser }, Cmd.none )
+
+        ClerkMsg clerkMsg ->
+            let
+                ( updatedClerkModel, clerkCmd ) =
+                    (Clerk.update clerkMsg model.clerkModel)
+            in
+                ( { model | clerkModel = updatedClerkModel }, Cmd.map ClerkMsg clerkCmd )
 
         _ ->
             ( model, Cmd.none )
@@ -83,9 +92,9 @@ view model =
                 NoUser ->
                     viewUserChoice
 
-                ClerkUser clerkModel ->
+                ClerkUser ->
                     div []
-                        [ Html.map ClerkMsg (Clerk.view clerkModel)
+                        [ Html.map ClerkMsg (Clerk.view model.clerkModel)
                         , viewBackToDemo
                         ]
 
@@ -180,7 +189,7 @@ viewBackToDemo =
                     [ class (buttonClassStr "w3-center")
                     , onClick BackToDemo
                     ]
-                    [ text "Back" ]
+                    [ text "Back To Demo Home" ]
                 ]
             ]
         ]
