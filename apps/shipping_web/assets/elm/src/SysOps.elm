@@ -90,7 +90,11 @@ viewSearchLine model =
                     , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
                     ]
                     [ text ("Search Criteria: " ++ model.searchCriteria) ]
-                , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick SearchHandlingEvents ] [ text "Search! " ]
+                , button
+                    [ class (buttonClassStr "w3-bar-item w3-margin-left")
+                    , onClick SearchHandlingEvents
+                    ]
+                    [ text "Search! " ]
                 ]
             ]
         , p [] []
