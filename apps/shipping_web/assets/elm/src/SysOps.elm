@@ -22,16 +22,18 @@ type alias Model =
 
 init : Model
 init =
-    Model "" Nothing Nothing
+    Model "All" Nothing Nothing
 
 
 type Msg
-    = NoOp
+    = SearchHandlingEvents
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        SearchHandlingEvents ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -39,6 +41,7 @@ view model =
     div []
         [ viewHeader
         , viewMessage model
+        , viewSearchLine model
         ]
 
 
@@ -73,3 +76,22 @@ viewMessage model =
 
         Nothing ->
             div [] []
+
+
+viewSearchLine : Model -> Html Msg
+viewSearchLine model =
+    div [ class row ]
+        [ div [ class colS2 ]
+            [ p [] [] ]
+        , div [ class (colS8 "w3-center") ]
+            [ div [ class "w3-bar" ]
+                [ span
+                    [ class "w3-bar-item"
+                    , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
+                    ]
+                    [ text ("Search Criteria: " ++ model.searchCriteria) ]
+                , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick SearchHandlingEvents ] [ text "Search! " ]
+                ]
+            ]
+        , p [] []
+        ]

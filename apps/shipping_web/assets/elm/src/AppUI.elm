@@ -79,8 +79,12 @@ update msg model =
         SysOpsChosen ->
             ( { model | user = SysOpsUser }, Cmd.none )
 
-        _ ->
-            ( model, Cmd.none )
+        SysOpsMsg sysOpsMsg ->
+            let
+                ( updatedSysOpsModel, sysOpsCmd ) =
+                    (SysOps.update sysOpsMsg model.sysOpsModel)
+            in
+                ( { model | sysOpsModel = updatedSysOpsModel }, Cmd.map SysOpsMsg sysOpsCmd )
 
 
 
