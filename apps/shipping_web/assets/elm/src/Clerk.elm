@@ -3,6 +3,7 @@ module Clerk exposing (Model, Msg(..), init, update, view)
 import Html exposing (..)
 import Html.Attributes exposing (class, id, placeholder, style, type_, value)
 import Html.Events exposing (onClick, onInput)
+import Date.Format
 
 
 -- Local Imports
@@ -15,7 +16,7 @@ import Styles exposing (..)
 type alias Model =
     { trackingId : String
     , message : Maybe String
-    , cargoResponse : Maybe Shipping.CargoResponse
+    , cargo : Maybe Shipping.Cargo
     }
 
 
@@ -42,12 +43,27 @@ update msg model =
         RestMsg restMsg ->
             case restMsg of
                 Rest.ReceivedCargo response ->
-                    ( { model | cargoResponse = Just response }, Cmd.none )
+                    case response of
+                        Shipping.CargoNotFound serverMessage ->
+                            ( { model
+                                | message = Just serverMessage
+                                , cargo = Nothing
+                              }
+                            , Cmd.none
+                            )
+
+                        Shipping.CargoFound cargo ->
+                            ( { model
+                                | message = Nothing
+                                , cargo = Just cargo
+                              }
+                            , Cmd.none
+                            )
 
                 Rest.HttpError message ->
                     ( { model
                         | message = Just message
-                        , cargoResponse = Nothing
+                        , cargo = Nothing
                       }
                     , Cmd.none
                     )
@@ -59,6 +75,12 @@ view model =
         [ viewHeader
         , viewMessage model
         , viewFindLine model
+        , case model.cargo of
+            Nothing ->
+                div [] []
+
+            Just cargo ->
+                viewDetail cargo
         ]
 
 
@@ -122,4 +144,72 @@ viewFindLine model =
                 ]
             ]
         , p [] []
+        ]
+
+
+viewDetail : Shipping.Cargo -> Html Msg
+viewDetail cargo =
+    div []
+        [ div [ class row ]
+            [ div [ class colS2 ] [ p [] [] ]
+            , div [ class (colS8 "") ]
+                [ h2 [] [ text "Cargo Tracking Details" ]
+                , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
+                    [ div [ class "w3-panel w3-blue" ]
+                        [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
+                    , div [ class "w3-panel" ]
+                        [ div [ class "w3-left" ] [ text ("Tracking Id: " ++ cargo.trackingId) ]
+                        , div [ class "w3-right" ] [ text ("Status: " ++ cargo.status) ]
+                        ]
+                    ]
+                ]
+            , div [ class colS2 ] [ p [] [] ]
+            ]
+        , div [ class row ]
+            [ div [ class colS2 ] [ p [] [] ]
+            , div [ class (colS8 "w3-padding-small"), style [ ( "background-color", "#fee" ) ] ]
+                [ h5 [] [ text "Shipment Progress" ] ]
+            , div [ class colS2 ] [ p [] [] ]
+            ]
+        , div [ class row ]
+            [ div [ class colS2 ] [ p [] [] ]
+            , div [ class (colS8 "") ]
+                [ case cargo.handlingEventsList of
+                    Just listOfHandlingEvents ->
+                        viewCustomerEventTable listOfHandlingEvents
+
+                    Nothing ->
+                        div [] []
+                ]
+            , div [ class colS2 ] [ p [] [] ]
+            ]
+        , p [] []
+        ]
+
+
+viewCustomerEventTable : List Shipping.HandlingEvent -> Html Msg
+viewCustomerEventTable handlingEventList =
+    table [ class "w3-table w3-striped w3-border w3-border-black" ]
+        [ thead [ class "w3-pale-yellow" ]
+            [ tr []
+                -- [ th [] [ text "Voyage No" ]
+                [ th [] [ text "Location" ]
+                , th [] [ text "Date" ]
+                , th [] [ text "Local Time" ]
+                , th [] [ text "Type" ]
+                ]
+            ]
+        , tbody []
+            (List.map viewCustomerEvent handlingEventList)
+        ]
+
+
+viewCustomerEvent : Shipping.HandlingEvent -> Html Msg
+viewCustomerEvent handlingEvent =
+    tr []
+        -- [ td [] [ text handlingEvent.voyage ]
+        [ td [] [ text handlingEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d" handlingEvent.completion_time) ]
+        , td [] [ text (Date.Format.format "%H:%M:%S" handlingEvent.completion_time) ]
+        , td [] [ text handlingEvent.event_type ]
         ]
