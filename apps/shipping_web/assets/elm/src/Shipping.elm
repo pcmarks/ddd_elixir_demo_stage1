@@ -1,4 +1,4 @@
-module Shipping exposing (CargoResponse(..), Cargo, HandlingEvent)
+module Shipping exposing (CargoResponse(..), Cargo, HandlingEvent, HandlingEventList)
 
 import Date exposing (Date)
 
@@ -15,9 +15,8 @@ type alias Cargo =
     }
 
 
-initCargo : Cargo
-initCargo =
-    (Cargo "" "" Nothing)
+type alias HandlingEventList =
+    { handling_events : List HandlingEvent }
 
 
 type alias HandlingEvent =
@@ -28,3 +27,8 @@ type alias HandlingEvent =
     , completion_time : Date
     , location : String
     }
+
+
+initCargo : Cargo
+initCargo =
+    (Cargo "" "" Nothing)

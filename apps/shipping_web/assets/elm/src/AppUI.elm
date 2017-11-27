@@ -10,6 +10,7 @@ Local Inports
 --}
 
 import Clerk exposing (Model, init, view)
+import SysOps exposing (Model, init, view)
 import Styles exposing (..)
 
 
@@ -38,12 +39,13 @@ type User
 type alias Model =
     { user : User
     , clerkModel : Clerk.Model
+    , sysOpsModel : SysOps.Model
     }
 
 
 init : Model
 init =
-    Model NoUser Clerk.init
+    Model NoUser Clerk.init SysOps.init
 
 
 
@@ -55,7 +57,7 @@ type Msg
     | ClerkChosen
     | ClerkMsg Clerk.Msg
     | SysOpsChosen
-    | SysOpsMsg
+    | SysOpsMsg SysOps.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -73,6 +75,9 @@ update msg model =
                     (Clerk.update clerkMsg model.clerkModel)
             in
                 ( { model | clerkModel = updatedClerkModel }, Cmd.map ClerkMsg clerkCmd )
+
+        SysOpsChosen ->
+            ( { model | user = SysOpsUser }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -101,7 +106,7 @@ view model =
                 -- Clerk.view model.user
                 SysOpsUser ->
                     div []
-                        [ text "SYSOPS"
+                        [ Html.map SysOpsMsg (SysOps.view model.sysOpsModel)
                         , viewBackToDemo
                         ]
 
