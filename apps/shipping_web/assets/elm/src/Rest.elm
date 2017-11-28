@@ -67,7 +67,7 @@ cargoRequest id =
 
 
 cargoResponseDecoder =
-    oneOf [ validCargoDecoder, errorCargoDecoder ]
+    oneOf [ validCargoDecoder, invalidCargoDecoder ]
 
 
 
@@ -80,10 +80,10 @@ type alias FoundCargo =
 
 validCargoDecoder =
     Json.Decode.map (\response -> CargoFound response.cargo)
-        cargoValidDecoder
+        cargoFieldDecoder
 
 
-cargoValidDecoder =
+cargoFieldDecoder =
     decode FoundCargo
         |> (required "cargo" cargoDecoder)
 
@@ -104,7 +104,7 @@ type alias CargoFoundNot =
     { errorStatus : String }
 
 
-errorCargoDecoder =
+invalidCargoDecoder =
     Json.Decode.map (\response -> CargoNotFound response.errorStatus)
         cargoErrorResponseDecoder
 
@@ -129,6 +129,10 @@ handlingEventDecoder =
         |> Pipeline.required "registration_time" date
         |> Pipeline.required "completion_time" date
         |> Pipeline.required "location" string
+
+
+
+--- SysOps (Clerks) requests, and responses
 
 
 clerksUrl : String
