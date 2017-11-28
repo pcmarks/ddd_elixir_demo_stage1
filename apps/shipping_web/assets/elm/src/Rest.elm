@@ -1,4 +1,4 @@
-module Rest exposing (Msg(..), findCargo)
+module Rest exposing (Msg(..), findCargo, getAllHandlingEvents)
 
 import Http exposing (Request)
 import Json.Decode exposing (Decoder, andThen, fail, int, list, maybe, map, oneOf, string, succeed)
@@ -19,6 +19,7 @@ type alias HandlingEventList =
 
 type Msg
     = ReceivedCargo CargoResponse
+    | ReceivedAllHandlingEvents HandlingEventList
     | HttpError String
 
 
@@ -128,6 +129,54 @@ handlingEventDecoder =
         |> Pipeline.required "registration_time" date
         |> Pipeline.required "completion_time" date
         |> Pipeline.required "location" string
+
+
+clerksUrl : String
+clerksUrl =
+    phoenixHostPortUrl ++ "/shipping/clerks"
+
+
+clerkEventsUrl : String
+clerkEventsUrl =
+    clerksUrl ++ "/events"
+
+
+getAllHandlingEvents : Cmd Msg
+getAllHandlingEvents =
+    Http.send
+        (\result ->
+            case result of
+                Ok response ->
+                    ReceivedAllHandlingEvents response
+
+                Err httpErr ->
+                    HttpError (toString httpErr)
+        )
+        allHandlingEventsRequest
+
+
+allHandlingEventsRequest : Request HandlingEventList
+allHandlingEventsRequest =
+    Http.get (clerkEventsUrl ++ "?_format=json") handlingEventListDecoder
+
+
+
+-- handlingEventListDecoder : Decoder HandlingEventList
+-- handlingEventListDecoder =
+--     decode HandlingEventList
+--         |> Pipeline.required "handling_events" (list handlingEventDecoder)
+--
+--
+-- handlingEventDecoder : Decoder HandlingEvent
+-- handlingEventDecoder =
+--     decode HandlingEvent
+--         |> Pipeline.required "voyage" string
+--         |> Pipeline.required "type" string
+--         |> Pipeline.required "tracking_id" string
+--         |> Pipeline.required "registration_time" date
+--         |> Pipeline.required "completion_time" date
+--         |> Pipeline.required "location" string
+--
 
 
 date : Decoder Date

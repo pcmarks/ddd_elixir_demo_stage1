@@ -107,14 +107,11 @@ view model =
                         , viewBackToDemo
                         ]
 
-                -- Clerk.view model.user
                 SysOpsUser ->
                     div []
                         [ Html.map SysOpsMsg (SysOps.view model.sysOpsModel)
                         , viewBackToDemo
                         ]
-
-            -- SysOps.view model.user
             ]
         ]
 

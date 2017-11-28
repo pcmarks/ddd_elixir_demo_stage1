@@ -68,6 +68,9 @@ update msg model =
                     , Cmd.none
                     )
 
+                _ ->
+                    ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -140,7 +143,11 @@ viewFindLine model =
                     , value model.trackingId
                     ]
                     []
-                , button [ class (buttonClassStr "w3-bar-item w3-margin-left"), onClick FindCargo ] [ text "Track! " ]
+                , button
+                    [ class (buttonClassStr "w3-bar-item w3-margin-left")
+                    , onClick FindCargo
+                    ]
+                    [ text "Track! " ]
                 ]
             ]
         , p [] []

@@ -27,12 +27,16 @@ init =
 
 type Msg
     = SearchHandlingEvents
+    | RestMsg Rest.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchHandlingEvents ->
+            ( model, Cmd.map RestMsg (Rest.getAllHandlingEvents) )
+
+        RestMsg restMsg ->
             ( model, Cmd.none )
 
 
@@ -42,6 +46,7 @@ view model =
         [ viewHeader
         , viewMessage model
         , viewSearchLine model
+        , viewDetail model
         ]
 
 
@@ -87,15 +92,25 @@ viewSearchLine model =
             [ div [ class "w3-bar" ]
                 [ span
                     [ class "w3-bar-item"
-                    , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
+                    , style [ ( "color", "MidnightBlue" ) ]
                     ]
-                    [ text ("Search Criteria: " ++ model.searchCriteria) ]
+                    [ text "Specify Search Criteria: " ]
+                , span
+                    [ class "w3-bar-item"
+                    , style [ ( "font-weight", "bold" ), ( "color", "MidnightBlue" ) ]
+                    ]
+                    [ text (model.searchCriteria) ]
                 , button
                     [ class (buttonClassStr "w3-bar-item w3-margin-left")
                     , onClick SearchHandlingEvents
                     ]
                     [ text "Search! " ]
                 ]
+            , p [] []
             ]
-        , p [] []
         ]
+
+
+viewDetail : Model -> Html Msg
+viewDetail model =
+    div [] [ text "VIEW DETAIL" ]
