@@ -37,7 +37,17 @@ update msg model =
             ( model, Cmd.map RestMsg (Rest.getAllHandlingEvents) )
 
         RestMsg restMsg ->
-            ( model, Cmd.none )
+            case restMsg of
+                Rest.ReceivedAllHandlingEvents handlingEventList ->
+                    ( { model
+                        | message = Nothing
+                        , handlingEventList = Just handlingEventList
+                      }
+                    , Cmd.none
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -46,7 +56,7 @@ view model =
         [ viewHeader
         , viewMessage model
         , viewSearchLine model
-        , viewDetail model
+        , viewDetail model.handlingEventList
         ]
 
 
@@ -111,6 +121,59 @@ viewSearchLine model =
         ]
 
 
-viewDetail : Model -> Html Msg
-viewDetail model =
-    div [] [ text "VIEW DETAIL" ]
+viewDetail : Maybe Shipping.HandlingEventList -> Html Msg
+viewDetail maybeHandlingEventList =
+    div []
+        [ div [ class row ]
+            [ div [ class colS1 ] [ p [] [] ]
+            , div [ class colS10 ]
+                [ h2 [] [ text "Handling Events List" ] ]
+            , div [ class colS1 ] [ p [] [] ]
+            ]
+        , case maybeHandlingEventList of
+            Nothing ->
+                div [ class row ]
+                    [ div [ class colS1 ] [ p [] [] ]
+                    , div [ class colS10 ]
+                        [ h5 [] [ text "No Handling Events Available" ] ]
+                    , div [ class colS1 ] [ p [] [] ]
+                    ]
+
+            Just handlingEvents ->
+                div [ class row ]
+                    [ div [ class colS1 ] [ p [] [] ]
+                    , div [ class colS10 ] [ viewHandlingEventTable handlingEvents ]
+                    , div [ class colS1 ] [ p [] [] ]
+                    ]
+        , p [] []
+        ]
+
+
+viewHandlingEventTable : Shipping.HandlingEventList -> Html Msg
+viewHandlingEventTable handlingEventList =
+    table [ class "w3-table w3-striped w3-border w3-border-black" ]
+        [ thead [ class "w3-pale-yellow" ]
+            [ tr []
+                [ th [] [ text "Type" ]
+                , th [] [ text "Location" ]
+                , th [] [ text "Local Comp. Time" ]
+                , th [] [ text "Local Reg. Time" ]
+                , th [] [ text "Tracking Id" ]
+                , th [] [ text "Voyage No" ]
+                ]
+            ]
+        , tbody []
+            (List.map viewHandlingEvent handlingEventList.handling_events)
+        ]
+
+
+viewHandlingEvent : Shipping.HandlingEvent -> Html Msg
+viewHandlingEvent handlingEvent =
+    tr []
+        [ td [] [ text handlingEvent.event_type ]
+        , td [] [ text handlingEvent.location ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.registration_time) ]
+        , td [] [ text handlingEvent.tracking_id ]
+        , td [] [ text handlingEvent.voyage ]
+        ]

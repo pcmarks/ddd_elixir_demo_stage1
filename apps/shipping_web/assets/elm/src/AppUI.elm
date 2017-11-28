@@ -64,7 +64,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         BackToDemo ->
-            ( { model | user = NoUser, clerkModel = Clerk.init }, Cmd.none )
+            ( { model
+                | user = NoUser
+                , clerkModel = Clerk.init
+                , sysOpsModel = SysOps.init
+              }
+            , Cmd.none
+            )
 
         ClerkChosen ->
             ( { model | user = ClerkUser }, Cmd.none )
