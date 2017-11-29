@@ -34,7 +34,7 @@ phoenixHostPortUrl =
 
 customersUrl : String
 customersUrl =
-    phoenixHostPortUrl ++ "/customers"
+    phoenixHostPortUrl ++ "/clerks"
 
 
 findCargo : String -> Cmd Msg

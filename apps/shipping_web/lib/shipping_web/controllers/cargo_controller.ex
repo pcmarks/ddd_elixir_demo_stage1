@@ -33,7 +33,7 @@ defmodule ShippingWeb.CargoController do
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")
-          |> redirect(to: customer_path(conn, :index))
+          |> redirect(to: clerk_path(conn, :index))
     end
   end
 
@@ -44,7 +44,7 @@ defmodule ShippingWeb.CargoController do
       _ ->
         conn
           |> put_flash(:error, "Cargo for #{tracking_id} not found.")
-          |> redirect(to: customer_path(conn, :index))
+          |> redirect(to: clerk_path(conn, :index))
     end
   end
 end
