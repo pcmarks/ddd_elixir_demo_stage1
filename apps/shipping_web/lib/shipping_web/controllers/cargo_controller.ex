@@ -23,8 +23,13 @@ defmodule ShippingWeb.CargoController do
           end
           # NOTE: Because we are employing a single page view for the Clerk page,
           # we render the ClerkView index page passing a cargo and its handling events
-          render(conn, ShippingWeb.CustomerView, :index,
-                        cargo: updated_cargo, handling_events: handling_events)
+          case get_format(conn) do
+            "json" ->
+              render(conn, :show, cargo: updated_cargo, handling_events: handling_events)
+            _ ->
+            render(conn, ShippingWeb.CustomerView, :index,
+                          cargo: updated_cargo, handling_events: handling_events)
+          end
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")
