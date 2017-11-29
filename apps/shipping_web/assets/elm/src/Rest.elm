@@ -164,25 +164,6 @@ allHandlingEventsRequest =
     Http.get (sysOpEventsUrl ++ "?_format=json") handlingEventListDecoder
 
 
-
--- handlingEventListDecoder : Decoder HandlingEventList
--- handlingEventListDecoder =
---     decode HandlingEventList
---         |> Pipeline.required "handling_events" (list handlingEventDecoder)
---
---
--- handlingEventDecoder : Decoder HandlingEvent
--- handlingEventDecoder =
---     decode HandlingEvent
---         |> Pipeline.required "voyage" string
---         |> Pipeline.required "type" string
---         |> Pipeline.required "tracking_id" string
---         |> Pipeline.required "registration_time" date
---         |> Pipeline.required "completion_time" date
---         |> Pipeline.required "location" string
---
-
-
 date : Decoder Date
 date =
     let

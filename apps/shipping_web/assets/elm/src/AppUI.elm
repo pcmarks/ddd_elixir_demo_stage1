@@ -75,15 +75,15 @@ update msg model =
         ClerkChosen ->
             ( { model | user = ClerkUser }, Cmd.none )
 
+        SysOpsChosen ->
+            ( { model | user = SysOpsUser }, Cmd.none )
+
         ClerkMsg clerkMsg ->
             let
                 ( updatedClerkModel, clerkCmd ) =
                     (Clerk.update clerkMsg model.clerkModel)
             in
                 ( { model | clerkModel = updatedClerkModel }, Cmd.map ClerkMsg clerkCmd )
-
-        SysOpsChosen ->
-            ( { model | user = SysOpsUser }, Cmd.none )
 
         SysOpsMsg sysOpsMsg ->
             let

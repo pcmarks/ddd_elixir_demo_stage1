@@ -125,12 +125,6 @@ viewDetail : Maybe Shipping.HandlingEventList -> Html Msg
 viewDetail maybeHandlingEventList =
     case maybeHandlingEventList of
         Nothing ->
-            -- div [ class row ]
-            --     [ div [ class colS1 ] [ p [] [] ]
-            --     , div [ class colS10 ]
-            --         [ h5 [] [ text "No Handling Events Available" ] ]
-            --     , div [ class colS1 ] [ p [] [] ]
-            --     ]
             p [] []
 
         Just handlingEvents ->
