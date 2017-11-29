@@ -137,7 +137,7 @@ handlingEventDecoder =
 
 clerksUrl : String
 clerksUrl =
-    phoenixHostPortUrl ++ "/shipping/clerks"
+    phoenixHostPortUrl ++ "/shipping/sysops"
 
 
 clerkEventsUrl : String

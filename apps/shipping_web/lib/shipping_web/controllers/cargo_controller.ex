@@ -27,7 +27,7 @@ defmodule ShippingWeb.CargoController do
             "json" ->
               render(conn, :show, cargo: updated_cargo, handling_events: handling_events)
             _ ->
-            render(conn, ShippingWeb.CustomerView, :index,
+            render(conn, ShippingWeb.ClerkView, :index,
                           cargo: updated_cargo, handling_events: handling_events)
           end
       _ ->
