@@ -138,7 +138,7 @@ viewDetail maybeHandlingEventList =
                 [ div [ class row ]
                     [ div [ class colS1 ] [ p [] [] ]
                     , div [ class colS10 ]
-                        [ h2 [] [ text "Handling Events List" ] ]
+                        [ h2 [] [ text "Listing of Handling Events" ] ]
                     , div [ class colS1 ] [ p [] [] ]
                     ]
                 , div [ class row ]
