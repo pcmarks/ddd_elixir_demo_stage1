@@ -1,4 +1,8 @@
 defmodule ShippingWeb.CargoView do
+  @moduledoc """
+  This view is only responsible for rendering (formatting) a JSON
+  Cargo response to a JSON request.
+  """
   use ShippingWeb, :view
 
   def render("error.json", %{error_status: error_status}) do
