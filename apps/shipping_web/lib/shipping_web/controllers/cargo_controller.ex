@@ -21,7 +21,10 @@ defmodule ShippingWeb.CargoController do
               |> Enum.reverse()
               |> Cargoes.update_cargo_status()
           end
-          render(conn, :show, cargo: updated_cargo, handling_events: handling_events)
+          # NOTE: Because we are employing a single page view for the Clerk page,
+          # we render the ClerkView index page passing a cargo and its handling events
+          render(conn, ShippingWeb.CustomerView, :index,
+                        cargo: updated_cargo, handling_events: handling_events)
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")

@@ -20,7 +20,7 @@ defmodule ShippingWeb.Router do
     pipe_through :browser
 
     get "/cargoes", CargoController, :show
-    resources "/", CustomerController, only: [:index, :show]
+    resources "/", CustomerController, only: [:index]
   end
 
   scope "/shipping", ShippingWeb do
