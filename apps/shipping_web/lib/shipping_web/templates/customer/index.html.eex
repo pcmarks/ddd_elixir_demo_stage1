@@ -19,8 +19,6 @@
 <h2>
   Tracking Details
 </h2>
-
-
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title text-right">
@@ -56,7 +54,7 @@
           <tr class="warning">
             <!-- <th>Voyage</th> -->
             <th>Location</th>
-            <th>Date</th>
+            <th>Date</th> 
             <th>Local Time</th>
             <th>Type</th>
           </tr>
@@ -79,3 +77,9 @@
   </div>
 </div>
 <%= end %>
+<div class="row">
+  <div class="col-md-4"></div>
+<div class="col-md-4 center-block">
+<a href="<%= page_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Back to Demo Home</a>
+</div>
+</div>

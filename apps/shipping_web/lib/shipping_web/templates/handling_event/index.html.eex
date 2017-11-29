@@ -27,5 +27,9 @@
 <% end %>
   </tbody>
 </table>
-
-<!-- <a href="<%= handling_event_path(@conn, :new ) %>" role="button" class="btn btn-primary btn-lg">New Handling Event</a> -->
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4 center-block">
+    <a href="<%= page_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Back to Demo Home</a>
+  </div>
+</div>
