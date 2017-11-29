@@ -4,7 +4,7 @@
 <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
 
-<div class="jumbotron">
+<div class="well">
   <%= form_for @conn, cargo_path(@conn, :show), [method: "get", as: :cargo_params], fn f -> %>
   <%= label(f, :tracking_id, "Enter a Tracking Id") %>
     <div class="input-group">
@@ -54,7 +54,7 @@
           <tr class="warning">
             <!-- <th>Voyage</th> -->
             <th>Location</th>
-            <th>Date</th> 
+            <th>Date</th>
             <th>Local Time</th>
             <th>Type</th>
           </tr>
