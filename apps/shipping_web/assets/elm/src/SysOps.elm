@@ -123,30 +123,31 @@ viewSearchLine model =
 
 viewDetail : Maybe Shipping.HandlingEventList -> Html Msg
 viewDetail maybeHandlingEventList =
-    div []
-        [ div [ class row ]
-            [ div [ class colS1 ] [ p [] [] ]
-            , div [ class colS10 ]
-                [ h2 [] [ text "Handling Events List" ] ]
-            , div [ class colS1 ] [ p [] [] ]
-            ]
-        , case maybeHandlingEventList of
-            Nothing ->
-                div [ class row ]
+    case maybeHandlingEventList of
+        Nothing ->
+            -- div [ class row ]
+            --     [ div [ class colS1 ] [ p [] [] ]
+            --     , div [ class colS10 ]
+            --         [ h5 [] [ text "No Handling Events Available" ] ]
+            --     , div [ class colS1 ] [ p [] [] ]
+            --     ]
+            p [] []
+
+        Just handlingEvents ->
+            div []
+                [ div [ class row ]
                     [ div [ class colS1 ] [ p [] [] ]
                     , div [ class colS10 ]
-                        [ h5 [] [ text "No Handling Events Available" ] ]
+                        [ h2 [] [ text "Handling Events List" ] ]
                     , div [ class colS1 ] [ p [] [] ]
                     ]
-
-            Just handlingEvents ->
-                div [ class row ]
+                , div [ class row ]
                     [ div [ class colS1 ] [ p [] [] ]
                     , div [ class colS10 ] [ viewHandlingEventTable handlingEvents ]
                     , div [ class colS1 ] [ p [] [] ]
                     ]
-        , p [] []
-        ]
+                , p [] []
+                ]
 
 
 viewHandlingEventTable : Shipping.HandlingEventList -> Html Msg
