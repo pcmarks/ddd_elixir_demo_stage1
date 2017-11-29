@@ -8,7 +8,7 @@ import Dom exposing (Id)
 
 focusElement : Id
 focusElement =
-    "customer-query"
+    "clerk-query"
 
 
 logo : List ( String, String )

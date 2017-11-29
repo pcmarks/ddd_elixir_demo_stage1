@@ -32,8 +32,8 @@ phoenixHostPortUrl =
 -- TODO: Change to clerksUrl and Change backend
 
 
-customersUrl : String
-customersUrl =
+clerksUrl : String
+clerksUrl =
     phoenixHostPortUrl ++ "/shipping/clerks"
 
 
@@ -54,7 +54,7 @@ findCargo trackingId =
 cargoRequest : String -> Request CargoResponse
 cargoRequest id =
     Http.get
-        (customersUrl
+        (clerksUrl
             ++ "/cargoes"
             ++ "?_format=json&cargo_params[tracking_id]="
             ++ id
@@ -135,14 +135,14 @@ handlingEventDecoder =
 --- SysOps (Clerks) requests, and responses
 
 
-clerksUrl : String
-clerksUrl =
+sysOpsUrl : String
+sysOpsUrl =
     phoenixHostPortUrl ++ "/shipping/sysops"
 
 
-clerkEventsUrl : String
-clerkEventsUrl =
-    clerksUrl ++ "/events"
+sysOpEventsUrl : String
+sysOpEventsUrl =
+    sysOpsUrl ++ "/events"
 
 
 getAllHandlingEvents : Cmd Msg
@@ -161,7 +161,7 @@ getAllHandlingEvents =
 
 allHandlingEventsRequest : Request HandlingEventList
 allHandlingEventsRequest =
-    Http.get (clerkEventsUrl ++ "?_format=json") handlingEventListDecoder
+    Http.get (sysOpEventsUrl ++ "?_format=json") handlingEventListDecoder
 
 
 
