@@ -1,6 +1,7 @@
-<h1 style="color: MidnightBlue;text-align:center;">Customer</h1>
+<h1 style="color: MidnightBlue;text-align:center;">Shipping Clerk</h1>
 <div class="jumbotron">
   <%= form_for @conn, cargo_path(@conn, :show), [method: "get", as: :cargo_params], fn f -> %>
+  <%= label(f, :tracking_id, "Enter a Tracking Id") %>
     <div class="input-group">
       <%= text_input f, :tracking_id, placeholder: "Tracking Number (e.g. ABC123, IJK456)", class: "form-control" %>
       <span class="input-group-btn">
