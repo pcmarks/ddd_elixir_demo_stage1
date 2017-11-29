@@ -6,14 +6,7 @@ defmodule ShippingWeb.CargoController do
   def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
     case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
       nil ->
-        case get_format(conn) do
-          "json" ->
-              render(conn, :error, error_status: "Cargo for #{tracking_id} not found.")
-          _ ->
-            conn
-              |> put_flash(:error, "Cargo for #{tracking_id} not found.")
-              |> redirect(to: customer_path(conn, :index))
-        end
+        error_formatter(conn, tracking_id)
       %Shipping.Cargoes.Cargo{} = cargo ->
         # Retrieve and apply all handling events to date against the cargo so as
         # to determine the cargo's current status.  Apply oldest events first.
@@ -32,6 +25,17 @@ defmodule ShippingWeb.CargoController do
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")
+          |> redirect(to: customer_path(conn, :index))
+    end
+  end
+
+  defp error_formatter(conn, tracking_id) do
+    case get_format(conn) do
+      "json" ->
+          render(conn, :error, error_status: "Cargo for #{tracking_id} not found.")
+      _ ->
+        conn
+          |> put_flash(:error, "Cargo for #{tracking_id} not found.")
           |> redirect(to: customer_path(conn, :index))
     end
   end
