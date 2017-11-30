@@ -5,8 +5,4 @@ defmodule ShippingWeb.ClerkController do
     render conn, :index
   end
 
-  def show(conn, _params) do
-    render conn, :index
-  end
-
 end
