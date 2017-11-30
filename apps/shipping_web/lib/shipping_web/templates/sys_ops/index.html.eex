@@ -1,4 +1,27 @@
 <h1 style="color: MidnightBlue;text-align:center;">Systems Operations Manager</h1>
+
+
+<p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+<p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+
+<div class="well">
+  <%= form_for @conn, handling_event_path(@conn, :show), [method: "get", as: :handling_event_params], fn f -> %>
+  <div class="row">
+    <div class="col-md-6">
+    <h4>Specify Search Criteria:    <strong> All </strong>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+    <%= submit "Search!", class: "btn btn-default" %>
+  </div>
+  </h4>
+  <% end %>
+</row>
+</div>
+</div>
+
+<%= if assigns[:handling_events] do %>
 <h2>Listing of Handling Events</h2>
 
 <table class="table">
@@ -33,3 +56,4 @@
     <a href="<%= page_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Back to Demo Home</a>
   </div>
 </div>
+<% end %>

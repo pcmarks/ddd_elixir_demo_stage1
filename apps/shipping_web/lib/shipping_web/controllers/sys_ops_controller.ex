@@ -10,6 +10,10 @@ defmodule ShippingWeb.SysOpsController do
   specify the cargo that they are handling.
   """
   def index(conn, _params) do
-    redirect(conn, to: handling_event_path(conn, :index))
+    render conn, :index
   end
+  # 
+  # def index(conn, _params) do
+  #   redirect(conn, to: handling_event_path(conn, :index))
+  # end
 end
