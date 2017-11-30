@@ -12,9 +12,18 @@ defmodule ShippingWeb.HandlingEventController do
   # The broadcasting channel
   alias ShippingWeb.HandlingEventChannel
 
-  def index(conn, _params) do
+  def show(conn, _params) do
     handling_events = HandlingEvents.list_handling_events()
-    render(conn, :index, handling_events: handling_events)
+
+    # NOTE: Because we are employing a single page view for the Clerk page,
+    # we render the ClerkView index page passing a cargo and its handling events
+    case get_format(conn) do
+      "json" ->
+        render(conn, :show, handling_events: handling_events)
+      _ ->
+        render(conn, ShippingWeb.SysOpsView, :index,
+                    handling_events: handling_events)
+    end
   end
   # def new(conn, _params) do
   #   changeset = HandlingEvents.change_handling_event(%HandlingEvents.HandlingEvent{})

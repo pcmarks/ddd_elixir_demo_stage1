@@ -26,8 +26,8 @@ defmodule ShippingWeb.Router do
     end
 
     scope "/sysops" do
-      resources "/events", HandlingEventController, only: [:index, :new, :create]
-      get "/", SysOpsController, :index
+      get "/events", HandlingEventController, :show
+      resources "/", SysOpsController, only: [:index]
     end
   end
 
