@@ -14,9 +14,9 @@
   </head>
 
   <body>
-    <script src="<%= static_path(@conn, "/js/AppUI.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/ShippingApp.js") %>"></script>
     <script>
-      var app = Elm.AppUI.fullscreen();
+      var app = Elm.ShippingApp.fullscreen();
     </script>
 
   </body>
