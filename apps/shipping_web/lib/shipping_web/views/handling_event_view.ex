@@ -1,7 +1,7 @@
 defmodule ShippingWeb.HandlingEventView do
   use ShippingWeb, :view
 
-  def render("index.json",  %{handling_events: handling_events}) do
+  def render("show.json",  %{handling_events: handling_events}) do
     %{
       handling_events: Enum.map(handling_events, &handling_event_to_json/1)
       }
@@ -14,12 +14,6 @@ defmodule ShippingWeb.HandlingEventView do
       type: handling_event.type,
       voyage: handling_event.voyage
     }
-  end
-
-  def render("new.json", %{changeset: changeset,
-                          location_map: location_map,
-                          handling_event_type_map: handling_event_type_map}) do
-    %{location_map: location_map, handling_event_type_map: handling_event_type_map}
   end
 
 end
