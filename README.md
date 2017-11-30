@@ -4,7 +4,7 @@ This project is an [Elixir](https://elixir-lang.org/) and  [Phoenix web framewor
 The demo was first written in Java; a description of that effort can be found [here](http://dddsample.sourceforge.net/) (Source Forge - has documentation) and [here](https://github.com/citerus/dddsample-core) (GitHub).
 
 ## Contributors
-Eric Evans, Peter C. Marks, and John Kasiewicz
+Peter C. Marks, Eric Evans, and John Kasiewicz
 ## The Project
 The original demo (see above for links) was written in Java using the Spring framework. Eric Evans' book was published in 2004 when the predominant coding style was object-oriented. The challenge for this project was not so much to go from a Java to an Elixir and Elm implementation but to find counterparts for DDD constructs and patterns in Elixir and Elm.
 
@@ -18,25 +18,26 @@ A central idea in functional programming - besides the obvious use of functions 
 The overall project will be divided into three stages that will, progressively, show certain aspects of DDD. This repository contains Stage 1.
 
 ## Stage 1 Description
-The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes: Customers and Shipping Clerks who work for Shipping Companies.
+The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes: Clerks and Systems Operation Managers (SysOps) who both work for a Shipping Company.
 
-Customers can follow the progress of their cargo(es) as it is handled by Cargo Handlers. Cargo Handlers are organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
+Clerks are customer facing Shipping employess that can retrieve the progress of particular cargo as it is handled by Cargo Handlers. Cargo Handlers are organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
 
 * Customs
 * Sea Shipping Companies
 * Land Shipping Companies
 * Ports (Unloading and Loading)
 
-Customers can access the latest status of their cargo via a query. The subsequent display shows the handling history of their cargo and its current status.
+An action performed by a Handler produces a Handling Event.
 
-Shipping Clerks have their entry point into the application. Their functions are limited in Stage 1, only providing a list of all Handling Events presently under the control of the Shipping Company. Subsequent stages of this demo will provide the Clerk with more functions, such as the searching of the Handling Events.
+Clerks can access the latest status of a specific cargo via a query. The subsequent display shows the handling history of that cargo and its current status.
 
-Subsequent stages will implement separate logins and authorization for Customers and Clerks.
+SysOps are Shipping employess who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1: only providing a list of all Handling Events presently under the control of the Shipping Company. Subsequent stages of this demo will provide the SysOps with more functions, such as finding all Cargoes that passed thru a specific port.
+
+Subsequent stages may also implement separate logins and authorization for Clerks and Clerks.
 
 ## DDD Aspects
 This stage demonstrates the following aspects of DDD:
 * Domain Events
-* Asynchronous External data feed (Handling Events)
 * Architectural Layers: UI, Application and Domain Events; Technology Stack: Elixir/Phoenix/Elm
 * Simple Aggregates:
   * Cargoes and Delivery History
@@ -58,7 +59,7 @@ This stage demonstrates the following aspects of DDD:
   * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling
 
 ## Installation and Operation
-Elixir, Phoenix and other packages, and Elm need to be installed first. Phoenix/Elixir installation instructions can be found [in the Phoenix documentation](https://hexdocs.pm/phoenix/installation.html#content). An Elm installation guide can be found at the [Elm website](https://guide.elm-lang.org/install.html). W3CSS styling needs no installation - its CSS is loaded by accessing a CDN.
+Elixir, Phoenix, and Elm need to be installed first. Phoenix/Elixir installation instructions can be found [in the Phoenix documentation](https://hexdocs.pm/phoenix/installation.html#content). An Elm installation guide can be found at the [Elm website](https://guide.elm-lang.org/install.html). W3CSS styling can be downloaded, however, this applicaiont accesses the style sheets via a CDN.
 
 Next, obtain this repository.
 
@@ -77,7 +78,7 @@ Perform all of these steps in order:
 
 The last Elm step will download Elm packages and compile the Elm code.
 
-**A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. You can use of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm files is saved.
+**A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. You can use of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm file is saved.
 
 ### Running the web application
 1. $ cd ddd_elixir_demo_stage1
@@ -87,15 +88,15 @@ The last Elm step will download Elm packages and compile the Elm code.
 
 Two separate methods are used to generate the web content: Phoenix (Views and Templates) and Elm. Each is accessed using a different URL. For Phoenix, use [localhost:4000](localhost:4000) and for the Elm version use [localhost:4000/elm](localhost:4000/elm). Both of these URLs will bring you to the demo's home page. From this point on, the UI looks and behaves (except for some color differences, button sizes, etc.) exactly the same for both versions.
 
-The application is designed for two different types of users: Customers and Shipping Clerks.
+The application is designed for two different types of users: Clerks and SysOps.
 
-#### Customers
+#### Clerks
 
-Customers are those people that wish to find the status of their cargoes. From the home page, click on the _Customers_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
+Clerks are those people that wish to find the status of a cargo. From the home page, click on the _Clerks_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
 
-#### Shipping Clerks
+#### SysOps
 
-Shipping Clerks work for the Shipping company and are interested in seeing all of the cargoes being managed. From the home page, click on _Shipping Clerk_. A list of all Handling Events will appear.
+SysOps work for the Shipping company and are interested in seeing all of the cargoes being managed. From the home page, click on _Sys Ops Manager_. This will take you to a "search" page with only one criterion: All. Click on _Search!_ and a list of all Handling Events will appear. Note that in subsequent stages the user will be able to specify more search criteria.
 
 ### Data Storage
-Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries in these files can be deleted if you wish to start from scratch and they can be added to with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
+Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".

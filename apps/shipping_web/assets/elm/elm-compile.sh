@@ -1,2 +1,2 @@
 #!/bin/bash
-elm-make --yes --output ../../priv/static/js/main.js ./src/Main.elm
+elm-make --yes --output ../../priv/static/js/ShippingApp.js ./src/ShippingApp.elm
