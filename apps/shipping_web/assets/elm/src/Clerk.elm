@@ -40,36 +40,34 @@ update msg model =
         FindCargo ->
             ( model, Cmd.map RestMsg (Rest.findCargo model.trackingId) )
 
-        RestMsg restMsg ->
-            case restMsg of
-                Rest.ReceivedCargo response ->
-                    case response of
-                        Shipping.CargoNotFound serverMessage ->
-                            ( { model
-                                | message = Just serverMessage
-                                , cargo = Nothing
-                              }
-                            , Cmd.none
-                            )
-
-                        Shipping.CargoFound cargo ->
-                            ( { model
-                                | message = Nothing
-                                , cargo = Just cargo
-                              }
-                            , Cmd.none
-                            )
-
-                Rest.HttpError message ->
+        RestMsg (Rest.ReceivedCargo response) ->
+            case response of
+                Shipping.CargoNotFound serverMessage ->
                     ( { model
-                        | message = Just message
+                        | message = Just serverMessage
                         , cargo = Nothing
                       }
                     , Cmd.none
                     )
 
-                _ ->
-                    ( model, Cmd.none )
+                Shipping.CargoFound cargo ->
+                    ( { model
+                        | message = Nothing
+                        , cargo = Just cargo
+                      }
+                    , Cmd.none
+                    )
+
+        RestMsg (Rest.HttpError message) ->
+            ( { model
+                | message = Just message
+                , cargo = Nothing
+              }
+            , Cmd.none
+            )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -111,7 +109,7 @@ viewMessage model =
                 [ div [ class row ]
                     [ div [ class (colS3 "") ] [ p [] [] ]
                     , div [ class (colS6 "w3-center") ]
-                        [ h3 [] [ span [ class "w3-light-blue" ] [ text message ] ] ]
+                        [ h3 [] [ span [ class "w3-pale-red" ] [ text message ] ] ]
                     ]
                 , div [] [ p [] [] ]
                 ]

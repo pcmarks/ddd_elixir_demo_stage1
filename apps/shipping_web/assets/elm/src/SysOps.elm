@@ -36,18 +36,16 @@ update msg model =
         SearchHandlingEvents ->
             ( model, Cmd.map RestMsg (Rest.getAllHandlingEvents) )
 
-        RestMsg restMsg ->
-            case restMsg of
-                Rest.ReceivedAllHandlingEvents handlingEventList ->
-                    ( { model
-                        | message = Nothing
-                        , handlingEventList = Just handlingEventList
-                      }
-                    , Cmd.none
-                    )
+        RestMsg (Rest.ReceivedAllHandlingEvents handlingEventList) ->
+            ( { model
+                | message = Nothing
+                , handlingEventList = Just handlingEventList
+              }
+            , Cmd.none
+            )
 
-                _ ->
-                    ( model, Cmd.none )
+        _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -84,7 +82,7 @@ viewMessage model =
                 [ div [ class row ]
                     [ div [ class (colS3 "") ] [ p [] [] ]
                     , div [ class (colS6 "w3-center") ]
-                        [ h3 [] [ span [ class "w3-light-blue" ] [ text message ] ] ]
+                        [ h3 [] [ span [ class "w3-pale-red" ] [ text message ] ] ]
                     ]
                 , div [] [ p [] [] ]
                 ]
