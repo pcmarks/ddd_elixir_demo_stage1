@@ -109,12 +109,14 @@ view model =
 
                 ClerkUser ->
                     div []
+                        -- Tag any Clerk Msg's with type ClerkMsg
                         [ Html.map ClerkMsg (Clerk.view model.clerkModel)
                         , viewBackToDemo
                         ]
 
                 SysOpsUser ->
                     div []
+                        -- Tag any SysOps Msg's with type SysOpsMsg
                         [ Html.map SysOpsMsg (SysOps.view model.sysOpsModel)
                         , viewBackToDemo
                         ]
