@@ -1,4 +1,4 @@
-module SysOps exposing (Model, Msg(..), init, update, view)
+module SysOps exposing (Model, Msg(..), initModel, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, placeholder, style, type_, value)
@@ -9,43 +9,42 @@ import Date.Format
 -- Local Imports
 
 import Shipping
-import Rest
+import HandlingEvent as HE
 import Styles exposing (..)
 
 
 type alias Model =
-    { searchCriteria : String
-    , message : Maybe String
-    , handlingEventList : Maybe Shipping.HandlingEventList
+    { shippingModel : Shipping.Model
+    , searchCriteria : String
     }
 
 
-init : Model
-init =
-    Model "All" Nothing Nothing
+initModel : Model
+initModel =
+    Model Shipping.initModel ""
 
 
 type Msg
     = SearchHandlingEvents
-    | RestMsg Rest.Msg
+    | ShippingMsg Shipping.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchHandlingEvents ->
-            ( model, Cmd.map RestMsg (Rest.getAllHandlingEvents) )
+            let
+                ( newShippingModel, cmd ) =
+                    Shipping.update (Shipping.FindHandlingEvents) model.newShippingModel
+            in
+                ( { model | shippingModel = newShippingModel }, Cmd.map ShippingMsg cmd )
 
-        RestMsg (Rest.ReceivedAllHandlingEvents handlingEventList) ->
-            ( { model
-                | message = Nothing
-                , handlingEventList = Just handlingEventList
-              }
-            , Cmd.none
-            )
-
-        _ ->
-            ( model, Cmd.none )
+        ShippingMsg shippingMsg ->
+            let
+                ( newShippingModel, newCmd ) =
+                    Shipping.update shippingMsg model.shippingModel
+            in
+                ( { model | shippingModel = newShippingModel }, Cmd.map ShippingMsg newCmd )
 
 
 view : Model -> Html Msg
@@ -54,7 +53,7 @@ view model =
         [ viewHeader
         , viewMessage model
         , viewSearchLine model
-        , viewDetail model.handlingEventList
+        , viewDetail model.shippingModel
         ]
 
 
@@ -119,13 +118,13 @@ viewSearchLine model =
         ]
 
 
-viewDetail : Maybe Shipping.HandlingEventList -> Html Msg
-viewDetail maybeHandlingEventList =
-    case maybeHandlingEventList of
-        Nothing ->
+viewDetail : Shipping.Model -> Html Msg
+viewDetail shippingModel =
+    case List.length shippingModel.handlingEvents of
+        0 ->
             p [] []
 
-        Just handlingEvents ->
+        _ ->
             div []
                 [ div [ class row ]
                     [ div [ class colS1 ] [ p [] [] ]
@@ -135,14 +134,14 @@ viewDetail maybeHandlingEventList =
                     ]
                 , div [ class row ]
                     [ div [ class colS1 ] [ p [] [] ]
-                    , div [ class colS10 ] [ viewHandlingEventTable handlingEvents ]
+                    , div [ class colS10 ] [ viewHandlingEventTable shippingModel.handlingEvents ]
                     , div [ class colS1 ] [ p [] [] ]
                     ]
                 , p [] []
                 ]
 
 
-viewHandlingEventTable : Shipping.HandlingEventList -> Html Msg
+viewHandlingEventTable : List HE.HandlingEvent -> Html Msg
 viewHandlingEventTable handlingEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
@@ -156,11 +155,11 @@ viewHandlingEventTable handlingEventList =
                 ]
             ]
         , tbody []
-            (List.map viewHandlingEvent handlingEventList.handling_events)
+            (List.map viewHandlingEvent handlingEventList)
         ]
 
 
-viewHandlingEvent : Shipping.HandlingEvent -> Html Msg
+viewHandlingEvent : HE.HandlingEvent -> Html Msg
 viewHandlingEvent handlingEvent =
     tr []
         [ td [] [ text handlingEvent.event_type ]

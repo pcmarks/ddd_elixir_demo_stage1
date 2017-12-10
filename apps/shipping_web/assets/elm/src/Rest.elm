@@ -10,11 +10,12 @@ import Date.Format
 
 -- Local Imports
 
-import Shipping exposing (..)
+import Cargo exposing (..)
+import HandlingEvent as HE
 
 
 type alias HandlingEventList =
-    { handling_events : List HandlingEvent }
+    { handling_events : List HE.HandlingEvent }
 
 
 type Msg
@@ -26,10 +27,6 @@ type Msg
 phoenixHostPortUrl : String
 phoenixHostPortUrl =
     "http://localhost:4000"
-
-
-
--- TODO: Change to clerksUrl and Change backend
 
 
 clerksUrl : String
@@ -120,9 +117,9 @@ handlingEventListDecoder =
         |> Pipeline.required "handling_events" (list handlingEventDecoder)
 
 
-handlingEventDecoder : Decoder HandlingEvent
+handlingEventDecoder : Decoder HE.HandlingEvent
 handlingEventDecoder =
-    decode HandlingEvent
+    decode HE.HandlingEvent
         |> Pipeline.required "voyage" string
         |> Pipeline.required "type" string
         |> Pipeline.required "tracking_id" string

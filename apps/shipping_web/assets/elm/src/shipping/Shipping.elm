@@ -1,34 +1,77 @@
-module Shipping exposing (CargoResponse(..), Cargo, HandlingEvent, HandlingEventList)
+module Shipping exposing (..)
 
-import Date exposing (Date)
-
-
-type CargoResponse
-    = CargoFound Cargo
-    | CargoNotFound String
+import Cargo as C
+import HandlingEvent as HE
+import Rest
 
 
-type alias Cargo =
-    { trackingId : String
-    , status : String
-    , handlingEventsList : Maybe (List HandlingEvent)
+type alias Model =
+    { cargo : Maybe C.Cargo
+    , handlingEvents : List HE.HandlingEvent
+    , serverMessage : Maybe String
+    , restMessage : Maybe String
     }
 
 
-type alias HandlingEventList =
-    { handling_events : List HandlingEvent }
-
-
-type alias HandlingEvent =
-    { voyage : String
-    , event_type : String
-    , tracking_id : String
-    , registration_time : Date
-    , completion_time : Date
-    , location : String
+initModel =
+    { cargo = Nothing
+    , handlingEvents = []
+    , serverMessage = Nothing
+    , restMessage = Nothing
     }
 
 
-initCargo : Cargo
-initCargo =
-    (Cargo "" "" Nothing)
+type Msg
+    = FindCargo String
+    | FindHandlingEvents
+    | RestMsg Rest.Msg
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        FindCargo trackingId ->
+            ( model, Cmd.map RestMsg (Rest.findCargo trackingId) )
+
+        FindHandlingEvents ->
+            ( model, Cmd.map RestMsg (Rest.getAllHandlingEvents) )
+
+        RestMsg (Rest.ReceivedCargo response) ->
+            case response of
+                C.CargoFound cargo ->
+                    ( { model
+                        | cargo = Just cargo
+                        , handlingEvents = []
+                        , serverMessage = Nothing
+                        , restMessage = Nothing
+                      }
+                    , Cmd.none
+                    )
+
+                C.CargoNotFound serverMessage ->
+                    ( { model
+                        | cargo = Nothing
+                        , handlingEvents = []
+                        , serverMessage = Just serverMessage
+                        , restMessage = Nothing
+                      }
+                    , Cmd.none
+                    )
+
+        RestMsg (Rest.ReceivedAllHandlingEvents handlingEventList) ->
+            ( { model
+                | handlingEvents = handlingEventList.handling_events
+                , serverMessage = Just ("FOUND " ++ toString (List.length handlingEventList.handling_events))
+              }
+            , Cmd.none
+            )
+
+        RestMsg (Rest.HttpError restMessage) ->
+            ( { model
+                | cargo = Nothing
+                , handlingEvents = []
+                , serverMessage = Nothing
+                , restMessage = Just restMessage
+              }
+            , Cmd.none
+            )
