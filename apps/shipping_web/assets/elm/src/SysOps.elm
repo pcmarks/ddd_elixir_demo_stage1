@@ -35,7 +35,7 @@ update msg model =
         SearchHandlingEvents ->
             let
                 ( newShippingModel, cmd ) =
-                    Shipping.update (Shipping.FindHandlingEvents) model.newShippingModel
+                    Shipping.update (Shipping.FindHandlingEvents) model.shippingModel
             in
                 ( { model | shippingModel = newShippingModel }, Cmd.map ShippingMsg cmd )
 
@@ -51,7 +51,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ viewHeader
-        , viewMessage model
+        , viewMessage model.shippingModel
         , viewSearchLine model
         , viewDetail model.shippingModel
         ]
@@ -73,9 +73,9 @@ viewHeader =
         ]
 
 
-viewMessage : Model -> Html Msg
-viewMessage model =
-    case model.message of
+viewMessage : Shipping.Model -> Html Msg
+viewMessage shippingModel =
+    case shippingModel.serverMessage of
         Just message ->
             div []
                 [ div [ class row ]
@@ -162,10 +162,10 @@ viewHandlingEventTable handlingEventList =
 viewHandlingEvent : HE.HandlingEvent -> Html Msg
 viewHandlingEvent handlingEvent =
     tr []
-        [ td [] [ text handlingEvent.event_type ]
+        [ td [] [ text handlingEvent.eventType ]
         , td [] [ text handlingEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completion_time) ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.registration_time) ]
-        , td [] [ text handlingEvent.tracking_id ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.completionTime) ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d %H:%M:%S" handlingEvent.registrationTime) ]
+        , td [] [ text handlingEvent.trackingId ]
         , td [] [ text handlingEvent.voyage ]
         ]

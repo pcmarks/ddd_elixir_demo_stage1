@@ -9,8 +9,8 @@ import Html.Events exposing (onClick)
 Local Inports
 --}
 
-import Clerk exposing (Model, init, view)
-import SysOps exposing (Model, init, view)
+import Clerk exposing (Model, initModel, view)
+import SysOps exposing (Model, initModel, view)
 import Styles exposing (..)
 
 
@@ -45,7 +45,7 @@ type alias Model =
 
 init : Model
 init =
-    Model NoUser Clerk.init SysOps.init
+    Model NoUser Clerk.initModel SysOps.initModel
 
 
 
@@ -66,8 +66,8 @@ update msg model =
         BackToDemo ->
             ( { model
                 | user = NoUser
-                , clerkModel = Clerk.init
-                , sysOpsModel = SysOps.init
+                , clerkModel = Clerk.initModel
+                , sysOpsModel = SysOps.initModel
               }
             , Cmd.none
             )

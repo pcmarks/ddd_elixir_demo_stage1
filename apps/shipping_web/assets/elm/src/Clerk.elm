@@ -1,4 +1,4 @@
-module Clerk exposing (Model, Msg(..), init, update, view)
+module Clerk exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, placeholder, style, type_, value)
@@ -9,26 +9,26 @@ import Date.Format
 -- Local Imports
 
 import Shipping
-import Rest
+import Cargo as C
+import HandlingEvent as HE
 import Styles exposing (..)
 
 
 type alias Model =
     { trackingId : String
-    , message : Maybe String
-    , cargo : Maybe Shipping.Cargo
+    , shippingModel : Shipping.Model
     }
 
 
-init : Model
-init =
-    (Model "" Nothing Nothing)
+initModel : Model
+initModel =
+    Model "" Shipping.initModel
 
 
 type Msg
     = TrackingIdEntered String
     | FindCargo
-    | RestMsg Rest.Msg
+    | ShippingMsg Shipping.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -38,45 +38,27 @@ update msg model =
             ( { model | trackingId = String.toUpper trackingId }, Cmd.none )
 
         FindCargo ->
-            ( model, Cmd.map RestMsg (Rest.findCargo model.trackingId) )
+            let
+                ( newShippingModel, cmd ) =
+                    Shipping.update (Shipping.FindCargo model.trackingId) model.shippingModel
+            in
+                ( { model | shippingModel = newShippingModel }, Cmd.map ShippingMsg cmd )
 
-        RestMsg (Rest.ReceivedCargo response) ->
-            case response of
-                Shipping.CargoNotFound serverMessage ->
-                    ( { model
-                        | message = Just serverMessage
-                        , cargo = Nothing
-                      }
-                    , Cmd.none
-                    )
-
-                Shipping.CargoFound cargo ->
-                    ( { model
-                        | message = Nothing
-                        , cargo = Just cargo
-                      }
-                    , Cmd.none
-                    )
-
-        RestMsg (Rest.HttpError message) ->
-            ( { model
-                | message = Just message
-                , cargo = Nothing
-              }
-            , Cmd.none
-            )
-
-        _ ->
-            ( model, Cmd.none )
+        ShippingMsg shippingMsg ->
+            let
+                ( newShippingModel, newCmd ) =
+                    Shipping.update shippingMsg model.shippingModel
+            in
+                ( { model | shippingModel = newShippingModel }, Cmd.map ShippingMsg newCmd )
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ viewHeader
-        , viewMessage model
+        , viewMessage model.shippingModel
         , viewFindLine model
-        , case model.cargo of
+        , case model.shippingModel.cargo of
             Nothing ->
                 div [] []
 
@@ -101,9 +83,9 @@ viewHeader =
         ]
 
 
-viewMessage : Model -> Html Msg
-viewMessage model =
-    case model.message of
+viewMessage : Shipping.Model -> Html Msg
+viewMessage shippingModel =
+    case shippingModel.serverMessage of
         Just message ->
             div []
                 [ div [ class row ]
@@ -152,7 +134,7 @@ viewFindLine model =
         ]
 
 
-viewDetail : Shipping.Cargo -> Html Msg
+viewDetail : C.Cargo -> Html Msg
 viewDetail cargo =
     div []
         [ div [ class row ]
@@ -192,7 +174,7 @@ viewDetail cargo =
         ]
 
 
-viewCustomerEventTable : List Shipping.HandlingEvent -> Html Msg
+viewCustomerEventTable : List HE.HandlingEvent -> Html Msg
 viewCustomerEventTable handlingEventList =
     table [ class "w3-table w3-striped w3-border w3-border-black" ]
         [ thead [ class "w3-pale-yellow" ]
@@ -209,12 +191,12 @@ viewCustomerEventTable handlingEventList =
         ]
 
 
-viewCustomerEvent : Shipping.HandlingEvent -> Html Msg
+viewCustomerEvent : HE.HandlingEvent -> Html Msg
 viewCustomerEvent handlingEvent =
     tr []
         -- [ td [] [ text handlingEvent.voyage ]
         [ td [] [ text handlingEvent.location ]
-        , td [] [ text (Date.Format.format "%Y-%m-%d" handlingEvent.completion_time) ]
-        , td [] [ text (Date.Format.format "%H:%M:%S" handlingEvent.completion_time) ]
-        , td [] [ text handlingEvent.event_type ]
+        , td [] [ text (Date.Format.format "%Y-%m-%d" handlingEvent.completionTime) ]
+        , td [] [ text (Date.Format.format "%H:%M:%S" handlingEvent.completionTime) ]
+        , td [] [ text handlingEvent.eventType ]
         ]

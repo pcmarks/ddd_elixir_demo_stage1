@@ -61,7 +61,12 @@ update msg model =
         RestMsg (Rest.ReceivedAllHandlingEvents handlingEventList) ->
             ( { model
                 | handlingEvents = handlingEventList.handling_events
-                , serverMessage = Just ("FOUND " ++ toString (List.length handlingEventList.handling_events))
+                , serverMessage =
+                    Just
+                        ("Found "
+                            ++ toString (List.length handlingEventList.handling_events)
+                            ++ " handling events."
+                        )
               }
             , Cmd.none
             )
