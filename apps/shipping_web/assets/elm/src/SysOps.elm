@@ -21,7 +21,7 @@ type alias Model =
 
 initModel : Model
 initModel =
-    Model Shipping.initModel ""
+    Model Shipping.initModel "All"
 
 
 type Msg
