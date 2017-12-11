@@ -1,4 +1,4 @@
-module ShippingApp exposing (main)
+module App exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, type_, placeholder, style, src)

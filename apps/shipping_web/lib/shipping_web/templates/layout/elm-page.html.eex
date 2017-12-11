@@ -16,7 +16,7 @@
   <body>
     <script src="<%= static_path(@conn, "/js/ShippingApp.js") %>"></script>
     <script>
-      var app = Elm.ShippingApp.fullscreen();
+      var app = Elm.App.fullscreen();
     </script>
 
   </body>
