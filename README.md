@@ -18,7 +18,7 @@ A central idea in functional programming - besides the obvious use of functions 
 The overall project will be divided into three stages that will, progressively, show certain aspects of DDD. This repository contains Stage 1.
 
 ## Stage 1 Description
-The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes: Clerks and Systems Operation Managers (SysOps) who both work for a Shipping Company.
+The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes and Handling Events: Clerks and Systems Operation Managers (SysOps) who both work for a Shipping Company.
 
 Clerks are customer facing Shipping employess that can retrieve the progress of particular cargo as it is handled by Cargo Handlers. Cargo Handlers are organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
 
@@ -31,7 +31,7 @@ An action performed by a Handler produces a Handling Event.
 
 Clerks can access the latest status of a specific cargo via a query. The subsequent display shows the handling history of that cargo and its current status.
 
-SysOps are Shipping employess who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1: only providing a list of all Handling Events presently under the control of the Shipping Company. Subsequent stages of this demo will provide the SysOps with more functions, such as finding all Cargoes that passed thru a specific port.
+SysOps are Shipping employess who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1: only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the SysOps with more functions, such as finding all Cargoes that passed thru a specific port.
 
 Subsequent stages may also implement separate logins and authorization for Clerks and Clerks.
 
@@ -56,7 +56,7 @@ This stage demonstrates the following aspects of DDD:
 * Elm
   * Single Page Application
   * Accesses the Phoenix JSON API via the Phoenix Controllers
-  * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling
+  * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling - no JavaScript
 
 ## Installation and Operation
 Elixir, Phoenix, and Elm need to be installed first. Phoenix/Elixir installation instructions can be found [in the Phoenix documentation](https://hexdocs.pm/phoenix/installation.html#content). An Elm installation guide can be found at the [Elm website](https://guide.elm-lang.org/install.html). W3CSS styling can be downloaded, however, this applicaiont accesses the style sheets via a CDN.
@@ -67,22 +67,22 @@ Next, obtain this repository.
 Perform all of these steps in order:
 
 ### Phoenix
-1. $ cd <install-directory>ddd_elixir_demo_stage1
-2. $ mix deps.get
-3. $ cd apps/shipping_web/assets
-4. $ npm install
+1. `$ cd <install-directory>ddd_elixir_demo_stage1`
+2. `$ mix deps.get`
+3. `$ cd apps/shipping_web/assets`
+4. `$ npm install`
 
 ### Elm
-1. $ cd <installation directory>/ddd_elixir_demo_stage1/apps/shipping_web/assets/elm
-2. $ elm-compile.cmd or ./elm-compile.sh
+1. `$ cd <installation directory>/ddd_elixir_demo_stage1/apps/shipping_web/assets/elm`
+2. `$ elm-compile.cmd or ./elm-compile.sh`
 
 The last Elm step will download Elm packages and compile the Elm code.
 
 **A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. You can use of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm file is saved.
 
 ### Running the web application
-1. $ cd ddd_elixir_demo_stage1
-2. $ mix phx.server
+1. `$ cd ddd_elixir_demo_stage1`
+2. `$ mix phx.server`
 
 ### Using the web application
 
@@ -100,3 +100,10 @@ SysOps work for the Shipping company and are interested in seeing all of the car
 
 ### Data Storage
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
+
+## Testing
+There are currently 24 Phoenix tests. They can be run by entering the following commands:
+1. `$ ddd_elixir_demo_stage1`
+2. `$ mix test`
+
+There will be Elm tests as well.
