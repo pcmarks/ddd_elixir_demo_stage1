@@ -3,7 +3,7 @@ defmodule ShippingWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"
-    assert html_response(conn, 200) =~ "Customers"
-    assert html_response(conn, 200) =~ "Handlers"
+    assert html_response(conn, 200) =~ "Clerk"
+    assert html_response(conn, 200) =~ "Sys Ops Manager"
   end
 end
