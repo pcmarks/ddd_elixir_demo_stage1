@@ -38,13 +38,13 @@ defmodule Shipping.HandlingEvents.HandlingEvent do
     |> validate_tracking_id()
   end
 
-  @doc """
-  A cargo with this tracking id needs to exist.
-  """
+  #
+  # A cargo with this tracking id needs to exist.
+  #
   defp validate_tracking_id(handling_event) do
     case Cargoes.get_cargo_by_tracking_id!(get_field(handling_event, :tracking_id)) do
       nil -> add_error(handling_event, :tracking_id, "Cannot find tracking number.")
-      cargo -> handling_event
+      _ -> handling_event
     end
   end
 

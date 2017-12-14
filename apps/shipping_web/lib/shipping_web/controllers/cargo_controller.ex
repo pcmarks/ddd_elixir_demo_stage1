@@ -13,7 +13,7 @@ defmodule ShippingWeb.CargoController do
         # The cargo is updated. The tracking status (:on_track, :off_track)
         # is ignored for now.
         handling_events = Cargoes.get_delivery_history_for_tracking_id(cargo.tracking_id)
-        {tracking_status, updated_cargo} =
+        {_, updated_cargo} =
           case handling_events do
             [] -> {:on_track, cargo}
             _  ->

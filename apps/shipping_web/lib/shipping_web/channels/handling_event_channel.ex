@@ -1,8 +1,6 @@
 defmodule ShippingWeb.HandlingEventChannel do
   use Phoenix.Channel
 
-  # The Cargoes Aggregate
-  alias Shipping.Cargoes
 
   def join("handling_event:" <> tracking_id, _message, socket) do
     handling_events = Cargoes.get_delivery_history_for_tracking_id(tracking_id)
@@ -35,7 +33,7 @@ defmodule ShippingWeb.HandlingEventChannel do
     handling_event
   end
 
-  def broadcast_new_cargo_status({tracking_status, cargo} = status_and_cargo) do
+  def broadcast_new_cargo_status({_tracking_status, cargo} = status_and_cargo) do
     ShippingWeb.Endpoint.broadcast(
       "handling_event:#{cargo.tracking_id}",
       "new_cargo_status",

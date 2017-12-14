@@ -8,9 +8,9 @@ defmodule ShippingWeb.HandlingEventController do
   use ShippingWeb,  :controller
 
   # The Aggregates
-  alias Shipping.{Cargoes, HandlingEvents, Locations}
-  # The broadcasting channel
-  alias ShippingWeb.HandlingEventChannel
+  alias Shipping.{Cargoes, HandlingEvents}
+  # # The broadcasting channel
+  # alias ShippingWeb.HandlingEventChannel
 
   def show(conn, _params) do
     handling_events = HandlingEvents.list_handling_events()
