@@ -65,7 +65,7 @@ update msg model =
                     Just
                         ("Found "
                             ++ toString (List.length handlingEventList.handling_events)
-                            ++ " handling events."
+                            ++ " Handling Events."
                         )
               }
             , Cmd.none

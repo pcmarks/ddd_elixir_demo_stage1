@@ -132,14 +132,14 @@ handlingEventDecoder =
 --- SysOps (Clerks) requests, and responses
 
 
-sysOpsUrl : String
-sysOpsUrl =
-    phoenixHostPortUrl ++ "/shipping/sysops"
+shippingOpsUrl : String
+shippingOpsUrl =
+    phoenixHostPortUrl ++ "/shipping/shippingops"
 
 
-sysOpEventsUrl : String
-sysOpEventsUrl =
-    sysOpsUrl ++ "/events"
+shippingOpsEventsUrl : String
+shippingOpsEventsUrl =
+    shippingOpsUrl ++ "/events"
 
 
 getAllHandlingEvents : Cmd Msg
@@ -158,7 +158,7 @@ getAllHandlingEvents =
 
 allHandlingEventsRequest : Request HandlingEventList
 allHandlingEventsRequest =
-    Http.get (sysOpEventsUrl ++ "?_format=json") handlingEventListDecoder
+    Http.get (shippingOpsEventsUrl ++ "?_format=json") handlingEventListDecoder
 
 
 date : Decoder Date
