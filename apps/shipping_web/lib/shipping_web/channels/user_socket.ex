@@ -2,9 +2,7 @@ defmodule ShippingWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # Provide a mechanism so that Handlers can communicate (broadcast) their
-  # handling events
-  channel "handling_event:*", ShippingWeb.HandlingEventChannel
+  # channel "room:*", SampleWeb.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -32,7 +30,7 @@ defmodule ShippingWeb.UserSocket do
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
   #
-  #     ShippingWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
+  #     SampleWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
   def id(_socket), do: nil
