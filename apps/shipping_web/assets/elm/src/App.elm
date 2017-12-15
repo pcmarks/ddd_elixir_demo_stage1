@@ -10,7 +10,7 @@ Local Inports
 --}
 
 import Clerk exposing (Model, initModel, view)
-import SysOps exposing (Model, initModel, view)
+import ShippingOps exposing (Model, initModel, view)
 import Styles exposing (..)
 
 
@@ -33,19 +33,19 @@ main =
 type User
     = NoUser
     | ClerkUser
-    | SysOpsUser
+    | ShippingOpsUser
 
 
 type alias Model =
     { user : User
     , clerkModel : Clerk.Model
-    , sysOpsModel : SysOps.Model
+    , shippingOpsModel : ShippingOps.Model
     }
 
 
 init : Model
 init =
-    Model NoUser Clerk.initModel SysOps.initModel
+    Model NoUser Clerk.initModel ShippingOps.initModel
 
 
 
@@ -56,8 +56,8 @@ type Msg
     = BackToDemo
     | ClerkChosen
     | ClerkMsg Clerk.Msg
-    | SysOpsChosen
-    | SysOpsMsg SysOps.Msg
+    | ShippingOpsChosen
+    | ShippingOpsMsg ShippingOps.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,7 +67,7 @@ update msg model =
             ( { model
                 | user = NoUser
                 , clerkModel = Clerk.initModel
-                , sysOpsModel = SysOps.initModel
+                , shippingOpsModel = ShippingOps.initModel
               }
             , Cmd.none
             )
@@ -75,8 +75,8 @@ update msg model =
         ClerkChosen ->
             ( { model | user = ClerkUser }, Cmd.none )
 
-        SysOpsChosen ->
-            ( { model | user = SysOpsUser }, Cmd.none )
+        ShippingOpsChosen ->
+            ( { model | user = ShippingOpsUser }, Cmd.none )
 
         ClerkMsg clerkMsg ->
             let
@@ -85,12 +85,12 @@ update msg model =
             in
                 ( { model | clerkModel = updatedClerkModel }, Cmd.map ClerkMsg clerkCmd )
 
-        SysOpsMsg sysOpsMsg ->
+        ShippingOpsMsg shippingOpsMsg ->
             let
-                ( updatedSysOpsModel, sysOpsCmd ) =
-                    (SysOps.update sysOpsMsg model.sysOpsModel)
+                ( updatedShippingOpsModel, shippingOpsCmd ) =
+                    (ShippingOps.update shippingOpsMsg model.shippingOpsModel)
             in
-                ( { model | sysOpsModel = updatedSysOpsModel }, Cmd.map SysOpsMsg sysOpsCmd )
+                ( { model | shippingOpsModel = updatedShippingOpsModel }, Cmd.map ShippingOpsMsg shippingOpsCmd )
 
 
 
@@ -114,10 +114,10 @@ view model =
                         , viewBackToDemo
                         ]
 
-                SysOpsUser ->
+                ShippingOpsUser ->
                     div []
-                        -- Tag any SysOps Msg's with type SysOpsMsg
-                        [ Html.map SysOpsMsg (SysOps.view model.sysOpsModel)
+                        -- Tag any ShippingOps Msg's with type ShippingOpsMsg
+                        [ Html.map ShippingOpsMsg (ShippingOps.view model.shippingOpsModel)
                         , viewBackToDemo
                         ]
             ]
@@ -181,9 +181,9 @@ viewUserChoice =
                     [ text "Clerk" ]
                 , button
                     [ class (buttonClassStr "w3-margin")
-                    , onClick SysOpsChosen
+                    , onClick ShippingOpsChosen
                     ]
-                    [ text "Sys Ops Manager" ]
+                    [ text "Shipping Ops Manager" ]
                 ]
             , div [ class (colS4 "") ] [ p [] [] ]
             ]

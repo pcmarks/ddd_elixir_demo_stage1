@@ -1,4 +1,4 @@
-module SysOps exposing (Model, Msg(..), initModel, update, view)
+module ShippingOps exposing (Model, Msg(..), initModel, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, placeholder, style, type_, value)
@@ -67,7 +67,7 @@ viewHeader =
                     [ class ""
                     , style [ ( "font", "bold" ), ( "color", "MidnightBlue" ) ]
                     ]
-                    [ text "Systems Operation Manager" ]
+                    [ text "Shipping Operations Manager" ]
                 ]
             ]
         ]
