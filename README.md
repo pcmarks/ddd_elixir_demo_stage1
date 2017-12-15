@@ -18,7 +18,7 @@ A central idea in functional programming - besides the obvious use of functions 
 The overall project will be divided into three stages that will, progressively, show certain aspects of DDD. This repository contains Stage 1.
 
 ## Stage 1 Description
-The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes and Handling Events: Clerks and Systems Operation Managers (SysOps) who both work for a Shipping Company.
+The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes and Handling Events: Clerks and Shipping Operations Managers (ShippingOps) who both work for a Shipping Company.
 
 Clerks are customer facing Shipping employess that can retrieve the progress of particular cargo as it is handled by Cargo Handlers. Cargo Handlers are organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
 
@@ -31,7 +31,7 @@ An action performed by a Handler produces a Handling Event.
 
 Clerks can access the latest status of a specific cargo via a query. The subsequent display shows the handling history of that cargo and its current status.
 
-SysOps are Shipping employess who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1: only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the SysOps with more functions, such as finding all Cargoes that passed thru a specific port.
+ShippingOps are Shipping employess who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1: only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the ShippingOps with more functions, such as finding all Cargoes that passed thru a specific port.
 
 Subsequent stages may also implement separate logins and authorization for Clerks and Clerks.
 
@@ -88,15 +88,15 @@ The last Elm step will download Elm packages and compile the Elm code.
 
 Two separate methods are used to generate the web content: Phoenix (Views and Templates) and Elm. Each is accessed using a different URL. For Phoenix, use [localhost:4000](localhost:4000) and for the Elm version use [localhost:4000/elm](localhost:4000/elm). Both of these URLs will bring you to the demo's home page. From this point on, the UI looks and behaves (except for some color differences, button sizes, etc.) exactly the same for both versions.
 
-The application is designed for two different types of users: Clerks and SysOps.
+The application is designed for two different types of users: Clerks and ShippingOps.
 
 #### Clerks
 
 Clerks are those people that wish to find the status of a cargo. From the home page, click on the _Clerks_ button. Enter 'ABC123' as a tracking number and click on _Track!_. The response will be a history of the Handling Events for this particular cargo.
 
-#### SysOps
+#### ShippingOps
 
-SysOps work for the Shipping company and are interested in seeing all of the cargoes being managed. From the home page, click on _Sys Ops Manager_. This will take you to a "search" page with only one criterion: All. Click on _Search!_ and a list of all Handling Events will appear. Note that in subsequent stages the user will be able to specify more search criteria.
+ShippingOps work for the Shipping company and are interested in the status of all the cargoes being managed by the company, for example, those entering a particular port. From the home page, click on _Shipping Operations Manager_. This will take you to a "search" page with only one criterion (for now): All. Click on _Search!_ and a list of all Handling Events will appear. Note that in subsequent stages the user will be able to specify more search criteria.
 
 ### Data Storage
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
