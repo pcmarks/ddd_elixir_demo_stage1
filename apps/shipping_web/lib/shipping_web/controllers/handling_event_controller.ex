@@ -21,7 +21,7 @@ defmodule ShippingWeb.HandlingEventController do
       "json" ->
         render(conn, :show, handling_events: handling_events)
       _ ->
-        render(conn, ShippingWeb.SysOpsView, :index,
+        render(conn, ShippingWeb.ShippingOpsView, :index,
                     handling_events: handling_events)
     end
   end

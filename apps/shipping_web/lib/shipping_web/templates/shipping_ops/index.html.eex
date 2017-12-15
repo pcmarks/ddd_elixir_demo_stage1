@@ -1,4 +1,4 @@
-<h1 style="color: MidnightBlue;text-align:center;">Systems Operations Manager</h1>
+<h1 style="color: MidnightBlue;text-align:center;">Shipping Operations Manager</h1>
 
 
 <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>

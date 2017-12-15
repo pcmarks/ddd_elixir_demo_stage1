@@ -25,9 +25,9 @@ defmodule ShippingWeb.Router do
       resources "/", ClerkController, only: [:index]
     end
 
-    scope "/sysops" do
+    scope "/shippingops" do
       get "/events", HandlingEventController, :show
-      resources "/", SysOpsController, only: [:index]
+      resources "/", ShippingOpsController, only: [:index]
     end
   end
 

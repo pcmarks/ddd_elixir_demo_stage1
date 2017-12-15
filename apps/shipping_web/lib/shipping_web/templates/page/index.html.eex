@@ -2,5 +2,5 @@
 <h3 style="text-align: center; color: MidnightBlue;">Please Choose a User Type</h2>
 <div class="jumbotron">
   <a href="<%= clerk_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Clerk</a>
-  <a href="<%= sys_ops_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Sys Ops Manager</a>
+  <a href="<%= shipping_ops_path(@conn, :index ) %>" role="button" class="btn btn-primary btn-lg">Shipping Ops Manager</a>
 </div>
