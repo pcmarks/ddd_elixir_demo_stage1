@@ -1,6 +1,6 @@
 defmodule ShippingWeb.HandlingEventController do
   @moduledoc """
-  Support for displaying Handling Events, primarily for the Shipping Clersk.
+  Support for displaying Handling Events, primarily for the Clersk.
 
   NOTE: Commented out code can be used to create a new Handling Event for
   future demo stages.
