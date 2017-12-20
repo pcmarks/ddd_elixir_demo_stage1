@@ -2,7 +2,10 @@ defmodule ShippingWeb.CargoController do
   use ShippingWeb, :controller
 
   alias Shipping.Cargoes
-
+  @doc """
+  Prepare to show a Cargo and its associated HandlingEvent's. Rendering results
+  in either and HTML page or a JSON response.
+  """
   def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
     case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
       nil ->
@@ -13,13 +16,13 @@ defmodule ShippingWeb.CargoController do
         # The cargo is updated. The tracking status (:on_track, :off_track)
         # is ignored for now.
         handling_events = Cargoes.get_delivery_history_for_tracking_id(cargo.tracking_id)
-        {_, updated_cargo} =
+        {_tracking_status, updated_cargo} =
           case handling_events do
             [] -> {:on_track, cargo}
             _  ->
               handling_events
               |> Enum.reverse()
-              |> Shipping.update_cargo_status()
+              |> Shipping.update_cargo_status(cargo)
           end
           # NOTE: Because we are employing a single page view for the Clerk page,
           # we render the ClerkView index page passing a cargo and its handling events

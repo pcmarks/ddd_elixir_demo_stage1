@@ -17,12 +17,10 @@ defmodule Shipping do
   The tracking status is either :on_track or :off_track. Note that tracking
   status is not currently used anywhere in the Stage 1 demo.
   """
-  def update_cargo_status(handling_events) when is_list(handling_events) do
-    cargo = Cargoes.get_cargo_by_tracking_id!(List.first(handling_events).tracking_id)
+  def update_cargo_status(handling_events, cargo) when is_list(handling_events) do
     do_update_cargo_status(handling_events, :on_track, cargo)
   end
-  def update_cargo_status(handling_event) do
-    cargo = Cargoes.get_cargo_by_tracking_id!(handling_event.tracking_id)
+  def update_cargo_status(handling_event, cargo) do
     do_update_cargo_status([handling_event], :on_track, cargo)
   end
 
@@ -30,7 +28,6 @@ defmodule Shipping do
                           _tracking_status,
                           %Cargo{status: status} = cargo) do
     {next_tracking_status, next_status} = next_status(type, status)
-    # IO.puts("STATUS: #{status} TYPE: #{type} NEXT: #{next_status}")
     do_update_cargo_status(handling_events, next_tracking_status, %{cargo | :status => next_status})
   end
   defp do_update_cargo_status([], tracking_status, cargo) do
@@ -43,8 +40,11 @@ defmodule Shipping do
     {tracking_status, cargo}
   end
 
-  # State transistion for cargo status given a handling event
-  # This is incomplete.
+  # State transistions to determine a cargo's status based on its current status
+  # and a handling event. In addition, there are combinations that result in
+  # a tracking status (different than the cargo status) being set: :on_track or
+  # :off_track.
+  # This is an incomplete set of combinations.
   defp next_status("RECEIVE", "NOT RECEIVED"), do: {:on_track, "IN PORT"}
   defp next_status("CUSTOMS", "IN PORT"), do: {:on_track, "IN PORT"}
   defp next_status("CLAIM", "IN PORT"), do: {:on_track, "CLAIMED"}
