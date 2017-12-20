@@ -6,7 +6,7 @@ defmodule Shipping.Cargoes do
   import Ecto.Query, warn: false
   alias Shipping.Repo
 
-  alias Shipping.Cargoes.{Cargo, DeliveryHistory}
+  alias Shipping.Cargoes.{Cargo, DeliveryHistories}
 
   @doc """
   Gets a cargo by its tracking id.
@@ -65,7 +65,7 @@ defmodule Shipping.Cargoes do
 
   """
   def get_delivery_history_for_tracking_id(tracking_id) do
-    DeliveryHistory.for_tracking_id(tracking_id)
+    DeliveryHistories.for_tracking_id(tracking_id)
     |> Enum.sort(&(&1.completion_time >= &2.completion_time))
   end
 

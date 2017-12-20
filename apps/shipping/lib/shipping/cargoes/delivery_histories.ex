@@ -1,4 +1,4 @@
-defmodule Shipping.Cargoes.DeliveryHistory do
+defmodule Shipping.Cargoes.DeliveryHistories do
   @moduledoc """
   A delivery history for a particular cargo is a list of all of the handling
   events associated with the cargo.
