@@ -10,6 +10,21 @@ defmodule Shipping do
   alias Shipping.Cargoes.Cargo
   alias Shipping.HandlingEvents.HandlingEvent
 
+  #############################################################################
+  # Support for HandlingEvent types - Useful for UI selects
+  #############################################################################
+  @handling_event_type_map %{
+    "Load": "LOAD",
+    "Unload": "UNLOAD",
+    "Receive": "RECEIVE",
+    "Claim": "CLAIM",
+    "Customs": "CUSTOMS"
+  }
+
+  def handling_event_type_map do
+    @handling_event_type_map
+  end
+
   @doc """
   Based on a cargo's current status and a list of handling events a new
   cargo status is determined, the cargo is updated with this status and a

@@ -69,19 +69,5 @@ defmodule Shipping.Cargoes do
     |> Enum.sort(&(&1.completion_time >= &2.completion_time))
   end
 
-  #############################################################################
-  # Support for HandlingEvent types
-  #############################################################################
-  @handling_event_type_map %{
-    "Load": "LOAD",
-    "Unload": "UNLOAD",
-    "Receive": "RECEIVE",
-    "Claim": "CLAIM",
-    "Customs": "CUSTOMS"
-  }
-
-  def handling_event_type_map do
-    @handling_event_type_map
-  end
 
 end

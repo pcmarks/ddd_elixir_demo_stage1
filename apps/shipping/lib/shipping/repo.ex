@@ -1,6 +1,6 @@
 defmodule Shipping.Repo do
   # use Ecto.Repo, otp_app: :shipping
-  #
+  # NOTE: No Database is used; rather, Agents. See CargoAgent and HandlingEventAgent
   # @doc """
   # Dynamically loads the repository url from the
   # DATABASE_URL environment variable.
