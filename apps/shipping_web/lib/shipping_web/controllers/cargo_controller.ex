@@ -19,7 +19,7 @@ defmodule ShippingWeb.CargoController do
             _  ->
               handling_events
               |> Enum.reverse()
-              |> Cargoes.update_cargo_status()
+              |> Shipping.update_cargo_status()
           end
           # NOTE: Because we are employing a single page view for the Clerk page,
           # we render the ClerkView index page passing a cargo and its handling events
