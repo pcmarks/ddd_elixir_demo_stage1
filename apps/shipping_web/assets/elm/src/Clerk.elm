@@ -136,42 +136,46 @@ viewFindLine model =
 
 viewDetail : C.Cargo -> Html Msg
 viewDetail cargo =
-    div []
-        [ div [ class row ]
-            [ div [ class colS2 ] [ p [] [] ]
-            , div [ class (colS8 "") ]
-                [ h2 [] [ text "Cargo Tracking Details" ]
-                , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
-                    [ div [ class "w3-panel w3-blue" ]
-                        [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
-                    , div [ class "w3-panel" ]
-                        [ div [ class "w3-left" ] [ text ("Tracking Id: " ++ cargo.trackingId) ]
-                        , div [ class "w3-right" ] [ text ("Status: " ++ cargo.status) ]
+    let
+        delivery =
+            cargo.delivery
+    in
+        div []
+            [ div [ class row ]
+                [ div [ class colS2 ] [ p [] [] ]
+                , div [ class (colS8 "") ]
+                    [ h2 [] [ text "Cargo Tracking Details" ]
+                    , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
+                        [ div [ class "w3-panel w3-blue" ]
+                            [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
+                        , div [ class "w3-panel" ]
+                            [ div [ class "w3-left" ] [ text ("Tracking Id: " ++ cargo.trackingId) ]
+                            , div [ class "w3-right" ] [ text ("Status: " ++ delivery.transportationStatus) ]
+                            ]
                         ]
                     ]
+                , div [ class colS2 ] [ p [] [] ]
                 ]
-            , div [ class colS2 ] [ p [] [] ]
-            ]
-        , div [ class row ]
-            [ div [ class colS2 ] [ p [] [] ]
-            , div [ class (colS8 "w3-padding-small"), style [ ( "background-color", "#fee" ) ] ]
-                [ h5 [] [ text "Shipment Progress" ] ]
-            , div [ class colS2 ] [ p [] [] ]
-            ]
-        , div [ class row ]
-            [ div [ class colS2 ] [ p [] [] ]
-            , div [ class (colS8 "") ]
-                [ case cargo.handlingEventsList of
-                    Just listOfHandlingEvents ->
-                        viewCustomerEventTable listOfHandlingEvents
+            , div [ class row ]
+                [ div [ class colS2 ] [ p [] [] ]
+                , div [ class (colS8 "w3-padding-small"), style [ ( "background-color", "#fee" ) ] ]
+                    [ h5 [] [ text "Shipment Progress" ] ]
+                , div [ class colS2 ] [ p [] [] ]
+                ]
+            , div [ class row ]
+                [ div [ class colS2 ] [ p [] [] ]
+                , div [ class (colS8 "") ]
+                    [ case cargo.handlingEventsList of
+                        Just listOfHandlingEvents ->
+                            viewCustomerEventTable listOfHandlingEvents
 
-                    Nothing ->
-                        div [] []
+                        Nothing ->
+                            div [] []
+                    ]
+                , div [ class colS2 ] [ p [] [] ]
                 ]
-            , div [ class colS2 ] [ p [] [] ]
+            , p [] []
             ]
-        , p [] []
-        ]
 
 
 viewCustomerEventTable : List HE.HandlingEvent -> Html Msg

@@ -1,7 +1,7 @@
 module Rest exposing (Msg(..), findCargo, getAllHandlingEvents)
 
 import Http exposing (Request)
-import Json.Decode exposing (Decoder, andThen, fail, int, list, maybe, map, oneOf, string, succeed)
+import Json.Decode exposing (Decoder, andThen, fail, bool, int, list, maybe, map, oneOf, string, succeed)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode
 import Date exposing (Date)
@@ -11,11 +11,12 @@ import Date.Format
 -- Local Imports
 
 import Cargo exposing (..)
-import HandlingEvent as HE
+import Delivery exposing (Delivery)
+import HandlingEvent exposing (HandlingEvent)
 
 
 type alias HandlingEventList =
-    { handling_events : List HE.HandlingEvent }
+    { handling_events : List HandlingEvent }
 
 
 type Msg
@@ -89,7 +90,7 @@ cargoDecoder : Decoder Cargo
 cargoDecoder =
     decode Cargo
         |> Pipeline.required "tracking_id" string
-        |> Pipeline.required "status" string
+        |> Pipeline.required "delivery" deliveryDecoder
         |> Pipeline.required "handling_events" (maybe (list handlingEventDecoder))
 
 
@@ -111,15 +112,25 @@ cargoErrorResponseDecoder =
         |> (required "error_status" string)
 
 
+deliveryDecoder =
+    decode Delivery
+        |> Pipeline.required "transportation_status" string
+        |> Pipeline.required "location" string
+        |> Pipeline.required "voyage" string
+        |> Pipeline.hardcoded False
+        -- "misdirected" bool
+        |> Pipeline.required "routing_status" string
+
+
 handlingEventListDecoder : Decoder HandlingEventList
 handlingEventListDecoder =
     decode HandlingEventList
         |> Pipeline.required "handling_events" (list handlingEventDecoder)
 
 
-handlingEventDecoder : Decoder HE.HandlingEvent
+handlingEventDecoder : Decoder HandlingEvent
 handlingEventDecoder =
-    decode HE.HandlingEvent
+    decode HandlingEvent
         |> Pipeline.required "voyage" string
         |> Pipeline.required "type" string
         |> Pipeline.required "tracking_id" string
@@ -132,14 +143,14 @@ handlingEventDecoder =
 --- SysOps (Clerks) requests, and responses
 
 
-shippingOpsUrl : String
-shippingOpsUrl =
+sysOpsUrl : String
+sysOpsUrl =
     phoenixHostPortUrl ++ "/shipping/opsmanagers"
 
 
-shippingOpsEventsUrl : String
-shippingOpsEventsUrl =
-    shippingOpsUrl ++ "/events"
+sysOpEventsUrl : String
+sysOpEventsUrl =
+    sysOpsUrl ++ "/events"
 
 
 getAllHandlingEvents : Cmd Msg
@@ -158,7 +169,7 @@ getAllHandlingEvents =
 
 allHandlingEventsRequest : Request HandlingEventList
 allHandlingEventsRequest =
-    Http.get (shippingOpsEventsUrl ++ "?_format=json") handlingEventListDecoder
+    Http.get (sysOpEventsUrl ++ "?_format=json") handlingEventListDecoder
 
 
 date : Decoder Date
