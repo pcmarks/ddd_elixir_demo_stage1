@@ -1,7 +1,7 @@
-defmodule Shipping.Cargoes.Delivery do
+defmodule Shipping.Cargoes.DeliveryHistory do
   @moduledoc """
   VALUE
-  A Delivery structure reflects the status of the cargo shipment. Its values
+  A Delivery History structure contains the status of the cargo shipment. Its values
   are largely determined by the cargo's history of handling events.
 
   For Stage 1, we assume that the cargo has already been "ROUTED", it

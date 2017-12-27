@@ -3,7 +3,7 @@ defmodule ShippingWeb.CargoController do
 
   alias Shipping.{Cargoes, HandlingEvents}
   @doc """
-  Prepare to show a Cargo and its associated Delivery. Rendering results
+  Prepare to show a Cargo and its associated DeliveryHistory. Rendering results
   in either and HTML page or a JSON response.
   """
   def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
@@ -11,42 +11,27 @@ defmodule ShippingWeb.CargoController do
       nil ->
         error_formatter(conn, tracking_id)
       %Shipping.Cargoes.Cargo{} = cargo ->
-        # Retrieve and apply all handling events to date against the cargo so as
+        # Retrieve and apply all handling events to date against the cargo
         # to determine the cargo's current status.  Apply oldest events first.
-        # The cargo is updated. The tracking status (:on_track, :off_track)
-        # is ignored for now.
         handling_events = HandlingEvents.get_all_with_tracking_id!(cargo.tracking_id)
         delivery = handling_events
           |> Enum.reverse
           |> Shipping.create_delivery()
-        # sorted_handling_events =
-        #   handling_events
-        #     |> Enum.reverse
-        # {_tracking_status, updated_cargo} =
-        #   case handling_events do
-        #     [] -> {:on_track, cargo}
-        #     _  ->
-        #       handling_events
-        #       |> Enum.reverse()
-        #       |> Shipping.update_cargo_status(cargo)
-        #   end
-          # NOTE: Because we are employing a single page view for the Clerk page,
-          # we render the ClerkView index page passing a cargo and its handling events
-          case get_format(conn) do
-            "json" ->
-              render(conn,
-                :show,
-                cargo: cargo,
-                delivery: delivery,
-                handling_events: handling_events)
-            _ ->
-              render(conn,
-                ShippingWeb.ClerkView,
-                :index,
-                cargo: cargo,
-                delivery: delivery,
-                handling_events: handling_events)
-          end
+        case get_format(conn) do
+          "json" ->
+            render(conn,
+              :show,
+              cargo: cargo,
+              delivery: delivery,
+              handling_events: handling_events)
+          _ ->
+            render(conn,
+              ShippingWeb.ClerkView,
+              :index,
+              cargo: cargo,
+              delivery: delivery,
+              handling_events: handling_events)
+        end
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")

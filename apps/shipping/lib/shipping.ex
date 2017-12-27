@@ -6,7 +6,7 @@ defmodule Shipping do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
-  alias Shipping.Cargoes.{Cargo, Delivery}
+  alias Shipping.Cargoes.{Cargo, DeliveryHistory}
   alias Shipping.HandlingEvents.HandlingEvent
 
   #############################################################################
@@ -25,18 +25,18 @@ defmodule Shipping do
   end
 
   @doc """
-  Create a Delivery: a representation of the Cargo's current status. The values
-  in a Delivery are determined by applying each of the Cargo's handling events,
-  in turn, against the Delivery.
+  Create a DeliveryHistory: a representation of the Cargo's current status. The values
+  in a DeliveryHistory are determined by applying each of the Cargo's handling events,
+  in turn, against the DeliveryHistory.
   """
   def create_delivery(handling_events) do
-    delivery = %Delivery{}
+    delivery = %DeliveryHistory{}
     update_delivery(handling_events, delivery)
   end
 
   defp update_delivery([%HandlingEvent{
                           type: type} | handling_events],
-                        %Delivery{
+                        %DeliveryHistory{
                           transportation_status: trans_status} = delivery) do
       new_trans_status = next_trans_status(type, trans_status)
       update_delivery(handling_events,

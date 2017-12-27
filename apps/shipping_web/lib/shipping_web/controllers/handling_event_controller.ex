@@ -8,7 +8,7 @@ defmodule ShippingWeb.HandlingEventController do
   use ShippingWeb,  :controller
 
   # The Aggregates
-  alias Shipping.{Cargoes, HandlingEvents}
+  alias Shipping.{HandlingEvents}
   # # The broadcasting channel
   # alias ShippingWeb.HandlingEventChannel
 
