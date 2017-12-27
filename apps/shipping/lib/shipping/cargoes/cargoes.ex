@@ -6,7 +6,7 @@ defmodule Shipping.Cargoes do
   import Ecto.Query, warn: false
   alias Shipping.Repo
 
-  alias Shipping.Cargoes.{Cargo, DeliveryHistories}
+  alias Shipping.Cargoes.Cargo
 
   @doc """
   Gets a cargo by its tracking id.
@@ -54,20 +54,5 @@ defmodule Shipping.Cargoes do
   def change_cargo(%Cargo{} = cargo) do
     Cargo.changeset(cargo, %{})
   end
-
-  @doc """
-  Gets the delivery history (all handling events to date) for a tracking id. And
-  then sorts it in descending order based on the completion date/time.
-
-  Raises `Ecto.NoResultsError` if the Handling event does not exist.
-
-  ## Examples
-
-  """
-  def get_delivery_history_for_tracking_id(tracking_id) do
-    DeliveryHistories.for_tracking_id(tracking_id)
-    |> Enum.sort(&(&1.completion_time >= &2.completion_time))
-  end
-
 
 end

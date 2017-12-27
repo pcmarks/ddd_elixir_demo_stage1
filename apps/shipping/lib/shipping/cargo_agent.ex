@@ -49,7 +49,6 @@ defmodule Shipping.CargoAgent do
           cargo
             |> String.trim_trailing("\n")
             |> Poison.decode!(as: %Cargo{})
-            |> Map.put(:status, "NOT RECEIVED")
         load_from_cache(cache, {[cargo_struct | cargoes], cargo_struct.id})
     end
   end

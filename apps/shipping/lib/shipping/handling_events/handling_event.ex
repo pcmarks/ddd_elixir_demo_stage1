@@ -1,4 +1,7 @@
 defmodule Shipping.HandlingEvents.HandlingEvent do
+  @moduledoc """
+  DOMAIN EVENT
+  """
   use Ecto.Schema
   import Ecto.Changeset
   # The Aggregate is HandlingEvents
@@ -7,7 +10,7 @@ defmodule Shipping.HandlingEvents.HandlingEvent do
   alias Shipping.Cargoes
 
   # Note that handling events are stored in the order that they are received
-  # - the registration_time - so that they can be "replayed". They are usually
+  # - the registration_time - so that they can be "replayed". They are often
   # displayed in the order that they happened - the completion_time - with the
   # newest first.
 

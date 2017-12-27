@@ -134,7 +134,7 @@ handlingEventDecoder =
 
 shippingOpsUrl : String
 shippingOpsUrl =
-    phoenixHostPortUrl ++ "/shipping/shippingops"
+    phoenixHostPortUrl ++ "/shipping/opsmanagers"
 
 
 shippingOpsEventsUrl : String

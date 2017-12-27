@@ -9,7 +9,7 @@ defmodule Shipping.HandlingEvents do
   alias Shipping.HandlingEvents.HandlingEvent
 
   @doc """
-  Returns the list of handling_events.
+  Returns the list of all handling_events.
 
   ## Examples
 
@@ -36,7 +36,7 @@ defmodule Shipping.HandlingEvents do
       []
 
   """
-  def get_handling_events_by_tracking_id!(tracking_id) do
+  def get_all_with_tracking_id!(tracking_id) do
     Repo.get_by_tracking_id!(HandlingEvent, tracking_id)
     |> Enum.sort(&(&1.completion_time >= &2.completion_time))
   end
