@@ -37,7 +37,7 @@
     <div class="pull-right">
       <p>
         <u><strong>Status:</strong></u>
-        <span id="cargo-status"><%= @cargo.status %></span>
+        <span id="cargo-status"><%= @delivery.transportation_status %></span>
       </p>
     </div>
   </div>
