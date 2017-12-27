@@ -1,4 +1,4 @@
-defmodule ShippingWeb.ShippingOpsView do
+defmodule ShippingWeb.OpsManagerView do
   use ShippingWeb, :view
 
   def render "index.json", _params do

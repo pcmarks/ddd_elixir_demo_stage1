@@ -1,4 +1,4 @@
-defmodule ShippingWeb.ShippingOpsController do
+defmodule ShippingWeb.OpsManagerController do
   use ShippingWeb, :controller
 
   def index(conn, _params) do

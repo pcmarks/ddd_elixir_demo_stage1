@@ -27,7 +27,7 @@ defmodule ShippingWeb.Router do
 
     scope "/opsmanagers" do
       get "/events", HandlingEventController, :show
-      resources "/", ShippingOpsController, only: [:index]
+      resources "/", OpsManagerController, only: [:index]
     end
   end
 
