@@ -12,12 +12,12 @@ defmodule Shipping.HandlingEventsTest do
   end
 
   test "Get handling events by tracking id" do
-    handling_events = HandlingEvents.get_handling_events_by_tracking_id!("ABC123")
+    handling_events = HandlingEvents.get_all_with_tracking_id!("ABC123")
     assert length(handling_events) >= 3
   end
 
   test "Get handling events for non-existent tracking id" do
-    handling_events = HandlingEvents.get_handling_events_by_tracking_id!("FOO")
+    handling_events = HandlingEvents.get_all_with_tracking_id!("FOO")
     assert length(handling_events) >= 0
   end
 

@@ -1,16 +1,19 @@
-defmodule Shipping.Cargoes.DeliveryHistoriesTest do
+defmodule Shipping.Cargoes.DeliveryTest do
   use ExUnit.Case
 
-  alias Shipping.Cargoes.DeliveryHistories
+  alias Shipping.Cargoes.Delivery
+  alias Shipping.HandlingEvents
 
-  test "Fetch some existing Delivery History" do
-    history = DeliveryHistories.for_tracking_id("ABC123")
-    assert length(history) >= 3
+  test "Create Delivery for existing Cargo" do
+    handling_events = HandlingEvents.get_all_with_tracking_id!("ABC123")
+    delivery = Shipping.create_delivery(handling_events)
+    assert delivery.transportation_status == "IN PORT"
   end
 
-  test "Fetch some non-existing Delivery History" do
-    history = DeliveryHistories.for_tracking_id("FOO")
-    assert history == []
+  test "Create Delivery for non-existing Cargo" do
+    handling_events = HandlingEvents.get_all_with_tracking_id!("FOO")
+    delivery = Shipping.create_delivery(handling_events)
+    assert delivery.transportation_status == "NOT RECEIVED"
   end
 
 end

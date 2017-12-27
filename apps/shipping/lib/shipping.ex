@@ -58,6 +58,6 @@ defmodule Shipping do
   defp next_trans_status("LOAD", "ON CARRIER"), do: "ON CARRIER"
   defp next_trans_status("UNLOAD", "ON CARRIER"), do: "IN PORT"
   defp next_trans_status("UNLOAD", "IN PORT"), do: "IN PORT"
-  defp next_trans_status(_, status), do: "UNKNOWN" <> status
+  defp next_trans_status(_, status), do: status
 
 end
