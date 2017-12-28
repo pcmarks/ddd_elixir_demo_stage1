@@ -6,7 +6,7 @@
 
 
 <div class="well">
-  <%= form_for @conn, handling_event_path(@conn, :show), [method: "get", as: :handling_event_params], fn f -> %>
+  <%= form_for @conn, handling_event_path(@conn, :show), [method: "get", as: :handling_event_params], fn _ -> %>
   <div class="row">
     <div class="col-md-6">
     <h4>Specify Search Criteria:    <strong> All </strong>
