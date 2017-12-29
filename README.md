@@ -39,7 +39,8 @@ This stage demonstrates the following aspects of DDD:
   * Handling Events
 
 ## Phoenix and Elm Aspects
-* Phoenix (Umbrella application)
+* Phoenix
+  * Umbrella project
   * Shipping application
     * Domain Model implementation
       * Cargoes context = Cargoes aggregate, and
