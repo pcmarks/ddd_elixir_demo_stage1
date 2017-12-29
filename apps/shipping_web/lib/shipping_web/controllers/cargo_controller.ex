@@ -16,7 +16,8 @@ defmodule ShippingWeb.CargoController do
         # First reverse the Handling Events which are in newest event first
         # so that the oldest event is first.
         handling_events = HandlingEvents.get_all_with_tracking_id!(cargo.tracking_id)
-        delivery_history = handling_events
+        delivery_history =
+          handling_events
           |> Enum.reverse
           |> Cargoes.create_delivery_history()
         case get_format(conn) do
