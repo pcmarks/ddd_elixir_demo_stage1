@@ -1,4 +1,4 @@
-module ShippingOps exposing (Model, Msg(..), initModel, update, view)
+module OpsManager exposing (Model, Msg(..), initModel, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, placeholder, style, type_, value)

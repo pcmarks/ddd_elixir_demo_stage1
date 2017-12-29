@@ -10,7 +10,7 @@ Local Inports
 --}
 
 import Clerk exposing (Model, initModel, view)
-import ShippingOps exposing (Model, initModel, view)
+import OpsManager exposing (Model, initModel, view)
 import Styles exposing (..)
 
 
@@ -33,19 +33,19 @@ main =
 type User
     = NoUser
     | ClerkUser
-    | ShippingOpsUser
+    | OpsManagerUser
 
 
 type alias Model =
     { user : User
     , clerkModel : Clerk.Model
-    , shippingOpsModel : ShippingOps.Model
+    , shippingOpsModel : OpsManager.Model
     }
 
 
 init : Model
 init =
-    Model NoUser Clerk.initModel ShippingOps.initModel
+    Model NoUser Clerk.initModel OpsManager.initModel
 
 
 
@@ -56,8 +56,8 @@ type Msg
     = BackToDemo
     | ClerkChosen
     | ClerkMsg Clerk.Msg
-    | ShippingOpsChosen
-    | ShippingOpsMsg ShippingOps.Msg
+    | OpsManagerChosen
+    | OpsManagerMsg OpsManager.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,7 +67,7 @@ update msg model =
             ( { model
                 | user = NoUser
                 , clerkModel = Clerk.initModel
-                , shippingOpsModel = ShippingOps.initModel
+                , shippingOpsModel = OpsManager.initModel
               }
             , Cmd.none
             )
@@ -75,8 +75,8 @@ update msg model =
         ClerkChosen ->
             ( { model | user = ClerkUser }, Cmd.none )
 
-        ShippingOpsChosen ->
-            ( { model | user = ShippingOpsUser }, Cmd.none )
+        OpsManagerChosen ->
+            ( { model | user = OpsManagerUser }, Cmd.none )
 
         ClerkMsg clerkMsg ->
             let
@@ -85,12 +85,12 @@ update msg model =
             in
                 ( { model | clerkModel = updatedClerkModel }, Cmd.map ClerkMsg clerkCmd )
 
-        ShippingOpsMsg shippingOpsMsg ->
+        OpsManagerMsg shippingOpsMsg ->
             let
-                ( updatedShippingOpsModel, shippingOpsCmd ) =
-                    (ShippingOps.update shippingOpsMsg model.shippingOpsModel)
+                ( updatedOpsManagerModel, shippingOpsCmd ) =
+                    (OpsManager.update shippingOpsMsg model.shippingOpsModel)
             in
-                ( { model | shippingOpsModel = updatedShippingOpsModel }, Cmd.map ShippingOpsMsg shippingOpsCmd )
+                ( { model | shippingOpsModel = updatedOpsManagerModel }, Cmd.map OpsManagerMsg shippingOpsCmd )
 
 
 
@@ -113,10 +113,10 @@ view model =
                         [ Html.map ClerkMsg (Clerk.view model.clerkModel)
                         ]
 
-                ShippingOpsUser ->
+                OpsManagerUser ->
                     div []
-                        -- Tag any ShippingOps Msg's with type ShippingOpsMsg
-                        [ Html.map ShippingOpsMsg (ShippingOps.view model.shippingOpsModel)
+                        -- Tag any OpsManager Msg's with type OpsManagerMsg
+                        [ Html.map OpsManagerMsg (OpsManager.view model.shippingOpsModel)
                         ]
             ]
         ]
@@ -179,7 +179,7 @@ viewUserChoice =
                     [ text "Clerk" ]
                 , button
                     [ class (buttonClassStr "w3-margin")
-                    , onClick ShippingOpsChosen
+                    , onClick OpsManagerChosen
                     ]
                     [ text "Shipping Ops Manager" ]
                 ]
