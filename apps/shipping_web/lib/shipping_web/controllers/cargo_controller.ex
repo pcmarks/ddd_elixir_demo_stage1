@@ -4,7 +4,7 @@ defmodule ShippingWeb.CargoController do
   alias Shipping.{Cargoes, HandlingEvents}
   @doc """
   Prepare to show a Cargo and its associated DeliveryHistory. Rendering results
-  in either and HTML page or a JSON response.
+  as an HTML page or a JSON response.
   """
   def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
     case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
@@ -13,28 +13,17 @@ defmodule ShippingWeb.CargoController do
       %Shipping.Cargoes.Cargo{} = cargo ->
         # Retrieve and apply all handling events to date against the cargo
         # to determine the cargo's current status (Delivery History).
-        # First reverse the Handling Events which are in newest event first
+        # First reverse the Handling Events which are in newest event first order
         # so that the oldest event is first.
         handling_events = HandlingEvents.get_all_with_tracking_id!(cargo.tracking_id)
         delivery_history =
           handling_events
           |> Enum.reverse
           |> Cargoes.create_delivery_history()
-        case get_format(conn) do
-          "json" ->
-            render(conn,
-              :show,
-              cargo: cargo,
-              delivery_history: delivery_history,
-              handling_events: handling_events)
-          _ ->
-            render(conn,
-              ShippingWeb.ClerkView,
-              :index,
-              cargo: cargo,
-              delivery_history: delivery_history,
-              handling_events: handling_events)
-        end
+        render(conn, :show,
+                     cargo: cargo,
+                     delivery_history: delivery_history,
+                     handling_events: handling_events)
       _ ->
         conn
           |> put_flash(:error, "Invalid tracking number")

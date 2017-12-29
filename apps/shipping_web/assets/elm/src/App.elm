@@ -111,14 +111,12 @@ view model =
                     div []
                         -- Tag any Clerk Msg's with type ClerkMsg
                         [ Html.map ClerkMsg (Clerk.view model.clerkModel)
-                        , viewBackToDemo
                         ]
 
                 ShippingOpsUser ->
                     div []
                         -- Tag any ShippingOps Msg's with type ShippingOpsMsg
                         [ Html.map ShippingOpsMsg (ShippingOps.view model.shippingOpsModel)
-                        , viewBackToDemo
                         ]
             ]
         ]
@@ -186,25 +184,6 @@ viewUserChoice =
                     [ text "Shipping Ops Manager" ]
                 ]
             , div [ class (colS4 "") ] [ p [] [] ]
-            ]
-        ]
-
-
-viewBackToDemo : Html Msg
-viewBackToDemo =
-    div []
-        [ p [] []
-        , div [ class row ]
-            [ div [ class (colS4 "") ]
-                [ p [] []
-                ]
-            , div [ class (colS4 "w3-center") ]
-                [ button
-                    [ class (buttonClassStr "w3-center")
-                    , onClick BackToDemo
-                    ]
-                    [ text "Back To Demo Home" ]
-                ]
             ]
         ]
 
