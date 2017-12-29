@@ -11,7 +11,7 @@ import Date.Format
 -- Local Imports
 
 import Cargo exposing (..)
-import Delivery exposing (Delivery)
+import DeliveryHistory exposing (DeliveryHistory)
 import HandlingEvent exposing (HandlingEvent)
 
 
@@ -90,7 +90,7 @@ cargoDecoder : Decoder Cargo
 cargoDecoder =
     decode Cargo
         |> Pipeline.required "tracking_id" string
-        |> Pipeline.required "delivery" deliveryDecoder
+        |> Pipeline.required "delivery_history" deliveryHistoryDecoder
         |> Pipeline.required "handling_events" (maybe (list handlingEventDecoder))
 
 
@@ -112,8 +112,8 @@ cargoErrorResponseDecoder =
         |> (required "error_status" string)
 
 
-deliveryDecoder =
-    decode Delivery
+deliveryHistoryDecoder =
+    decode DeliveryHistory
         |> Pipeline.required "transportation_status" string
         |> Pipeline.required "location" string
         |> Pipeline.required "voyage" string

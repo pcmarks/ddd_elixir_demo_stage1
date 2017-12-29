@@ -29,21 +29,21 @@ defmodule Shipping do
   in a DeliveryHistory are determined by applying each of the Cargo's handling events,
   in turn, against the DeliveryHistory.
   """
-  def create_delivery(handling_events) do
-    delivery = %DeliveryHistory{}
-    update_delivery(handling_events, delivery)
+  def create_delivery_history(handling_events) do
+    delivery_history = %DeliveryHistory{}
+    update_delivery_history(handling_events, delivery_history)
   end
 
-  defp update_delivery([%HandlingEvent{
+  defp update_delivery_history([%HandlingEvent{
                           type: type} | handling_events],
                         %DeliveryHistory{
-                          transportation_status: trans_status} = delivery) do
+                          transportation_status: trans_status} = delivery_history) do
       new_trans_status = next_trans_status(type, trans_status)
-      update_delivery(handling_events,
-                      %{delivery | :transportation_status => new_trans_status})
+      update_delivery_history(handling_events,
+                      %{delivery_history | :transportation_status => new_trans_status})
   end
-  defp update_delivery([], delivery) do
-    delivery
+  defp update_delivery_history([], delivery_history) do
+    delivery_history
   end
 
   # State transistions to determine a cargo's transportation status based on

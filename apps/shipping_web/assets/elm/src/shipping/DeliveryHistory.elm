@@ -1,7 +1,7 @@
-module Delivery exposing (Delivery, initModel)
+module DeliveryHistory exposing (DeliveryHistory, initModel)
 
 
-type alias Delivery =
+type alias DeliveryHistory =
     { transportationStatus : String
     , location : String
     , voyage : String
@@ -10,6 +10,6 @@ type alias Delivery =
     }
 
 
-initModel : Delivery
+initModel : DeliveryHistory
 initModel =
-    (Delivery "" "" "" False "")
+    (DeliveryHistory "" "" "" False "")

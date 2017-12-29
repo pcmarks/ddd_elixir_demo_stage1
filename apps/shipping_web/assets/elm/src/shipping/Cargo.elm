@@ -1,6 +1,6 @@
 module Cargo exposing (CargoResponse(..), Cargo)
 
-import Delivery exposing (..)
+import DeliveryHistory exposing (..)
 import HandlingEvent as HE
 
 
@@ -11,11 +11,11 @@ type CargoResponse
 
 type alias Cargo =
     { trackingId : String
-    , delivery : Delivery
+    , delivery : DeliveryHistory
     , handlingEventsList : HE.Model
     }
 
 
 initCargo : Cargo
 initCargo =
-    (Cargo "" (Delivery.initModel) HE.initModel)
+    (Cargo "" (DeliveryHistory.initModel) HE.initModel)

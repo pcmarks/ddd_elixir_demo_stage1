@@ -12,24 +12,26 @@ defmodule ShippingWeb.CargoController do
         error_formatter(conn, tracking_id)
       %Shipping.Cargoes.Cargo{} = cargo ->
         # Retrieve and apply all handling events to date against the cargo
-        # to determine the cargo's current status.  Apply oldest events first.
+        # to determine the cargo's current status (Delivery History).
+        # First reverse the Handling Events which are in newest event first
+        # so that the oldest event is first.
         handling_events = HandlingEvents.get_all_with_tracking_id!(cargo.tracking_id)
-        delivery = handling_events
+        delivery_history = handling_events
           |> Enum.reverse
-          |> Shipping.create_delivery()
+          |> Shipping.create_delivery_history()
         case get_format(conn) do
           "json" ->
             render(conn,
               :show,
               cargo: cargo,
-              delivery: delivery,
+              delivery_history: delivery_history,
               handling_events: handling_events)
           _ ->
             render(conn,
               ShippingWeb.ClerkView,
               :index,
               cargo: cargo,
-              delivery: delivery,
+              delivery_history: delivery_history,
               handling_events: handling_events)
         end
       _ ->

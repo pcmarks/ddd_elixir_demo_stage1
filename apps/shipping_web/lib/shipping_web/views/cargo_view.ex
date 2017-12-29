@@ -10,10 +10,10 @@ defmodule ShippingWeb.CargoView do
   end
 
   def render("show.json",
-    %{cargo: cargo, delivery: delivery, handling_events: handling_events}) do
+    %{cargo: cargo, delivery_history: delivery_history, handling_events: handling_events}) do
     %{cargo:
       %{tracking_id: cargo.tracking_id,
-        delivery: delivery_to_json(delivery),
+        delivery_history: delivery_history_to_json(delivery_history),
         handling_events:
           case List.first(handling_events) do
             nil -> nil
@@ -24,12 +24,12 @@ defmodule ShippingWeb.CargoView do
     }
   end
 
-  defp delivery_to_json(delivery) do
-    %{transportation_status: delivery.transportation_status,
-      location: delivery.location,
-      voyage: delivery.voyage,
-      misdirected: (if delivery.misdirected, do: "true", else: "false"),
-      routing_status: delivery.routing_status
+  defp delivery_history_to_json(delivery_history) do
+    %{transportation_status: delivery_history.transportation_status,
+      location: delivery_history.location,
+      voyage: delivery_history.voyage,
+      misdirected: (if delivery_history.misdirected, do: "true", else: "false"),
+      routing_status: delivery_history.routing_status
     }
   end
 
