@@ -18,7 +18,7 @@ defmodule ShippingWeb.CargoController do
         handling_events = HandlingEvents.get_all_with_tracking_id!(cargo.tracking_id)
         delivery_history = handling_events
           |> Enum.reverse
-          |> Shipping.create_delivery_history()
+          |> Cargoes.create_delivery_history()
         case get_format(conn) do
           "json" ->
             render(conn,
