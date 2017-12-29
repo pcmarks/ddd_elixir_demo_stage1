@@ -20,34 +20,3 @@
 </row>
 </div>
 </div>
-
-<%= if assigns[:handling_events] do %>
-<h2>Listing of Handling Events</h2>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Location</th>
-      <th>Completion Time</th>
-      <th>Registration Time</th>
-      <th>Tracking Id</th>
-      <th>Voyage</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for handling_event <- @handling_events do %>
-    <tr>
-      <td><%= handling_event.type %></td>
-      <td><%= handling_event.location %></td>
-      <td><%= handling_event.completion_time %></td>
-      <td><%= handling_event.registration_time %></td>
-      <td><%= handling_event.tracking_id %></td>
-      <td><%= handling_event.voyage %></td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-<% end %>
