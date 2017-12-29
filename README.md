@@ -20,20 +20,16 @@ The overall project will be divided into three stages that will, progressively, 
 ## Stage 1 Description
 The function of Cargo Tracking is the focus of this stage. Two types of users have access to Cargoes and Handling Events: Clerks and Shipping Operations Managers (OpsManagers) who both work for a Shipping Company.
 
-Clerks are customer facing Shipping employess that can retrieve the progress of particular cargo as it is handled by Cargo Handlers. Cargo Handlers are organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
+Clerks are Shipping employess who can retrieve the status and progress of a particular cargo as it is handled by Cargo Handlers. Cargo Handlers are organizations that play some role in the progress of the cargo from its source to its destination. A few of the typical Handlers are:
 
 * Customs
 * Sea Shipping Companies
 * Land Shipping Companies
 * Ports (Unloading and Loading)
 
-An action performed by a Handler produces a Handling Event.
+OpsManagers are Shipping employees who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1 to only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the OpsManagers with more functions, such as finding all Cargoes that passed thru a specific port.
 
-Clerks can access the latest status of a specific cargo via a query. The subsequent display shows the handling history of that cargo and its current status.
-
-OpsManagers are Shipping employess who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1: only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the OpsManagers with more functions, such as finding all Cargoes that passed thru a specific port.
-
-Subsequent stages may also implement separate logins and authorization for Clerks and Clerks.
+Subsequent stages may also implement separate logins and authorization for Clerks and OpsManagers.
 
 ## DDD Aspects
 This stage demonstrates the following aspects of DDD:
@@ -43,18 +39,20 @@ This stage demonstrates the following aspects of DDD:
   * Handling Events
 
 ## Phoenix and Elm Aspects
-* Phoenix
+* Phoenix (Umbrella application)
   * Shipping application
-    * Domain Model implementation (Cargoes and Handling Events)
-    * Agents
+    * Domain Model implementation
+      * Cargoes context = Cargoes aggregate, and
+      * Handling Events context = Handling Events aggregate
+    * Agents - used by Repo
   * Shipping_web application
     * Produces the web pages
     * Uses Bootstrap for web page styling (Phoenix default)
     * Accesses the Domain Model via the Phoenix Controllers
-    * Implements a JSON API via rendering
+    * Implements a JSON API via View rendering
 * Elm
   * Single Page Application
-  * Accesses the Phoenix JSON API via the Phoenix Controllers
+  * Accesses the Phoenix JSON API via the Phoenix Controllers (and Views)
   * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling - no JavaScript
 
 ## Installation and Operation
@@ -86,6 +84,8 @@ The last Elm step will download Elm packages and compile the Elm code.
 ### Using the web application
 
 Two separate methods are used to generate the web content: Phoenix (Views and Templates) and Elm. Each is accessed using a different URL. For Phoenix, use [localhost:4000](localhost:4000) and for the Elm version use [localhost:4000/elm](localhost:4000/elm). Both of these URLs will bring you to the demo's home page. From this point on, the UI looks and behaves (except for some color differences, button sizes, etc.) exactly the same for both versions.
+
+To return to the Home page from any other page, click on the Domain Driven Delivery image.
 
 The application is designed for two different types of users: Clerks and OpsManagers.
 
