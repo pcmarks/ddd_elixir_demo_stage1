@@ -65,21 +65,28 @@ Next, obtain this repository.
 Perform all of these steps in order:
 
 ### Phoenix
-1. `$ cd <install-directory>ddd_elixir_demo_stage1`
+This step will download all the required Elixir and node.js packages
+1. `$ cd <installation directory>`
 2. `$ mix deps.get`
 3. `$ cd apps/shipping_web/assets`
 4. `$ npm install`
 
 ### Elm
-1. `$ cd <installation directory>/ddd_elixir_demo_stage1/apps/shipping_web/assets/elm`
+
+This step will download all the required Elm packages and compile the Elm code.
+1. `$ cd <installation directory>`
+2. `$ cd apps/shipping_web/assets/elm`
 2. `$ elm-compile.cmd or ./elm-compile.sh`
 
-The last Elm step will download Elm packages and compile the Elm code.
+### Elm Test Installation
+This step will install the Elm testing harness that is required for running the project's Elm tests (see below).
+1. $ npm install -g elm-test
+
 
 **A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. You can use of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm file is saved.
 
 ### Running the web application
-1. `$ cd ddd_elixir_demo_stage1`
+1. `$ cd <installation directory>`
 2. `$ mix phx.server`
 
 ### Using the web application
@@ -102,8 +109,15 @@ OpsManagers work for the Shipping company and are interested in the status of al
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
 
 ## Testing
-There are currently 24 Phoenix tests. They can be run by entering the following commands:
-1. `$ ddd_elixir_demo_stage1`
+There are currently 24 Phoenix tests. They can be run by entering the commands below.
+
+From the project root directory
+1. `$ cd <installation directory>`
 2. `$ mix test`
 
-There will be Elm tests as well.
+There are currently xx Elm tests. They can be run by entering the commands below.
+
+From the project root directory
+1. `$ cd <installation directory>`
+2. `$ cd shipping_web/assets/elm`
+3. `$ elm-test`
