@@ -28,3 +28,5 @@ npm-debug.log
 
 # Elm packages which can be reloaded
 /assets/elm/elm-stuff
+# Elm testing packages which can be reloaded
+/assets/elm/test/elm-stuff
