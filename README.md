@@ -46,7 +46,7 @@ This stage demonstrates the following aspects of DDD:
       * Cargoes context = Cargoes aggregate, and
       * Handling Events context = Handling Events aggregate
     * Agents - used by Repo
-  * Shipping_web application
+  * Tracking_web application
     * Produces the web pages
     * Uses Bootstrap for web page styling (Phoenix default)
     * Accesses the Domain Model via the Phoenix Controllers
@@ -68,14 +68,14 @@ Perform all of these steps in order:
 This step will download all the required Elixir and node.js packages
 1. `$ cd <installation directory>`
 2. `$ mix deps.get`
-3. `$ cd apps/shipping_web/assets`
+3. `$ cd apps/tracking_web/assets`
 4. `$ npm install`
 
 ### Elm
 
 This step will download all the required Elm packages and compile the Elm code.
 1. `$ cd <installation directory>`
-2. `$ cd apps/shipping_web/assets/elm`
+2. `$ cd apps/tracking_web/assets/elm`
 2. `$ elm-compile.cmd or ./elm-compile.sh`
 
 ### Elm Test Installation
@@ -109,15 +109,15 @@ OpsManagers work for the Shipping company and are interested in the status of al
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
 
 ## Testing
-There are currently 24 Phoenix tests. They can be run by entering the commands below.
+There are currently 32 Phoenix tests. They can be run by entering the commands below.
 
 From the project root directory
 1. `$ cd <installation directory>`
 2. `$ mix test`
 
-There are currently xx Elm tests. They can be run by entering the commands below.
+There are currently 8 very basic Elm tests. They can be run by entering the commands below.
 
 From the project root directory
 1. `$ cd <installation directory>`
-2. `$ cd shipping_web/assets/elm`
+2. `$ cd apps/tracking_web/assets/elm`
 3. `$ elm-test`

@@ -1,0 +1,61 @@
+<%= render TrackingWeb.ClerkView, "index.html", conn: @conn %>
+<h2>
+  Tracking Details
+</h2>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title text-right">
+      In Transit
+      <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+    </h3>
+  </div>
+  <div class="panel-body" id="tracking-info" tracking-id="<%= @cargo.tracking_id %>">
+    <div class="pull-left">
+      <p>
+        <u><strong>Tracking #:</strong></u>
+        <%= @cargo.tracking_id %>
+      </p>
+    </div>
+
+    <div class="pull-right">
+      <p>
+        <u><strong>Status:</strong></u>
+        <span id="cargo-status"><%= @delivery_history.transportation_status %></span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Shipment Progress</h3>
+  </div>
+  <div class="panel-body">
+    <%= if Enum.any? @handling_events do %>
+      <table id="shipment-progress" class="table table-striped">
+        <thead>
+          <tr class="warning">
+            <!-- <th>Voyage</th> -->
+            <th>Location</th>
+            <th>Date</th>
+            <th>Local Time</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody id="handling-events">
+          <%= Enum.with_index(@handling_events) |> Enum.map(fn({handling_event, index}) -> %>
+          <tr>
+            <!-- <td><%= handling_event.voyage %></td> -->
+            <td><%= handling_event.location %></td>
+            <td id="completion-date-<%= index %>"><%= DateTime.to_date(handling_event.completion_time) %></td>
+            <td id="completion-time-<%= index %>"><%= DateTime.to_time(handling_event.completion_time) %></td>
+            <td><%= handling_event.type %></td>
+          </tr>
+          <% end ) %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No events reported.</p>
+    <% end %>
+  </div>
+</div>

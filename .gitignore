@@ -4,7 +4,7 @@
 erl_crash.dump
 *.ez
 # Node stuff
-/apps/shipping_web/assets/node_modules
+/apps/tracking_web/assets/node_modules
 # Elm stuff
-/apps/shipping_web/assets/elm/elm-stuff
-/apps/shipping_web/priv/static/js/elm.js
+/apps/tracking_web/assets/elm/elm-stuff
+/apps/tracking_web/priv/static/js/elm.js
