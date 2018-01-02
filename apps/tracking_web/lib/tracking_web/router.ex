@@ -17,7 +17,7 @@ defmodule TrackingWeb.Router do
   end
 
 
-  scope "/shipping", TrackingWeb do
+  scope "/tracking", TrackingWeb do
     pipe_through :browser
 
     scope "/clerks" do

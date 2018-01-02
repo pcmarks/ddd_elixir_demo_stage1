@@ -32,7 +32,7 @@ phoenixHostPortUrl =
 
 clerksUrl : String
 clerksUrl =
-    phoenixHostPortUrl ++ "/shipping/clerks"
+    phoenixHostPortUrl ++ "/tracking/clerks"
 
 
 findCargo : String -> Cmd Msg
@@ -145,7 +145,7 @@ handlingEventDecoder =
 
 sysOpsUrl : String
 sysOpsUrl =
-    phoenixHostPortUrl ++ "/shipping/opsmanagers"
+    phoenixHostPortUrl ++ "/tracking/opsmanagers"
 
 
 sysOpEventsUrl : String
