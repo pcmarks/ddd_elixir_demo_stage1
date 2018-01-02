@@ -1,7 +1,7 @@
 # An Elixir/Phoenix/Elm Implementation of the DDD Shipping Example (Work In Progress)
 This project is an [Elixir](https://elixir-lang.org/) and  [Phoenix web framework](http://phoenixframework.org/) implementation and an alternative [Elm language](http://elm-lang.org/) UI of the Domain Driven Design shipping example. This example is featured in Eric Evans' book: ["Domain-Driven Design"](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=sr_1_1?s=books&ie=UTF8&qid=1496944932&sr=1-1&keywords=domain-driven+design+tackling+complexity+in+the+heart+of+software).
 
-The demo was first written in Java; a description of that effort can be found [here](http://dddsample.sourceforge.net/) (Source Forge - has documentation) and [here](https://github.com/citerus/dddsample-core) (GitHub).
+A demonstration of this example was first written in Java; a description of that effort can be found [here](http://dddsample.sourceforge.net/) (Source Forge - has documentation) and [here](https://github.com/citerus/dddsample-core) (GitHub).
 
 ## Contributors
 Peter C. Marks, Eric Evans, and John Kasiewicz
@@ -111,13 +111,11 @@ Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvent
 ## Testing
 There are currently 32 Phoenix tests. They can be run by entering the commands below.
 
-From the project root directory
 1. `$ cd <installation directory>`
 2. `$ mix test`
 
 There are currently 8 very basic Elm tests. They can be run by entering the commands below.
 
-From the project root directory
 1. `$ cd <installation directory>`
 2. `$ cd apps/tracking_web/assets/elm`
 3. `$ elm-test`
