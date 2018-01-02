@@ -1,4 +1,4 @@
-module App exposing (main)
+module App exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, id, type_, placeholder, style, src)
