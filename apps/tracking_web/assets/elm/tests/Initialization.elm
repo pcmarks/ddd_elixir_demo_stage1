@@ -14,15 +14,15 @@ initialModels =
             \_ ->
                 let
                     user =
-                        Tracking.init
+                        Tracking.initModel
                             |> .user
                 in
                     Expect.equal user Tracking.NoUser
-        , test "Check initial clerk model 1" <|
+        , test "Check initModelial clerk model 1" <|
             \_ ->
                 let
                     trackingId =
-                        Tracking.init
+                        Tracking.initModel
                             |> .clerkModel
                             |> .trackingId
                 in
@@ -31,7 +31,7 @@ initialModels =
             \_ ->
                 let
                     shippingModel =
-                        Tracking.init
+                        Tracking.initModel
                             |> .clerkModel
                             |> .shippingModel
                 in
@@ -40,7 +40,7 @@ initialModels =
             \_ ->
                 let
                     searchChoice =
-                        Tracking.init
+                        Tracking.initModel
                             |> .shippingOpsModel
                             |> .searchCriteria
                 in
@@ -49,7 +49,7 @@ initialModels =
             \_ ->
                 let
                     shippingModel =
-                        Tracking.init
+                        Tracking.initModel
                             |> .shippingOpsModel
                             |> .shippingModel
                 in

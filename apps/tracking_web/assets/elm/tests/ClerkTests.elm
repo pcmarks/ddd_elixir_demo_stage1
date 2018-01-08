@@ -14,7 +14,7 @@ import Cargo
 
 chooseClerk : Tracking.Model
 chooseClerk =
-    Tracking.init
+    Tracking.initModel
         |> Tracking.update Tracking.ClerkChosen
         |> Tuple.first
 

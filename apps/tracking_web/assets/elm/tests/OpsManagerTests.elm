@@ -13,7 +13,7 @@ import OpsManager
 
 chooseOpsManager : Tracking.Model
 chooseOpsManager =
-    Tracking.init
+    Tracking.initModel
         |> Tracking.update Tracking.OpsManagerChosen
         |> Tuple.first
 
