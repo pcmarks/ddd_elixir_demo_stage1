@@ -23,8 +23,8 @@ defmodule Shipping do
 
 
   # State transistions to determine a cargo's transportation status based on
-  # its current status and a handling event.
-  # NOTE: Is this a complete set of combinations?
+  # a handling event and its current status.
+  # NOTE: This may not be a complete set of transitions
   def next_trans_status("RECEIVE", "NOT RECEIVED"), do: "IN PORT"
   def next_trans_status("CUSTOMS", "IN PORT"), do: "IN PORT"
   def next_trans_status("CLAIM", "IN PORT"), do: "CLAIMED"
