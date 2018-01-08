@@ -13,7 +13,7 @@ defmodule Shipping do
     "Load": "LOAD",
     "Unload": "UNLOAD",
     "Receive": "RECEIVE",
-    "Claim": "CLAIM",
+    "Claim": "CLAIM", 
     "Customs": "CUSTOMS"
   }
 
