@@ -6,16 +6,16 @@ module ClerkTests exposing (..)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
-import App
+import Tracking
 import Shipping
 import Clerk
 import Cargo
 
 
-chooseClerk : App.Model
+chooseClerk : Tracking.Model
 chooseClerk =
-    App.init
-        |> App.update App.ClerkChosen
+    Tracking.init
+        |> Tracking.update Tracking.ClerkChosen
         |> Tuple.first
 
 
@@ -28,5 +28,5 @@ clerkChosen =
                     user =
                         chooseClerk |> .user
                 in
-                    Expect.equal user App.ClerkUser
+                    Expect.equal user Tracking.ClerkUser
         ]

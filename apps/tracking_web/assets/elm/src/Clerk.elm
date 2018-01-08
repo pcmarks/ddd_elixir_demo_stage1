@@ -1,5 +1,14 @@
 module Clerk exposing (..)
 
+{--
+The Clerk module contains the model, msg's, updates and views for the Clerk user.
+This module is responsible for requesting and showing the status of a particular
+cargo if it exists.
+
+This module relies on the Shipping, Cargo and HandlingEvent modules.
+
+--}
+
 import Html exposing (..)
 import Html.Attributes exposing (class, id, placeholder, style, type_, value)
 import Html.Events exposing (onClick, onInput)

@@ -3,7 +3,7 @@ module Initialization exposing (..)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
-import App
+import Tracking
 import Shipping
 
 
@@ -14,15 +14,15 @@ initialModels =
             \_ ->
                 let
                     user =
-                        App.init
+                        Tracking.init
                             |> .user
                 in
-                    Expect.equal user App.NoUser
+                    Expect.equal user Tracking.NoUser
         , test "Check initial clerk model 1" <|
             \_ ->
                 let
                     trackingId =
-                        App.init
+                        Tracking.init
                             |> .clerkModel
                             |> .trackingId
                 in
@@ -31,7 +31,7 @@ initialModels =
             \_ ->
                 let
                     shippingModel =
-                        App.init
+                        Tracking.init
                             |> .clerkModel
                             |> .shippingModel
                 in
@@ -40,7 +40,7 @@ initialModels =
             \_ ->
                 let
                     searchChoice =
-                        App.init
+                        Tracking.init
                             |> .shippingOpsModel
                             |> .searchCriteria
                 in
@@ -49,7 +49,7 @@ initialModels =
             \_ ->
                 let
                     shippingModel =
-                        App.init
+                        Tracking.init
                             |> .shippingOpsModel
                             |> .shippingModel
                 in

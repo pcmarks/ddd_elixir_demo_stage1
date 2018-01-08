@@ -4,8 +4,8 @@
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
-        "../src",
-        "../src/shipping",
+        "..\\src",
+        "..\\src\\shipping",
         "."
     ],
     "exposed-modules": [],

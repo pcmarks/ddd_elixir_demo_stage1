@@ -6,15 +6,15 @@ module OpsManagerTests exposing (..)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Test exposing (..)
-import App
+import Tracking
 import Shipping
 import OpsManager
 
 
-chooseOpsManager : App.Model
+chooseOpsManager : Tracking.Model
 chooseOpsManager =
-    App.init
-        |> App.update App.OpsManagerChosen
+    Tracking.init
+        |> Tracking.update Tracking.OpsManagerChosen
         |> Tuple.first
 
 
@@ -27,5 +27,5 @@ opsManagerChosen =
                     user =
                         chooseOpsManager |> .user
                 in
-                    Expect.equal user App.OpsManagerUser
+                    Expect.equal user Tracking.OpsManagerUser
         ]
