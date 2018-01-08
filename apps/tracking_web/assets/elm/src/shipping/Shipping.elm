@@ -1,5 +1,14 @@
 module Shipping exposing (..)
 
+{--
+The Shipping module is responsible for handling all requests and response to
+and from the Shipping server. Its model contains the results from these requests.
+
+There is no UI component is this module.
+
+It is dependent on the Cargo, HandlingEvent and Rest modules.
+--}
+
 import Cargo as C
 import HandlingEvent as HE
 import Rest

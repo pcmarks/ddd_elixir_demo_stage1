@@ -1,5 +1,14 @@
 module Rest exposing (Msg(..), findCargo, getAllHandlingEvents)
 
+{--
+The Rest module handles all the encoding of all the Shipping server requests and
+the server's responses. Responses are decoded from the JSON values returned by
+the server.
+
+Responses are wrapped in a Msg type that modules "above" will catch if applicable.
+
+--}
+
 import Http exposing (Request)
 import Json.Decode exposing (Decoder, andThen, fail, bool, int, list, maybe, map, oneOf, string, succeed)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
