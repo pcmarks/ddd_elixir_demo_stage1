@@ -1,10 +1,10 @@
-/_build
-/cover
-/deps
+**/_build
+**/cover
+**/deps
 erl_crash.dump
 *.ez
 # Node stuff
 /apps/tracking_web/assets/node_modules
 # Elm stuff
 /apps/tracking_web/assets/elm/elm-stuff
-/apps/tracking_web/priv/static/js/elm.js
+/apps/tracking_web/priv/static/js/TrackingWeb.js
