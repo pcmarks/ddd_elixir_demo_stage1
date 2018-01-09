@@ -1,1 +1,1 @@
-elm-make --yes --output ..\..\priv\static\js\ShippingApp.js src\Tracking.elm
+elm-make --yes --output ..\..\priv\static\js\TrackingApp.js src\Tracking.elm

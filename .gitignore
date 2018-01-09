@@ -3,8 +3,9 @@
 **/deps
 erl_crash.dump
 *.ez
-# Node stuff
-/apps/tracking_web/assets/node_modules
+# Node (npm) stuff
+**/node_modules
+**/package-lock.json
 # Elm stuff
 /apps/tracking_web/assets/elm/elm-stuff
 /apps/tracking_web/priv/static/js/TrackingWeb.js
