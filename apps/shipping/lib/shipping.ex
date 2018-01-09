@@ -27,6 +27,28 @@ defmodule Shipping do
     @handling_event_type_map
   end
 
+  #############################################################################
+  # Support for Locations
+  #############################################################################
+  @location_map  %{
+    "Hongkong": "CHHKG",
+    "Melbourne": "AUMEL",
+    "Stockholm": "SESTO",
+    "Helsinki": "FIHEL",
+    "Chicago": "USCHI",
+    "Tokyo": "JPTKO",
+    "Hamburg": "DEHAM",
+    "Shanghai": "CNSHA",
+    "Rotterdam": "NLRTM",
+    "Goteborg": "SEGOT",
+    "Hangzhou": "CHHGH",
+    "New York": "USNYC",
+    "Dallas": "USDAL"
+  }
+
+  def location_map do
+    @location_map
+  end
 
   #############################################################################
   # State transistion function that determines a cargo's transportation
