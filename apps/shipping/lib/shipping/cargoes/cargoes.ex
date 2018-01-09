@@ -1,10 +1,6 @@
 defmodule Shipping.Cargoes do
   @moduledoc """
-  The boundary for the Cargoes Aggregate.
-  Responsiblities:
-  o Get and update Cargo data.
-  o Create a DeliveryHistory based on a list of HandlingEvent's
-
+  The root of the Cargoes Aggregate.
   """
 
   import Ecto.Query, warn: false

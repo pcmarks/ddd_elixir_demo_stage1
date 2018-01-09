@@ -1,19 +1,25 @@
 defmodule Shipping do
   @moduledoc """
-  Shipping keeps the contexts (aggregates) that define your domain and business logic.
+  Shipping - a Phoenix application - represents the DDD domain model* of the Shipping
+  demo. It encapsulates aggregates (see below). This module also contains
+  domain-wide business logic and functions.
 
-  Contexts (aggregates) are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
+  Phoenix contexts serve as DDD aggregates*. Aggregates are defined in separate
+  modules; they are responsible for the management of data . The aggregates are
+  Cargoes and HandlingEvents.
+
+  * From the DDD book: [An aggregate is] a cluster of associated objects that are
+  treated as a unit for the purpose of data changes...
   """
 
   #############################################################################
-  # Support for HandlingEvent types - Useful for UI selects
+  # Support for HandlingEvent types - Useful for UI selects, possibly
   #############################################################################
   @handling_event_type_map %{
     "Load": "LOAD",
     "Unload": "UNLOAD",
     "Receive": "RECEIVE",
-    "Claim": "CLAIM", 
+    "Claim": "CLAIM",
     "Customs": "CUSTOMS"
   }
 
@@ -22,9 +28,11 @@ defmodule Shipping do
   end
 
 
-  # State transistions to determine a cargo's transportation status based on
-  # a handling event and its current status.
+  #############################################################################
+  # State transistion function that determines a cargo's transportation
+  # status based on a new handling event and its current status.
   # NOTE: This may not be a complete set of transitions
+  #############################################################################
   def next_trans_status("RECEIVE", "NOT RECEIVED"), do: "IN PORT"
   def next_trans_status("CUSTOMS", "IN PORT"), do: "IN PORT"
   def next_trans_status("CLAIM", "IN PORT"), do: "CLAIMED"

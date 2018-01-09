@@ -1,6 +1,6 @@
 defmodule Shipping.HandlingEvents do
   @moduledoc """
-  The boundary for the Tracking system.
+  The root of the HandlingEvent aggregate.
   """
 
   import Ecto.Query, warn: false
