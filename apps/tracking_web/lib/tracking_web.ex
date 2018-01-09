@@ -1,7 +1,9 @@
 defmodule TrackingWeb do
   @moduledoc """
-  The entrypoint for defining your web interface, such
-  as controllers, views, channels and so on.
+  The entrypoint for defining the Tracking application's web interface, such
+  as controllers, views, templates, and channels.
+
+  Phoenix-generated documentation:
 
   This can be used in your application as:
 
