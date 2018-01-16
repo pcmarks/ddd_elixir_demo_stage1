@@ -1,6 +1,6 @@
 defmodule Shipping.HandlingEvents.HandlingEvent do
   @moduledoc """
-  A domain event representing a particular event concerning the handling of a Cargo.
+  A domain event representing a particular handling of a Cargo.
   """
   use Ecto.Schema
   import Ecto.Changeset
