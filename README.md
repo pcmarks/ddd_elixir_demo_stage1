@@ -1,10 +1,16 @@
-# An Elixir/Phoenix/Elm Implementation of the DDD Shipping Example (Work In Progress)
+# An Elixir/Phoenix/Elm Implementation of the DDD Shipping Example
 This project is an [Elixir](https://elixir-lang.org/) and  [Phoenix web framework](http://phoenixframework.org/) implementation and an alternative [Elm language](http://elm-lang.org/) UI of the Domain Driven Design shipping example. This example is featured in Eric Evans' book: ["Domain-Driven Design"](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=sr_1_1?s=books&ie=UTF8&qid=1496944932&sr=1-1&keywords=domain-driven+design+tackling+complexity+in+the+heart+of+software).
 
 A demonstration of this example was first written in Java; a description of that effort can be found [here](http://dddsample.sourceforge.net/) (Source Forge - has documentation) and [here](https://github.com/citerus/dddsample-core) (GitHub).
 
 ## Contributors
-Peter C. Marks, Eric Evans, and John Kasiewicz
+Peter C. Marks (@PeterCMarks), Eric Evans (@ericevans0), and John Kasiewicz (@seejohnplay)
+
+The demo was first implemented by Eric Evans and [Citerus](https:www.citerus.se) - a design consultancy. Eric is the founder of [Domain Language](https://domainlanguage.com).
+
+ The idea for this version of the demo was conceived at a Portland, ME Erlang/Elixir Meetup that featured a presentation on DDD by Eric. Peter and John joined Eric in defining the scope of this project. John and Peter created the first Phoenix-only version. Several iterations of design and coding resulted in the final Phoenix server and web interface. At a Portland, ME Elm Meetup, Peter suggested and subsequently developed a first version of an Elm implementation of the web interface. Eric and Peter further refined this Elm version.
+
+Both the Elixir and Elm Meetups are led by Jean-Francois Cloutier (@jfcloutier).
 ## The Project
 The original demo (see above for links) was written in Java using the Spring framework. Eric Evans' book was published in 2004 when the predominant coding style was object-oriented. The challenge for this project was not so much to go from a Java to an Elixir and Elm implementation but to find counterparts for DDD constructs and patterns in Elixir and Elm.
 
@@ -27,11 +33,24 @@ Clerks are Shipping employess who can retrieve the status and progress of a part
 * Land Shipping Companies
 * Ports (Unloading and Loading)
 
-OpsManagers are Shipping employees who have access to more shipping data via multi-faceted queries. These searches are limited in Stage 1 to only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the OpsManagers with more functions, such as finding all Cargoes that passed thru a specific port.
+OpsManagers are Shipping employees who have access to more shipping data via multi-faceted queries. These queries are limited in Stage 1 to only providing a list of all Handling Events presently known by the Shipping Company. Subsequent stages of this demo will provide the OpsManagers with expanded functionality, such as finding all Cargoes that passed thru a specific port.
 
 Subsequent stages may also implement separate logins and authorization for Clerks and OpsManagers.
 
-## DDD Aspects
+## Phoenix and DDD concepts and their correspondence
+
+Phoenix Module | Phoenix/Elixir Concept | DDD Concept
+--------------|-----------------|------------
+Shipping|Application|Domain/Model
+Shipping.Cargoes|Context|Aggregate
+Shipping.Cargoes.Cargo|Schema|Repository
+Shipping.Cargoes.DeliveryHistory|Struct|Query/Event Sourcing
+Shipping.HandlingEvents|Context|Aggregate
+Shipping.HandlingEvents.HandlingEvent|Schema|Repository/Domain Event
+TrackingWeb|Application|Application/UI
+
+Note that not all of the Phoenix modules are listed.
+
 This stage demonstrates the following aspects of DDD:
 * Domain Events - Handling Events
 * Aggregates:
@@ -42,18 +61,20 @@ This stage demonstrates the following aspects of DDD:
 * Phoenix
   * Umbrella project
   * Shipping application
-    * Domain Model implementation
-      * Cargoes context = Cargoes aggregate, and
-      * Handling Events context = Handling Events aggregate
-    * Agents - used by Repo
-  * Tracking_web application
+    * Cargoes context
+      * Cargo Schema
+      * Delivery History - Event Sourced
+    * Handling Events context
+      * Handling Event Schema
+    * Agents - data access, in lieu of a database, used by Repo
+  * TrackingWeb application
     * Produces the web pages
     * Uses Bootstrap for web page styling (Phoenix default)
-    * Accesses the Domain Model via the Phoenix Controllers
+    * Accesses the Shipping Application via the Phoenix Controllers
     * Implements a JSON API via View rendering
 * Elm
   * Single Page Application
-  * Accesses the Phoenix JSON API via the Phoenix Controllers (and Views)
+  * Accesses the Domain Model using a Phoenix JSON API via the Phoenix Controllers (and Views)
   * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling - no JavaScript
 
 ## Installation and Operation
@@ -78,12 +99,12 @@ This step will download all the required Elm packages and compile the Elm code.
 2. `$ cd apps/tracking_web/assets/elm`
 2. `$ elm-compile.cmd or ./elm-compile.sh`
 
+**A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence this Phoenix project does not rely on automatic recompilation. You can use one of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm file is saved. An Atom save_commands.json file is included.
+
 ### Elm Test Installation
 This step will install the Elm testing harness that is required for running the project's Elm tests (see below).
 1. $ npm install -g elm-test
 
-
-**A note on Elm recompilation** Phoenix uses [Brunch](http://brunch.io/) to monitor changes in the Elixir files and provide automatic recompilation. There is a Brunch plugin - [elm-brunch](https://www.npmjs.com/package/elm-brunch) - that can monitor changes to Elm files. However, we had trouble with the proper recompilation of multiple, inter-dependent Elm source files. Hence we do not rely on automatic recompilation. You can use of the elm-compile scripts to recompile manually or some editors can be configured to executed commands upon the saving of files. Atom, for instance, has a save-commands plugin that will execute elm-make of the Main.elm file anytime an Elm file is saved.
 
 ### Running the web application
 1. `$ cd <installation directory>`
