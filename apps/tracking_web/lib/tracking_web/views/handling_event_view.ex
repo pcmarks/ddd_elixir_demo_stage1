@@ -1,4 +1,8 @@
 defmodule TrackingWeb.HandlingEventView do
+  @moduledoc """
+  This view is only responsible for rendering (formatting) a JSON
+  HandlingEvent response to a JSON request.
+  """
   use TrackingWeb, :view
 
   def render("show.json",  %{handling_events: handling_events}) do

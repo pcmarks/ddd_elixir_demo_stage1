@@ -1,4 +1,8 @@
 defmodule TrackingWeb.CargoController do
+  @moduledoc """
+  The Tracking Applications Phoenix Controller. It handles both HTML and JSON
+  requests, responses including errors.
+  """
   use TrackingWeb, :controller
 
   alias Shipping.{Cargoes, HandlingEvents}

@@ -17,8 +17,12 @@ defmodule TrackingWeb.Router do
   end
 
 
+  # The tracking application
+
   scope "/tracking", TrackingWeb do
     pipe_through :browser
+
+    ## The following scopes are organized by application user
 
     scope "/clerks" do
       get "/cargoes", CargoController, :show
@@ -31,6 +35,8 @@ defmodule TrackingWeb.Router do
     end
   end
 
+  # Special scope for loading the Elm version of the Tracking application
+  
   scope "/elm", TrackingWeb do
     pipe_through :browser
 
