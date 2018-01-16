@@ -1,15 +1,13 @@
 defmodule Shipping do
   @moduledoc """
-  Shipping - a Phoenix application - represents the DDD domain model* of the Shipping
-  demo. It encapsulates aggregates (see below). This module also contains
+  Shipping - a Phoenix application (see Shipping.Application) - represents the
+  DDD domain model* of the Shipping   demo. It encapsulates two aggregates -
+  Phoenix contexts - Cargoes and Handling Events. This module also contains
   domain-wide business logic and functions.
 
-  Phoenix contexts serve as DDD aggregates*. Aggregates are defined in separate
-  modules; they are responsible for the management of data . The aggregates are
-  Cargoes and HandlingEvents.
-
-  * From the DDD book: [An aggregate is] a cluster of associated objects that are
-  treated as a unit for the purpose of data changes...
+  * From the DDD book: [A model is] a system of abstractions that describes
+  selected aspects of a domain and can be used to solve problems related to that
+  domain.
   """
 
   #############################################################################

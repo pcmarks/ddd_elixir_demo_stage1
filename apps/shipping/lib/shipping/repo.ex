@@ -1,13 +1,6 @@
 defmodule Shipping.Repo do
   # use Ecto.Repo, otp_app: :shipping
-  # NOTE: No Database is used; rather, Agents. See CargoAgent and HandlingEventAgent
-  # @doc """
-  # Dynamically loads the repository url from the
-  # DATABASE_URL environment variable.
-  # """
-  # def init(_, opts) do
-  #   {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
-  # end
+
   @moduledoc """
   Normally the Repo module is responsible for the data storage and retrieval to
   and from a database system. See the commented out code above.

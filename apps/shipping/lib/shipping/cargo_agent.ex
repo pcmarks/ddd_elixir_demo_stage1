@@ -25,7 +25,7 @@ defmodule Shipping.CargoAgent do
 
   @doc """
   Before starting the Agent process, start_link first loads any Cargoes
-  that might be stored in the file cache ("cargoes.json"). Any cargoes
+  that might be stored in the file cache ("cargoes.json"). These cargoes
   become part of the Agent's state.
   """
   def start_link do

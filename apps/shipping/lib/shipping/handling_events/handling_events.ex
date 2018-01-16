@@ -1,7 +1,11 @@
 defmodule Shipping.HandlingEvents do
   @moduledoc """
-  The root of the HandlingEvent aggregate.
-  """
+  The Handling Events Aggregate*. Its root is the module Shipping.HandlingEvent
+
+  From the DDD book: [An AGGREGATE is] a cluster of associated objects that
+  are treated as a unit for the purgpose of data changes. External references are
+  restricted to one member of the AGGREGATE, designated as the root.
+"""
 
   import Ecto.Query, warn: false
   alias Shipping.Repo

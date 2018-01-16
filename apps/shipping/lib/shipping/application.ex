@@ -2,7 +2,7 @@ defmodule Shipping.Application do
   @moduledoc """
   The Shipping Application Service.
 
-  The shipping system business domain lives in this application.
+  Responsible for starting up the Cargo and Handling Event Agents.
 
   Exposes API to clients such as the `Shipping.Web` application
   for use in channels, controllers, and elsewhere.

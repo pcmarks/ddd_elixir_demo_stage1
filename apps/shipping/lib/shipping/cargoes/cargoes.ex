@@ -1,6 +1,11 @@
 defmodule Shipping.Cargoes do
   @moduledoc """
-  The root of the Cargoes Aggregate.
+  The Cargoes Aggregate*. Its root is the module Shipping.Cargo
+  Cargoes is also responsible for creating a Delivery History from the Handling Events
+
+  From the DDD book: [An AGGREGATE is] a cluster of associated objects that
+  are treated as a unit for the purgpose of data changes. External references are
+  restricted to one member of the AGGREGATE, designated as the root.
   """
 
   import Ecto.Query, warn: false
