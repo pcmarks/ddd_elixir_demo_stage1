@@ -8,7 +8,7 @@ Peter C. Marks (@PeterCMarks), Eric Evans (@ericevans0), and John Kasiewicz (@se
 
 The demo was first implemented by Eric Evans and [Citerus](https:www.citerus.se) - a design consultancy. Eric is the founder of [Domain Language](https://domainlanguage.com).
 
- The idea for this version of the demo was conceived at a Portland, ME Erlang/Elixir Meetup that featured a presentation on DDD by Eric. Peter and John joined Eric in defining the scope of this project. John and Peter created the first Phoenix-only version. Several iterations of design and coding resulted in the final Phoenix server and web interface. At a Portland, ME Elm Meetup, Peter suggested and subsequently developed a first version of an Elm implementation of the web interface. Eric and Peter further refined this Elm version.
+The idea for this version of the demo was conceived at a Portland, ME Erlang/Elixir Meetup that featured a presentation on DDD by Eric. Peter and John joined Eric in defining the scope of this project. John and Peter created the first Phoenix-only version. Several iterations of design and coding resulted in the final Phoenix server and web interface. At a Portland, ME Elm Meetup, Peter suggested and subsequently developed a first version of an Elm implementation of the web interface. Eric and Peter further refined this Elm version.
 
 Both the Elixir and Elm Meetups are led by Jean-Francois Cloutier (@jfcloutier).
 ## The Project
