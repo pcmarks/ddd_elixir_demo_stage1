@@ -5,7 +5,8 @@ The Rest module handles all the encoding of all the Shipping server requests and
 the server's responses. Responses are decoded from the JSON values returned by
 the server.
 
-Responses are wrapped in a Msg type that modules "above" will catch if applicable.
+Responses are wrapped in a Msg type that modules "above" this one will catch,
+if applicable.
 
 --}
 
@@ -34,14 +35,23 @@ type Msg
     | HttpError String
 
 
-phoenixHostPortUrl : String
-phoenixHostPortUrl =
-    "http://localhost:4000"
+
+-- Server base URL. Note the "api" in the path; the server will respond with a
+-- JSON String
 
 
-clerksUrl : String
-clerksUrl =
-    phoenixHostPortUrl ++ "/tracking/clerks"
+phoenixHostPortTrackingUrl : String
+phoenixHostPortTrackingUrl =
+    "http://localhost:4000/tracking/api"
+
+
+
+-- Cargo requests and responses (JSON)
+
+
+trackingCargoesUrl : String
+trackingCargoesUrl =
+    phoenixHostPortTrackingUrl ++ "/cargoes"
 
 
 findCargo : String -> Cmd Msg
@@ -61,9 +71,8 @@ findCargo trackingId =
 cargoRequest : String -> Request CargoResponse
 cargoRequest id =
     Http.get
-        (clerksUrl
-            ++ "/cargoes"
-            ++ "?_format=json&cargo_params[tracking_id]="
+        (trackingCargoesUrl
+            ++ "?cargo_params[tracking_id]="
             ++ id
         )
         cargoResponseDecoder
@@ -149,17 +158,12 @@ handlingEventDecoder =
 
 
 
---- SysOps (Clerks) requests, and responses
+--- Handling Event requests, and responses (JSON)
 
 
-sysOpsUrl : String
-sysOpsUrl =
-    phoenixHostPortUrl ++ "/tracking/opsmanagers"
-
-
-sysOpEventsUrl : String
-sysOpEventsUrl =
-    sysOpsUrl ++ "/events"
+handlingEventsUrl : String
+handlingEventsUrl =
+    phoenixHostPortTrackingUrl ++ "/events"
 
 
 getAllHandlingEvents : Cmd Msg
@@ -178,7 +182,7 @@ getAllHandlingEvents =
 
 allHandlingEventsRequest : Request HandlingEventList
 allHandlingEventsRequest =
-    Http.get (sysOpEventsUrl ++ "?_format=json") handlingEventListDecoder
+    Http.get handlingEventsUrl handlingEventListDecoder
 
 
 date : Decoder Date
