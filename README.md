@@ -43,10 +43,10 @@ Phoenix Module | Phoenix/Elixir Concept | DDD Concept
 --------------|-----------------|------------
 Shipping|Application|Domain/Model
 Shipping.Cargoes|Context|Aggregate
-Shipping.Cargoes.Cargo|Schema|Repository
-Shipping.Cargoes.DeliveryHistory|Struct|Query/Event Sourcing
+Shipping.Cargoes.Cargo|Schema|Entity, Aggregate Root & Repository
+Shipping.Cargoes.DeliveryHistory|Struct (Elixir)|Value Object (Event Sourced)
 Shipping.HandlingEvents|Context|Aggregate
-Shipping.HandlingEvents.HandlingEvent|Schema|Repository/Domain Event
+Shipping.HandlingEvents.HandlingEvent|Schema|Domain Event & Aggregate Root
 TrackingWeb|Application|Application/UI
 
 Note that not all of the Phoenix modules are listed.
@@ -58,7 +58,7 @@ This stage demonstrates the following aspects of DDD:
   * Handling Events
 
 ## Phoenix and Elm Aspects
-* Phoenix
+* Phoenix (Client and Server)
   * Umbrella project
   * Shipping application
     * Cargoes context
@@ -71,11 +71,11 @@ This stage demonstrates the following aspects of DDD:
     * Produces the web pages
     * Uses Bootstrap for web page styling (Phoenix default)
     * Accesses the Shipping Application via the Phoenix Controllers
-    * Implements a JSON API via View rendering
-* Elm
-  * Single Page Application
-  * Accesses the Domain Model using a Phoenix JSON API via the Phoenix Controllers (and Views)
-  * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling - no JavaScript
+    * Exposes a JSON API
+* Elm (Client)
+  * Single Page Application.
+  * Accesses the Domain Model using a Phoenix JSON API via the same Phoenix Router,  Controllers (and Views) used by the Phoenix client.
+  * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling - no JavaScript (so far).
 
 ## Installation and Operation
 Elixir, Phoenix, and Elm need to be installed first. Phoenix/Elixir installation instructions can be found [in the Phoenix documentation](https://hexdocs.pm/phoenix/installation.html#content). An Elm installation guide can be found at the [Elm website](https://guide.elm-lang.org/install.html). W3CSS styling can be downloaded, however, this applicaiont accesses the style sheets via a CDN.
