@@ -156,7 +156,7 @@ viewDetail cargo =
                     [ h2 [] [ text "Cargo Tracking Details" ]
                     , div [ class "w3-panel w3-padding-small w3-border w3-border-black w3-round-large" ]
                         [ div [ class "w3-panel w3-blue" ]
-                            [ h5 [ class "w3-right" ] [ text "In Transit" ] ]
+                            [ h5 [ class "w3-center" ] [ text ("Current Location: " ++ delivery.location) ] ]
                         , div [ class "w3-panel" ]
                             [ div [ class "w3-left" ] [ text ("Tracking Id: " ++ cargo.trackingId) ]
                             , div [ class "w3-right" ] [ text ("Status: " ++ delivery.transportationStatus) ]
