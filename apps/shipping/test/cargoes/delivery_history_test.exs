@@ -22,4 +22,20 @@ defmodule Shipping.Cargoes.DeliveryHistoryTest do
     assert delivery_history.transportation_status == "UNKNOWN"
   end
 
+  test "Create DeliveryHistory for existing Cargo and check location #1" do
+    delivery =
+      HandlingEvents.get_all_with_tracking_id!("ABC123")
+      |> Enum.reverse()
+      |> Cargoes.create_delivery_history()
+    assert delivery.location == "SESTO"
+  end
+
+  test "Create DeliveryHistory for existing Cargo and check location #2" do
+    delivery =
+      HandlingEvents.get_all_with_tracking_id!("IJK456")
+      |> Enum.reverse()
+      |> Cargoes.create_delivery_history()
+    assert delivery.location == "IN TRANSIT"
+  end
+
 end

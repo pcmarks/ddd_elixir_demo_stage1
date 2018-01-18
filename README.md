@@ -130,7 +130,7 @@ OpsManagers work for the Shipping company and are interested in the status of al
 Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
 
 ## Testing
-There are currently 23 Phoenix tests. They can be run by entering the commands below.
+There are currently 25 Phoenix tests. They can be run by entering the commands below.
 
 1. `$ cd <installation directory>`
 2. `$ mix test`
