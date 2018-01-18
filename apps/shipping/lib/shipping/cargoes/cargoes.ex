@@ -72,12 +72,13 @@ defmodule Shipping.Cargoes do
   end
 
   defp update_delivery_history([%HandlingEvent{
-                          type: type} | handling_events],
+                          type: type, location: location} | handling_events],
                         %DeliveryHistory{
                           transportation_status: trans_status} = delivery_history) do
       new_trans_status = Shipping.next_trans_status(type, trans_status)
       update_delivery_history(handling_events,
-                      %{delivery_history | :transportation_status => new_trans_status})
+                      %{delivery_history | :transportation_status => new_trans_status,
+                                           :location => location})
   end
   defp update_delivery_history([], delivery_history) do
     delivery_history

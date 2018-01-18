@@ -5,23 +5,22 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title text-right">
-      In Transit
-      <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+      Current Location:
+      <span id="cargo-location"><%= @delivery_history.location %></span>
     </h3>
   </div>
   <div class="panel-body" id="tracking-info" tracking-id="<%= @cargo.tracking_id %>">
-    <div class="pull-left">
-      <p>
+    <div class="row">
+      <div class="col-sm-4">
         <u><strong>Tracking #:</strong></u>
         <%= @cargo.tracking_id %>
-      </p>
-    </div>
-
-    <div class="pull-right">
-      <p>
+      </div>
+      <div class="col-sm-4">
+      </div>
+        <div class="col-sm-4">
         <u><strong>Status:</strong></u>
         <span id="cargo-status"><%= @delivery_history.transportation_status %></span>
-      </p>
+      </div>
     </div>
   </div>
 </div>
