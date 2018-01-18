@@ -49,7 +49,7 @@ defmodule Shipping do
   end
 
   #############################################################################
-  # State transistion function that determines a cargo's transportation
+  # State transition function that determines a cargo's transportation
   # status based on a new handling event and its current status.
   # NOTE: This may not be a complete set of transitions
   #############################################################################
@@ -58,7 +58,7 @@ defmodule Shipping do
   def next_trans_status("CLAIM",   "IN PORT"), do: "CLAIMED"
   def next_trans_status("LOAD",    "IN PORT"), do: "ON CARRIER"
   def next_trans_status("UNLOAD",  "ON CARRIER"), do: "IN PORT"
-  # Any other combination of Handling Event and current Status (includeing
+  # Any other combination of Handling Event type and current Status (including
   # "UNKNOWN") is "UNKNOWN"
   def next_trans_status(_, _), do: "UNKNOWN"
 

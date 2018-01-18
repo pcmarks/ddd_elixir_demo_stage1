@@ -39,6 +39,16 @@ Subsequent stages may also implement separate logins and authorization for Clerk
 
 ## Phoenix and DDD concepts and their correspondence
 
+This stage demonstrates the following DDD concepts:
+* Domain/Model
+* Aggregates and Aggregate roots
+* Entitiy Objects
+* Value Objects
+* Repositories
+* Domain Events
+
+The following table shows a set of correspondences between Phoenix and DDD concepts according to the current projects's Phoenix module organization. This table is not meant to show the only types of correspondences; other writers have suggested different approaches.
+
 Phoenix Module | Phoenix/Elixir Concept | DDD Concept
 --------------|-----------------|------------
 Shipping|Application|Domain/Model
@@ -50,12 +60,6 @@ Shipping.HandlingEvents.HandlingEvent|Schema|Domain Event & Aggregate Root
 TrackingWeb|Application|Application/UI
 
 Note that not all of the Phoenix modules are listed.
-
-This stage demonstrates the following aspects of DDD:
-* Domain Events - Handling Events
-* Aggregates:
-  * Cargoes including Delivery History
-  * Handling Events
 
 ## Phoenix and Elm Aspects
 * Phoenix (Client and Server)
@@ -74,7 +78,7 @@ This stage demonstrates the following aspects of DDD:
     * Exposes a JSON API
 * Elm (Client)
   * Single Page Application.
-  * Accesses the Domain Model using a Phoenix JSON API via the same Phoenix Router,  Controllers (and Views) used by the Phoenix client.
+  * Accesses the Domain Model using a Phoenix JSON API via the same Phoenix Router,  Controllers (and Views)that are used by the Phoenix client.
   * Only uses [W3.CSS](https://www.w3schools.com/w3css/) for web page styling - no JavaScript (so far).
 
 ## Installation and Operation
@@ -86,7 +90,7 @@ Next, obtain this repository.
 Perform all of these steps in order:
 
 ### Phoenix
-This step will download all the required Elixir and node.js packages
+This step will download and install all the required Elixir and node.js packages
 1. `$ cd <installation directory>`
 2. `$ mix deps.get`
 3. `$ cd apps/tracking_web/assets`
@@ -127,7 +131,7 @@ Clerks are those people that wish to find the status of a cargo. From the home p
 OpsManagers work for the Shipping company and are interested in the status of all the cargoes being managed by the company, for example, those entering a particular port. From the home page, click on _Shipping Ops Manager_. This will take you to a "search" page with only one criterion (for now): All. Click on _Search!_ and a list of all Handling Events will appear. Note that in subsequent stages the user will be able to specify more search criteria.
 
 ### Data Storage
-Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo is "NOT RECEIVED".
+Stage 1 of this demo does not use a database. Instead, Cargoes and HandlingEvents are managed by [Elixir Agents](https://hexdocs.pm/elixir/Agent.html); they are saved in their respective agent's state as well as in a file cache. The files are loaded by default when the application is started. The files are named "cargoes.json" and "handling_events.json" and are in the resources directory. Entries can be added with any text editor so long as the id values are unique. Note that the starting status for a new Cargo should be "NOT RECEIVED".
 
 ## Testing
 There are currently 25 Phoenix tests. They can be run by entering the commands below.
