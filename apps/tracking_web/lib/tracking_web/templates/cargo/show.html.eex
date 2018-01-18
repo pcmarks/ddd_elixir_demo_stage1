@@ -4,7 +4,7 @@
 </h2>
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title text-right">
+    <h3 class="panel-title text-center">
       Current Location:
       <span id="cargo-location"><%= @delivery_history.location %></span>
     </h3>
