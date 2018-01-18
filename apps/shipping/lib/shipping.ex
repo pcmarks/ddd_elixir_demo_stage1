@@ -26,7 +26,7 @@ defmodule Shipping do
   end
 
   #############################################################################
-  # Support for Locations
+  # Support for Location abbreviations
   #############################################################################
   @location_map  %{
     "Hongkong": "CHHKG",
@@ -55,13 +55,11 @@ defmodule Shipping do
   #############################################################################
   def next_trans_status("RECEIVE", "NOT RECEIVED"), do: "IN PORT"
   def next_trans_status("CUSTOMS", "IN PORT"), do: "IN PORT"
-  def next_trans_status("CLAIM", "IN PORT"), do: "CLAIMED"
-  def next_trans_status("LOAD", "CLEARED"), do: "ON CARRIER"
-  def next_trans_status("LOAD", "RECEIVED"), do: "ON CARRIER"
-  def next_trans_status("LOAD", "IN PORT"), do: "ON CARRIER"
-  def next_trans_status("LOAD", "ON CARRIER"), do: "ON CARRIER"
-  def next_trans_status("UNLOAD", "ON CARRIER"), do: "IN PORT"
-  def next_trans_status("UNLOAD", "IN PORT"), do: "IN PORT"
-  def next_trans_status(_, status), do: status
+  def next_trans_status("CLAIM",   "IN PORT"), do: "CLAIMED"
+  def next_trans_status("LOAD",    "IN PORT"), do: "ON CARRIER"
+  def next_trans_status("UNLOAD",  "ON CARRIER"), do: "IN PORT"
+  # Any other combination of Handling Event and current Status (includeing
+  # "UNKNOWN") is "UNKNOWN"
+  def next_trans_status(_, _), do: "UNKNOWN"
 
 end

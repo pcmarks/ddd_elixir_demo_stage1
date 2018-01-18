@@ -31,16 +31,17 @@ defmodule Shipping.HandlingEventsTest do
     assert handling_event.id == 1
   end
 
+  #Make sure you do not use a tracking_id that is used in other tests
   test "Create a handling event" do
     {result, handling_event} = HandlingEvents.create_handling_event(
-      %{type: "UNLOAD", location: "CHI" , completion_time: DateTime.utc_now, tracking_id: "ABC123", voyage: "989"})
+      %{type: "UNLOAD", location: "USCHI" , completion_time: DateTime.utc_now, registration_time: DateTime.utc_now, tracking_id: "XYYZZY", voyage: "989"})
     assert result == :ok
-    assert handling_event.location == "CHI"
+    assert handling_event.location == "USCHI"
   end
 
   test "Fail to create a handling event when type value is missing" do
     result = HandlingEvents.create_handling_event(
-      %{type: "", location: "CHI" , completion_time: DateTime.utc_now, tracking_id: "ABC123", voyage: "989"})
+      %{type: "", location: "CHI" , completion_time: DateTime.utc_now, tracking_id: "XYYZZY", voyage: "989"})
     assert match?({:error, _}, result)
   end
 

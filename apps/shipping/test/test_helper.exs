@@ -18,7 +18,8 @@ test_handling_events =
 test_cargoes =
   [
   %{tracking_id: "ABC123", status: "NOT RECEIVED"},
-  %{tracking_id: "IJK456", status: "NOT RECEIVED"}
+  %{tracking_id: "IJK456", status: "NOT RECEIVED"},
+  %{tracking_id: "XYYZZY", status: "NOT RECEIVED"}
   ]
 
 for cargo_attrs <- test_cargoes do
