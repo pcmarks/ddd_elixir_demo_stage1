@@ -13,7 +13,7 @@ defmodule TrackingWeb.CargoController do
   def show(conn, %{"cargo_params" => %{"tracking_id" => tracking_id}}) do
     case Cargoes.get_cargo_by_tracking_id!(tracking_id) do
       nil ->
-        error_formatter(conn, tracking_id)
+        cargo_error(conn, "Cargo for #{tracking_id} not found.")
       %Shipping.Cargoes.Cargo{} = cargo ->
         # Retrieve and apply all handling events to date against the cargo
         # to determine the cargo's current status (Delivery History).
@@ -28,20 +28,16 @@ defmodule TrackingWeb.CargoController do
                      cargo: cargo,
                      delivery_history: delivery_history,
                      handling_events: handling_events)
-      _ ->
-        conn
-          |> put_flash(:error, "Invalid tracking number")
-          |> redirect(to: clerk_path(conn, :index))
     end
   end
 
-  defp error_formatter(conn, tracking_id) do
+  defp cargo_error(conn, error_msg) do
     case get_format(conn) do
       "json" ->
-          render(conn, :error, error_status: "Cargo for #{tracking_id} not found.")
+          render(conn, :error, error_status: error_msg)
       _ ->
         conn
-          |> put_flash(:error, "Cargo for #{tracking_id} not found.")
+          |> put_flash(:error, error_msg)
           |> redirect(to: clerk_path(conn, :index))
     end
   end
