@@ -2,7 +2,7 @@ module Tracking exposing (..)
 
 {--
 The Tracking module represents the Application that allows Clerks and Shipping
-Operations Managers to show the status of a particular cargo or the a listing
+Operations Managers to show the status of a particular cargo or the listing
 of all the Handling Events in the system, respectively.
 
 Control/Messages are handled by dispatching "down" to the Clerk or OpsManager
