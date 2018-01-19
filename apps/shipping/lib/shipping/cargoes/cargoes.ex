@@ -62,9 +62,10 @@ defmodule Shipping.Cargoes do
   end
 
   @doc """
-  Create a DeliveryHistory: a representation of the Cargo's current status. The values
+  Create a DeliveryHistory: a value object of the Cargo's current status. The values
   in a DeliveryHistory are determined by applying each of the Cargo's handling events,
-  in turn, against the DeliveryHistory.
+  in turn, against the DeliveryHistory. Note the Handling Events must be chronological
+  order, using the completion_time, with the oldest first.
   """
   def create_delivery_history(handling_events) do
     delivery_history = %DeliveryHistory{}
@@ -72,11 +73,11 @@ defmodule Shipping.Cargoes do
   end
 
   defp update_delivery_history([%HandlingEvent{
-                          type: type, location: location} | handling_events],
+                          type: type, location: location, voyage: voyage} | handling_events],
                           %DeliveryHistory{
                              transportation_status: trans_status} = delivery_history) do
       new_trans_status = Shipping.next_trans_status(type, trans_status)
-      new_location = if type == "LOAD", do: "IN TRANSIT", else: location
+      new_location = if type == "LOAD", do: "ON VESSEL VOYAGE #{voyage}", else: location
       update_delivery_history(handling_events,
                       %{delivery_history | :transportation_status => new_trans_status,
                                            :location => new_location})
