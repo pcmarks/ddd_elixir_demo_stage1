@@ -35,7 +35,7 @@ defmodule Shipping.Cargoes.DeliveryHistoryTest do
       HandlingEvents.get_all_with_tracking_id!("IJK456")
       |> Enum.reverse()
       |> Cargoes.create_delivery_history()
-    assert delivery.location == "IN TRANSIT"
+    assert delivery.location == "ON VESSEL VOYAGE 45"
   end
 
 end
