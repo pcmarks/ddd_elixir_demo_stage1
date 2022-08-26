@@ -12,7 +12,7 @@ The idea for this version of the demo was conceived at a Portland, ME Erlang/Eli
 
 Both the Elixir and Elm Meetups are led by Jean-Francois Cloutier (@jfcloutier).
 ## The Project
-The original demo (see above for links) was written in Java using the Spring framework. Eric Evans' book was published in 2004 when the predominant coding style was object-oriented. The challenge for this project was not so much to go from a Java to an Elixir and Elm implementation but to find counterparts for DDD concepts and patterns in Elixir and Elm.
+The original demo (see above for links) was written in [Java](https://www.scaler.com/topics/java/) using the Spring framework. Eric Evans' book was published in 2004 when the predominant coding style was object-oriented. The challenge for this project was not so much to go from a Java to an Elixir and Elm implementation but to find counterparts for DDD concepts and patterns in Elixir and Elm.
 
 Because Elixir is a functional language, some guidance for its use -  within the context of DDD  - was found in recent activity pertaining to DDD and functional languages; similarly for Elm. A document containing pointers to this activity (for Elixir) is available [here](https://github.com/pcmarks/ddd_elixir_demo_stage1/blob/master/docs/ElixirDDDReferences.md). In addition, there are at least two books currently available:
 
